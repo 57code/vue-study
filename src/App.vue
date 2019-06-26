@@ -3,7 +3,9 @@
     <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
     <!-- <CompCommunicate /> --> 
     <!-- <SlotsTest></SlotsTest> -->
-    <Recursion></Recursion>
+    <!-- <Recursion></Recursion> -->
+    <!-- <FormSample></FormSample> -->
+    <Tree></Tree>
   </div>
 </template>
 
@@ -12,6 +14,8 @@ import HelloWorld from "./components/HelloWorld.vue";
 import CompCommunicate from "./components/communicate";
 import SlotsTest from "./components/slots";
 import Recursion from "./components/recursion";
+import FormSample from "./components/form";
+import Tree from "./components/tree";
 
 export default {
   name: "app",
@@ -19,7 +23,9 @@ export default {
     HelloWorld,
     CompCommunicate,
     SlotsTest,
-    Recursion
+    Recursion,
+    FormSample,
+    Tree
   }
 };
 </script>
