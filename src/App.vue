@@ -4,8 +4,8 @@
     <!-- <CompCommunicate /> --> 
     <!-- <SlotsTest></SlotsTest> -->
     <!-- <Recursion></Recursion> -->
-    <!-- <FormSample></FormSample> -->
-    <Tree></Tree>
+    <FormSample></FormSample>
+    <!-- <Tree></Tree> -->
   </div>
 </template>
 
