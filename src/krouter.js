@@ -49,7 +49,6 @@ class VueRouter {
     // <router-view></router-view>
     Vue.component("router-view", {
       render: h => {
-        console.log(this.routeMap[this.app.current]);
         const comp = this.routeMap[this.app.current];
         return h(comp);
       }
