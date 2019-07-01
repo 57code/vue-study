@@ -2,6 +2,12 @@ import Vue from "vue";
 import App from "./App.vue";
 import create from "@/utils/create";
 
+// import router from './router'
+import router from './krouter'
+
+// import store from './store'
+import store from './kstore'
+
 Vue.config.productionTip = false;
 
 Vue.prototype.$dispatch = function(eventName, data) {
@@ -57,5 +63,7 @@ Vue.prototype.$bus = new Bus();
 Vue.prototype.$create = create;
 
 new Vue({
+  router,
+  store,
   render: h => h(App)
 }).$mount("#app");
