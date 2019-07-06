@@ -2,7 +2,7 @@
 
 虚拟DOM（Virtual DOM）是对DOM的JS抽象表示，它们是JS对象，能够描述DOM结构和关系。
 
-![1562292260205](kaikeba/lesson/vue-lesson/%E8%AF%BE%E4%BB%B6/assets/1562292260205.png)
+![1562292260205](src/assets/1562292260205.png)
 
 
 
@@ -319,7 +319,7 @@ patch将新老VNode节点进行比对（diff算法），然后根据比较结果
 
 diff算法：通过**同层的树节点进行比较**而非对树进行逐层搜索遍历的方式，同层级只做三件事：增删改。具体规则是：new VNode不存在就删；old VNode不存在就增；都存在就比较类型，类型不同直接替换、类型相同执行更新；
 
-![img](kaikeba/lesson/vue-lesson/%E8%AF%BE%E4%BB%B6/assets/68747470733a2f2f692e6c6f6c692e6e65742f323031372f30382f32372f353961323431396133633631372e706e67.png)
+![img](src/assets/68747470733a2f2f692e6c6f6c692e6e65742f323031372f30382f32372f353961323431396133633631372e706e67.png)
 
 ```js
  /*createPatchFunction的返回值，一个patch函数*/
@@ -466,7 +466,7 @@ diff算法：通过**同层的树节点进行比较**而非对树进行逐层搜
 
 updateChildren主要作用是比对新旧两个VNode的children得出具体DOM操作。执行一个双循环是传统方式，vue中针对web场景特点做了特别的算法优化：
 
-![img](kaikeba/lesson/vue-lesson/%E8%AF%BE%E4%BB%B6/assets/68747470733a2f2f692e6c6f6c692e6e65742f323031372f30382f32382f353961343031356262323736352e706e67.png)
+![img](src/assets/68747470733a2f2f692e6c6f6c692e6e65742f323031372f30382f32382f353961343031356262323736352e706e67.png)
 
 在新老两组VNode节点的左右头尾两侧都有一个变量标记，在**遍历过程中这几个变量都会向中间靠拢**。当**oldStartIdx > oldEndIdx**或者**newStartIdx > newEndIdx**时结束循环。
 
@@ -476,7 +476,7 @@ updateChildren主要作用是比对新旧两个VNode的children得出具体DOM�
 
 当 oldStartVnode和newStartVnode 或者 oldEndVnode和newEndVnode 满足sameVnode，直接将该VNode节点进行patchVnode即可，不需再遍历就完成了一次循环。如下图，
 
-![img](kaikeba/lesson/vue-lesson/%E8%AF%BE%E4%BB%B6/assets/68747470733a2f2f692e6c6f6c692e6e65742f323031372f30382f32382f353961343063313263313635352e706e67.png)
+![img](src/assets/68747470733a2f2f692e6c6f6c692e6e65742f323031372f30382f32382f353961343063313263313635352e706e67.png)
 
 
 
@@ -484,7 +484,7 @@ updateChildren主要作用是比对新旧两个VNode的children得出具体DOM�
 
 如果oldStartVnode与newEndVnode满足sameVnode。说明oldStartVnode已经跑到了oldEndVnode后面去了，进行patchVnode的同时还需要将真实DOM节点移动到oldEndVnode的后面。
 
-![img](kaikeba/lesson/vue-lesson/%E8%AF%BE%E4%BB%B6/assets/68747470733a2f2f6f6f6f2e306f302e6f6f6f2f323031372f30382f32382f353961343231343738343937392e706e67.png)
+![img](src/assets/68747470733a2f2f6f6f6f2e306f302e6f6f6f2f323031372f30382f32382f353961343231343738343937392e706e67.png)
 
 
 
@@ -631,7 +631,7 @@ export function createPatchFunction (backend) {
 
 模板编译的主要目标是**将模板(template)转换为渲染函数(render)**
 
-![1561880016375](kaikeba/lesson/vue-lesson/%E8%AF%BE%E4%BB%B6/assets/1561880016375.png)
+![1561880016375](src/assets/1561880016375.png)
 
 #### 体验模板编译
 
@@ -697,7 +697,7 @@ export function createPatchFunction (backend) {
 
 调试查看得到的AST，/src/compiler/parser/index.js - parse，结构如下：
 
-![1562120918119](kaikeba/lesson/vue-lesson/%E8%AF%BE%E4%BB%B6/assets/1562120918119.png)
+![1562120918119](src/assets/1562120918119.png)
 
 
 
@@ -758,7 +758,7 @@ export function optimize (root: ?ASTElement, options: CompilerOptions) {
 
 标记结束
 
-![1562123041141](kaikeba/lesson/vue-lesson/%E8%AF%BE%E4%BB%B6/assets/1562123041141.png)
+![1562123041141](src/assets/1562123041141.png)
 
 
 
