@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <FormTest></FormTest>
+    <FormTest />
     <!-- <HelloWorld msg="Welcome to Your Vue.js App" ref="hw" @foo="onFoo($event)" /> -->
     <!-- <HelloWorld> -->
       <!-- 默认插槽用default做参数 -->
