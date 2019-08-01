@@ -7,8 +7,12 @@
       <KFormItem label="密码" prop="password">
         <KInput v-model="model.password" type="password"></KInput>
       </KFormItem>
+      <KFormItem label="记住密码" prop="password">
+        <KCheckBox v-model="model.remember"></KCheckBox>
+        <KCheckBox :checked="model.remember" @change="model.remember = $event"></KCheckBox>
+      </KFormItem>
       <KFormItem>
-          <button @click="onLogin">登录</button>
+        <button @click="onLogin">登录</button>
       </KFormItem>
     </KForm>
     {{model}}
@@ -17,20 +21,25 @@
 
 <script>
 import KInput from "./KInput.vue";
+import KCheckBox from "./KCheckBox.vue";
 import KFormItem from "./KFormItem.vue";
 import KForm from "./KForm.vue";
+import Notice from "../Notice";
+import create from "@/utils/create";
 
 export default {
   components: {
     KInput,
     KFormItem,
-    KForm
+    KForm,
+    KCheckBox
   },
   data() {
     return {
       model: {
         username: "tom",
-        password: ""
+        password: "",
+        remember: false
       },
       rules: {
         username: [{ required: true, message: "用户名必填" }],
@@ -39,15 +48,29 @@ export default {
     };
   },
   methods: {
-      onLogin() {
-          this.$refs.loginForm.validate((isValid) => {
-              if (isValid) {
-                  alert('登录！！！')
-              } else {
-                  alert('有错！！')
-              }
-          })
-      }
-  },
+    onLogin() {
+      // 创建弹窗实例
+      let notice;
+
+      this.$refs.loginForm.validate(isValid => {
+        if (isValid) {
+          // alert('登录！！！')
+          notice = create(Notice, {
+            title: "xxx",
+            message: "登录！！！",
+            duration: 10000
+          });
+        } else {
+          // alert('有错！！')
+          notice = create(Notice, {
+            title: "xxx",
+            message: "有错！！！",
+            duration: 10000
+          });
+        }
+        notice.show();
+      });
+    }
+  }
 };
 </script>

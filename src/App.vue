@@ -1,12 +1,16 @@
 <template>
   <div id="app">
-    <FormTest />
+    <router-link to="/list">Home</router-link>
+    <router-link to="/about">About</router-link>
+    <router-view />
+    <!-- <Tree></Tree> -->
+    <!-- <FormTest /> -->
     <!-- <HelloWorld msg="Welcome to Your Vue.js App" ref="hw" @foo="onFoo($event)" /> -->
     <!-- <HelloWorld> -->
-      <!-- 默认插槽用default做参数 -->
-      <!-- <template v-slot:default>abcdefg</template> -->
-      <!-- 具名插槽用插槽名做参数 -->
-      <!-- <template v-slot:content="{bla,bar}">{{bla}}{{bar}}</template> -->
+    <!-- 默认插槽用default做参数 -->
+    <!-- <template v-slot:default>abcdefg</template> -->
+    <!-- 具名插槽用插槽名做参数 -->
+    <!-- <template v-slot:content="{bla,bar}">{{bla}}{{bar}}</template> -->
     <!-- </HelloWorld> -->
     <!-- <CompCommunicate /> -->
     <!-- <SlotsTest></SlotsTest> -->
@@ -19,24 +23,28 @@ import HelloWorld from "./components/HelloWorld.vue";
 import CompCommunicate from "./components/communicate";
 import SlotsTest from "./components/slots";
 import Recursion from "./components/recursion";
-import FormTest from './components/form'
+import FormTest from "./components/form";
+import Tree from "./components/tree";
+import router from "./router";
 
 export default {
   name: "app",
+  router,
   provide() {
-    return { dong: this }
+    return { dong: this };
   },
   data() {
     return {
-      bla: 'blabla'
-    }
+      bla: "blabla"
+    };
   },
   components: {
     HelloWorld,
     CompCommunicate,
     SlotsTest,
     Recursion,
-    FormTest
+    FormTest,
+    Tree
   },
   created() {
     // 父组件先于子组件创建
@@ -44,7 +52,6 @@ export default {
   },
   mounted() {
     // this.$refs.hw.foo = "bar";
-
     // this.$children[0].foo = "dong";
   },
   methods: {
