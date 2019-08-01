@@ -78,7 +78,7 @@ VueRouter.install = function(_Vue) {
             // this是谁？ Vue组件实例
             // 但是这里只希望根组件执行一次
             if (this.$options.router) {
-                Vue.prototype.$router = this.$options.router;
+                // Vue.prototype.$router = this.$options.router;
                 this.$options.router.init();
             }
             

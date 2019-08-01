@@ -25,11 +25,9 @@ import SlotsTest from "./components/slots";
 import Recursion from "./components/recursion";
 import FormTest from "./components/form";
 import Tree from "./components/tree";
-import router from "./router";
 
 export default {
   name: "app",
-  router,
   provide() {
     return { dong: this };
   },
