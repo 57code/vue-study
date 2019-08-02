@@ -2,24 +2,15 @@
   <div>
     List
     <ul>
-      <li>
-        <router-link to="/detail/1">web全栈</router-link>
+      <li @click="$router.push({name:'detail', params: {id: '1'}})">
+        web全栈
       </li>
     </ul>
   </div>
 </template>
 
 <script>
-export default {
-  watch: {
-    $route() {
-      // [{name:'home'},{name:'list'}]
-      console.log(this.$route.matched);
-      // ['home','list']
-      //   this.crumbData = this.$route.matched.map(m => m.name);
-    }
-  }
-};
+export default {};
 </script>
 
 <style lang="scss" scoped>

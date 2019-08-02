@@ -13,9 +13,10 @@ const router = new Router({
     {
       path: "/",
       component: Home,
+      redirect: '/list',
       children: [
         { path: "/list", name: "list", component: List },
-        { path: "/detail/:id", component: Detail, props: true }
+        { path: "/detail/:id", name: 'detail', component: Detail }
       ]
     },
     {

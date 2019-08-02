@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <!-- 路由 -->
     <router-link to="/list">Home</router-link>
     <router-link to="/about">About</router-link>
     <router-view />
