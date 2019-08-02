@@ -53,21 +53,12 @@ export default {
       let notice;
 
       this.$refs.loginForm.validate(isValid => {
-        if (isValid) {
-          // alert('登录！！！')
-          notice = create(Notice, {
-            title: "xxx",
-            message: "登录！！！",
-            duration: 10000
-          });
-        } else {
-          // alert('有错！！')
-          notice = create(Notice, {
-            title: "xxx",
-            message: "有错！！！",
-            duration: 10000
-          });
-        }
+        notice = create(Notice, {
+          title: "xxx",
+          message: isValid ? "登录！！！" : "有错！！！",
+          duration: 10000
+        });
+
         notice.show();
       });
     }
