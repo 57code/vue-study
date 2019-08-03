@@ -1,9 +1,12 @@
 <template>
   <div id="app">
+    <!-- <VuexTest></VuexTest> -->
+    <KVuexTest></KVuexTest>
     <!-- 路由 -->
-    <router-link to="/list">Home</router-link>
+    <!-- <router-link to="/list">Home</router-link>
     <router-link to="/about">About</router-link>
     <router-view />
+    <comp></comp> -->
     <!-- <Tree></Tree> -->
     <!-- <FormTest /> -->
     <!-- <HelloWorld msg="Welcome to Your Vue.js App" ref="hw" @foo="onFoo($event)" /> -->
@@ -26,7 +29,8 @@ import SlotsTest from "./components/slots";
 import Recursion from "./components/recursion";
 import FormTest from "./components/form";
 import Tree from "./components/tree";
-
+import VuexTest from './components/VuexTest.vue';
+import KVuexTest from './components/KVuexTest.vue';
 export default {
   name: "app",
   provide() {
@@ -43,7 +47,9 @@ export default {
     SlotsTest,
     Recursion,
     FormTest,
-    Tree
+    Tree,
+    VuexTest,
+    KVuexTest,
   },
   created() {
     // 父组件先于子组件创建

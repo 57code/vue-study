@@ -13,6 +13,7 @@ const router = new Router({
     {
       path: "/",
       component: Home,
+      name: 'home',
       redirect: '/list',
       children: [
         { path: "/list", name: "list", component: List },
