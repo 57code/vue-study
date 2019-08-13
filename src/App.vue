@@ -1,12 +1,15 @@
 <template>
   <div id="app">
+    <router-view></router-view>
     <!-- <VuexTest></VuexTest> -->
-    <KVuexTest></KVuexTest>
+    <!-- <Icon icon-class="qq" class-name="myicon"></Icon>
+    <Icon icon-class="wx" class-name="myicon"></Icon> -->
+    <!-- <KVuexTest></!--> 
     <!-- 路由 -->
     <!-- <router-link to="/list">Home</router-link>
     <router-link to="/about">About</router-link>
     <router-view />
-    <comp></comp> -->
+    <comp></comp>-->
     <!-- <Tree></Tree> -->
     <!-- <FormTest /> -->
     <!-- <HelloWorld msg="Welcome to Your Vue.js App" ref="hw" @foo="onFoo($event)" /> -->
@@ -29,8 +32,8 @@ import SlotsTest from "./components/slots";
 import Recursion from "./components/recursion";
 import FormTest from "./components/form";
 import Tree from "./components/tree";
-import VuexTest from './components/VuexTest.vue';
-import KVuexTest from './components/KVuexTest.vue';
+import VuexTest from "./components/VuexTest.vue";
+import KVuexTest from "./components/KVuexTest.vue";
 export default {
   name: "app",
   provide() {
@@ -49,7 +52,7 @@ export default {
     FormTest,
     Tree,
     VuexTest,
-    KVuexTest,
+    KVuexTest
   },
   created() {
     // 父组件先于子组件创建
@@ -76,5 +79,9 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.myicon {
+  font-size: 20px;
+  color: green;
 }
 </style>

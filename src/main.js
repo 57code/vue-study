@@ -1,15 +1,15 @@
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
+import './permission';
 
 // import router from './krouter'
-import Bus from './plugins/bus'
+import Bus from "./plugins/bus";
 
-// import store from './store'
-import store from './store/kindex'
+import store from './store'
+// import store from "./store/kindex";
 
-
-
+import "./icons/";
 
 Vue.config.productionTip = false;
 Vue.use(Bus);
@@ -19,7 +19,7 @@ Vue.use(Bus);
 Vue.component("comp", {
   // template:'<div id="box" class="foo"><span>aaa</span></div>',
   render(h) {
-    return h('div', { class: { foo: true }, attrs: { id: "box" } }, [
+    return h("div", { class: { foo: true }, attrs: { id: "box" } }, [
       h("span", "aaa")
     ]);
   }
@@ -27,8 +27,6 @@ Vue.component("comp", {
   //   return <div id="box" class="foo"><span>aaa</span></div>
   // }
 });
-
-
 
 new Vue({
   router,
