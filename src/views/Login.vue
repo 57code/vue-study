@@ -17,7 +17,8 @@ export default {
     async login() {
       try {
         await this.$store.dispatch("user/login", { username: this.username });
-        this.$router.push({path: '/'});
+        const redirect = this.$route.query.redirect || '/';
+        this.$router.push(redirect);
       } catch (error) {
         alert(error);
       }
