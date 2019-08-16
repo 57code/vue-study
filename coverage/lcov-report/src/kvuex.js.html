@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/kvuex.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="..\prettify.css" />
+    <link rel="stylesheet" href="..\base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(..\sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="..\index.html">All files</a> / <a href="index.html">src</a> kvuex.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>0/17</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/9</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/7</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>0/17</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// 1.维护状态state
+// 2.修改状态commit
+// 3.业务逻辑控制dispatch
+// 4.状态派发getter
+// 5.实现state响应式
+// 6.插件
+// 7.混入
+&nbsp;
+let Vue;
+&nbsp;
+function <span class="fstat-no" title="function not covered" >install(_Vue) {</span>
+<span class="cstat-no" title="statement not covered" >  Vue = _Vue;</span>
+&nbsp;
+  // 混入：把store选项指定到Vue原型上
+<span class="cstat-no" title="statement not covered" >  Vue.mixin({</span>
+    beforeCreate() {
+<span class="cstat-no" title="statement not covered" >      if (this.$options.store) {</span>
+<span class="cstat-no" title="statement not covered" >        Vue.prototype.$store = this.$options.store;</span>
+      }
+    }
+  });
+}
+&nbsp;
+class Store {
+  // options:  {state:{count:0}, mutations: {count(state){}}}
+<span class="fstat-no" title="function not covered" >  constructor</span>(options = <span class="branch-0 cbranch-no" title="branch not covered" >{}) <span class="cstat-no" title="statement not covered" >{</span></span>
+    // 利用vue数据响应式
+<span class="cstat-no" title="statement not covered" >    this.state = new Vue({</span>
+      data: options.state
+    });
+&nbsp;
+    // 初始化mutaions
+<span class="cstat-no" title="statement not covered" >    this.mutations = options.mutations || {};</span>
+<span class="cstat-no" title="statement not covered" >    this.actions = options.actions || {};</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    options.getters &amp;&amp; this.handleGetters(options.getters)</span>
+  }
+&nbsp;
+  // 触发mutaions，需要实现commit
+  commit = <span class="fstat-no" title="function not covered" >(t</span>ype, arg) =&gt; {
+    // this指向Store实例
+    const fn = <span class="cstat-no" title="statement not covered" >this.mutations[type]; //获取变更函数</span>
+<span class="cstat-no" title="statement not covered" >    fn(this.state, arg);</span>
+  };
+&nbsp;
+  dispatch = <span class="fstat-no" title="function not covered" >(t</span>ype, arg) =&gt; {
+    const fn = <span class="cstat-no" title="statement not covered" >this.actions[type];</span>
+<span class="cstat-no" title="statement not covered" >    return fn({ commit: this.commit, state: this.state }, arg);</span>
+  }
+&nbsp;
+  // {getters: {score(state){return state.xx}}}
+<span class="fstat-no" title="function not covered" >  handleGetters</span>(getters) {
+<span class="cstat-no" title="statement not covered" >    this.getters = {}; // store实例上的getters</span>
+&nbsp;
+    // 定义只读的属性
+<span class="cstat-no" title="statement not covered" >    Object.keys(getters).forEach(<span class="fstat-no" title="function not covered" >key</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        Object.defineProperty(this.getters, key, {</span>
+            get: <span class="fstat-no" title="function not covered" >() =&gt; </span>{
+<span class="cstat-no" title="statement not covered" >                return getters[key](this.state);</span>
+            }
+        })
+    })
+  }
+}
+// Vuex
+export default { Store, install };
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Aug 15 2019 22:37:24 GMT+0800 (GMT+08:00)
+</div>
+</div>
+<script src="..\prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="..\sorter.js"></script>
+</body>
+</html>

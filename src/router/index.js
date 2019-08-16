@@ -18,6 +18,7 @@ export const constRoutes = [
     path: "/",
     component: Layout,// 应用布局
     redirect: "/home",
+    meta: {title:'主页'},
     children: [
       {
         path: "home",
@@ -28,7 +29,18 @@ export const constRoutes = [
             title: "Home", // 导航菜单项标题
             icon: "qq" // 导航菜单项图标
         }
+      },
+      {
+        path: "bla",
+        component: () =>
+          import(/* webpackChunkName: "home" */ "@/views/Home.vue"),
+        name: "bla",
+        meta: { 
+            title: "blabla", // 导航菜单项标题
+            icon: "wx" // 导航菜单项图标
+        }
       }
+
     ]
   }
 ];
@@ -49,6 +61,18 @@ export const asyncRoutes = [
             icon: "qq",
             // 角色决定将来那些用户可以看到该路由
             roles: ['admin', 'editor']
+        },
+      },
+      {
+        path: "foo",
+        component: () =>
+          import(/* webpackChunkName: "home" */ "@/views/About.vue"),
+        name: "foo",
+        meta: { 
+            title: "foo", 
+            icon: "wx",
+            // 角色决定将来那些用户可以看到该路由
+            roles: ['admin']
         },
       }
     ]

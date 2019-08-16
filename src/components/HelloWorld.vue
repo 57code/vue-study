@@ -1,7 +1,7 @@
 <template>
   <div class="hello" @click="$parent.$emit('mua')">
     <h1 @click="$emit('foo', 'bar')">{{ msg }}</h1>
-    {{foo}} - {{dong.bla}}
+    {{foo}} - <span>{{dong.bla}}</span>
 
     <!-- 匿名插槽 -->
     <slot></slot>

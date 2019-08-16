@@ -1,16 +1,21 @@
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
-import './permission';
+import "./permission";
 
 // import router from './krouter'
 import Bus from "./plugins/bus";
 
-import store from './store'
+import store from "./store";
+
 // import store from "./store/kindex";
 
 import "./icons/";
 
+import "./plugins/element.js";
+import permission from "@/directive/permission";
+
+Vue.directive("permission", permission);
 Vue.config.productionTip = false;
 Vue.use(Bus);
 // Vue.prototype.$bus = new Vue();

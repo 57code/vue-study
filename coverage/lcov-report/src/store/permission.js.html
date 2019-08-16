@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/store/permission.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="..\..\prettify.css" />
+    <link rel="stylesheet" href="..\..\base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(..\..\sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="..\..\index.html">All files</a> / <a href="index.html">src/store</a> permission.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>0/24</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/12</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/6</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>0/23</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80</td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { asyncRoutes, constRoutes } from "@/router";</span>
+&nbsp;
+/**
+ * 根据路由meta.role确定是否当前用户拥有访问权限
+ * @roles 用户拥有角色
+ * @route 待判定路由
+ */
+function <span class="fstat-no" title="function not covered" >hasPermission(roles, route) {</span>
+  // 如果当前路由有roles字段则需判断用户访问权限
+<span class="cstat-no" title="statement not covered" >  if (route.meta &amp;&amp; route.meta.roles) {</span>
+    // 若用户拥有的角色中有被包含在待判定路由角色表中的则拥有访问权
+<span class="cstat-no" title="statement not covered" >    return roles.some(<span class="fstat-no" title="function not covered" >role</span> =&gt; <span class="cstat-no" title="statement not covered" >route.meta.roles.includes(role));</span></span>
+  } else {
+    // 没有设置roles则无需判定即可访问
+<span class="cstat-no" title="statement not covered" >    return true;</span>
+  }
+}
+&nbsp;
+/**
+ * 递归过滤AsyncRoutes路由表
+ * @routes 待过滤路由表，首次传入的就是AsyncRoutes
+ * @roles 用户拥有角色
+ */
+export function <span class="fstat-no" title="function not covered" >filterAsyncRoutes(routes, roles) {</span>
+  const res = <span class="cstat-no" title="statement not covered" >[];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  routes.forEach(<span class="fstat-no" title="function not covered" >route</span> =&gt; {</span>
+    // 复制一份
+    const tmp = <span class="cstat-no" title="statement not covered" >{ ...route };</span>
+    // 如果用户有访问权则加入结果路由表
+<span class="cstat-no" title="statement not covered" >    if (hasPermission(roles, tmp)) {</span>
+      // 如果存在子路由则递归过滤之
+<span class="cstat-no" title="statement not covered" >      if (tmp.children) {</span>
+<span class="cstat-no" title="statement not covered" >        tmp.children = filterAsyncRoutes(tmp.children, roles);</span>
+      }
+<span class="cstat-no" title="statement not covered" >      res.push(tmp);</span>
+    }
+  });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  return res;</span>
+}
+&nbsp;
+const state = <span class="cstat-no" title="statement not covered" >{</span>
+  routes: [], // 完整路由表
+  addRoutes: [] // 用户可访问路由表
+};
+&nbsp;
+const mutations = <span class="cstat-no" title="statement not covered" >{</span>
+  SET_ROUTES: <span class="fstat-no" title="function not covered" >(s</span>tate, routes) =&gt; {
+    // 保存能够访问的动态路由
+<span class="cstat-no" title="statement not covered" >    state.addRoutes = routes;</span>
+    // 全部路由
+<span class="cstat-no" title="statement not covered" >    state.routes = constRoutes.concat(routes);</span>
+  }
+};
+&nbsp;
+const actions = <span class="cstat-no" title="statement not covered" >{</span>
+  // 路由生成：在得到用户角色后会第一时间调用
+  generateRoutes({ commit }, roles) {
+<span class="cstat-no" title="statement not covered" >    return new Promise(<span class="fstat-no" title="function not covered" >resolve</span> =&gt; {</span>
+      let accessedRoutes;
+      //   用户是管理员则拥有完整访问权限
+<span class="cstat-no" title="statement not covered" >      if (roles.includes("admin")) {</span>
+<span class="cstat-no" title="statement not covered" >        accessedRoutes = asyncRoutes || [];</span>
+      } else {
+        //   否则需要根据角色做过滤处理
+<span class="cstat-no" title="statement not covered" >        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles);</span>
+      }
+<span class="cstat-no" title="statement not covered" >      commit("SET_ROUTES", accessedRoutes);</span>
+<span class="cstat-no" title="statement not covered" >      resolve(accessedRoutes);</span>
+    });
+  }
+};
+&nbsp;
+export default {
+  namespaced: true,
+  state,
+  mutations,
+  actions
+};</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Aug 15 2019 22:37:24 GMT+0800 (GMT+08:00)
+</div>
+</div>
+<script src="..\..\prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="..\..\sorter.js"></script>
+</body>
+</html>
