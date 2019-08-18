@@ -1,12 +1,11 @@
 <template>
   <div id="app">
-    <img :src="logo" alt="vue">
+    <img src="./assets/logo.png" alt="vue">
     <HelloWorld msg="Hello, Vue"></HelloWorld>
   </div>
 </template>
 
 <script>
-import logo from '@/assets/logo.png'
 import HelloWorld from "./components/HelloWorld.vue";
 
 export default {
