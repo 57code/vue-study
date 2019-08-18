@@ -1,25 +1,18 @@
 <template>
   <div id="app">
-    <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-    <!-- <CompCommunicate /> --> 
-    <!-- <SlotsTest></SlotsTest> -->
-    <Recursion></Recursion>
+    <img :src="logo" alt="vue">
+    <HelloWorld msg="Hello, Vue"></HelloWorld>
   </div>
 </template>
 
 <script>
+import logo from '@/assets/logo.png'
 import HelloWorld from "./components/HelloWorld.vue";
-import CompCommunicate from "./components/communicate";
-import SlotsTest from "./components/slots";
-import Recursion from "./components/recursion";
 
 export default {
   name: "app",
   components: {
     HelloWorld,
-    CompCommunicate,
-    SlotsTest,
-    Recursion
   }
 };
 </script>
