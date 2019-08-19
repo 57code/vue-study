@@ -1,18 +1,16 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png" alt="vue">
-    <HelloWorld msg="Hello, Vue"></HelloWorld>
+    <nav>
+      <router-link to="/">首页</router-link>
+      <router-link to="/detail">详情页</router-link>
+    </nav>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
-
 export default {
   name: "app",
-  components: {
-    HelloWorld,
-  }
 };
 </script>
 
