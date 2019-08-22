@@ -14,7 +14,8 @@
     "express": "^4.17.1",
     "vue": "^2.6.10",
     "vue-router": "^3.1.2",
-    "vue-server-renderer": "^2.6.10"
+    "vue-server-renderer": "^2.6.10",
+    "vuex": "^3.1.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.2.0",
