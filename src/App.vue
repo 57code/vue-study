@@ -1,17 +1,17 @@
 <template>
   <div id="app">
-    <nav>
-      <router-link to="/">首页</router-link>
-      <router-link to="/detail">详情页</router-link>
-    </nav>
-    <router-view></router-view>
+    <HelloWorld msg="Hello, Vue!"></HelloWorld>
   </div>
 </template>
 
 <script>
+import HelloWorld from '@/components/HelloWorld.vue'
+
 export default {
-  name: "app",
-};
+  components: {
+    HelloWorld
+  },
+}
 </script>
 
 <style>
