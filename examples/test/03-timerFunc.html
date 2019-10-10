@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Vue源码剖析</title>
+    <script src="../../dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="demo">
+        <h1>异步更新</h1>
+        <p id="p1">{{foo}}</p>
+    </div>
+    <script>
+        // 创建实例
+        const app = new Vue({
+            el: '#demo',
+            data: { foo: '' },
+            mounted() {
+                setInterval(() => {                    
+                    this.foo = Math.random()
+                    this.foo = Math.random()
+                    this.foo = Math.random()
+                    console.log(p1.innerHTML)
+                    this.$nextTick(() => {
+                        console.log(p1.innerHTML)
+                    })
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+
+</html>

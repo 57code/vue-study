@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Vue源码剖析</title>
+    <script src="../../dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="demo">
+        <h1>数据响应化</h1>
+        <div v-for="a in arr" :key="a">
+            {{ a }}
+        </div>
+    </div>
+    <script>
+        // 创建实例
+        const app = new Vue({
+            el: '#demo',
+            data: { arr: ['foo', 'bar'] },
+            mounted() {
+                setTimeout(() => {
+                    this.arr.push('baz')
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+
+</html>
