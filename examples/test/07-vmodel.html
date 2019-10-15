@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Vue事件处理</title>
+</head>
+
+<body>
+    <div id="demo">
+        <h1>双向绑定机制</h1>
+        <!--表单控件绑定-->
+        <input type="text" v-model="foo">
+        <!--自定义事件-->
+        <comp v-model="foo"></comp>
+    </div>
+    <script src="../../dist/vue.js"></script>
+    <script>
+        // 声明自定义组件
+        Vue.component('comp', {
+            template: `
+                <input type="text" :value="$attrs.value"
+                    @input="$emit('input', $event.target.value)">
+            `
+        })
+        // 创建实例
+        const app = new Vue({
+            el: '#demo',
+            data: { foo: 'foo' }
+        });
+
+        console.log(app.$options.render);
+        
+    </script>
+</body>
+
+</html>
