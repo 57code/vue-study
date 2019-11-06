@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Vue事件处理</title>
+</head>
+
+<body>
+    <div id="demo">
+        <h1>事件处理机制</h1>
+        <!--普通事件-->
+        <p @click="onClick">this is p</p>
+        <!--自定义事件-->
+        <comp @myclick="onMyClick"></comp>
+    </div>
+    <script src="../../dist/vue.js"></script>
+    <script>
+        // 声明自定义组件
+        Vue.component('comp', {
+            template: `
+                <div @click="onClick">this is comp</div>
+            `,
+            methods: {
+                onClick() {
+                    this.$emit('myclick')
+                }
+            }
+        })
+        // 创建实例
+        const app = new Vue({
+            el: '#demo',
+            methods: {
+                onClick() {
+                    console.log('普通事件');
+                },
+                onMyClick() {
+                    console.log('自定义事件');
+                }
+            },
+        });
+        console.log(app.$options.render);
+        
+    </script>
+</body>
+</html>
