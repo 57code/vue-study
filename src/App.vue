@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <img :src="`${publicPath}assets/logo.png`" />
+
     <message ref="msgSuccess" class="success">
       <!-- 命名为title插槽内容 -->
       <template v-slot:title="slotProps">
@@ -40,7 +42,8 @@ export default {
     return {
       title: "开课吧购物车",
       course: "",
-      courses: []
+      courses: [],
+      publicPath: process.env.BASE_URL
     };
   },
   async created() {
@@ -68,7 +71,10 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+a {
+  color: $color;
+}
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -84,5 +90,11 @@ export default {
   vertical-align: -0.15em;
   fill: currentColor;
   overflow: hidden;
+}
+
+#app {
+  /deep/ .inp {
+    border: 1px solid #2687e7
+  }  
 }
 </style>
