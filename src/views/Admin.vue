@@ -35,6 +35,7 @@ import Message from "@/components/Message.vue";
 import { getCourses } from "@/api/course";
 
 export default {
+  name: 'admin',
   components: {
     CourseList,
     CourseAdd,
@@ -69,6 +70,20 @@ export default {
         this.$refs.msgWarning.toggle();
       }
     }
+  },
+  activated() {
+    console.log('activated');
+    
+  },
+  deactivated() {
+    console.log('deactivated');
   }
-}
+  // beforeRouteEnter(to, from, next) {
+  //   if (window.isLogin) {
+  //     next();
+  //   } else {
+  //     next("/login?redirect=" + to.fullPath);
+  //   }
+  // }
+};
 </script>

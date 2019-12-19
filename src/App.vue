@@ -6,7 +6,9 @@
     </nav>
 
     <!-- 路由出口 -->
-    <router-view></router-view>
+    <keep-alive include="admin">
+      <router-view></router-view>
+    </keep-alive>
   </div>
 </template>
 
