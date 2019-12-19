@@ -9,13 +9,18 @@
               {{ c }}
     </div>-->
     <!-- style -->
-    <div class="course-list" v-else>
+    <div :class="['course-list', $style.red]" v-else>
       <div
         v-for="c in courses"
         :key="c.name"
-        :style="{backgroundColor: (selectedCourse === c ? '#ddd' : 'transparent')}"
-        @click="selectedCourse = c"
-      >{{ c.name }} - {{ c.price | currency('￥') }}</div>
+        :class="{[$style.active]: selectedCourse === c}"
+        @click="onClick(c)"
+      >
+        {{ c.name }} - {{ c.price | currency('￥') }}
+        <!-- <router-link :to="`/admin/course/${c.name}`">
+          {{ c.name }} - {{ c.price | currency('￥') }}
+        </router-link>-->
+      </div>
     </div>
   </div>
 </template>
@@ -39,12 +44,26 @@ export default {
     currency(value, symbol = "￥") {
       return symbol + value;
     }
+  },
+  methods: {
+    onClick(c) {
+      this.selectedCourse = c;
+      // this.$router.push(`/admin/course/${c.name}`)
+      this.$router.push({
+        name: "detail",
+        params: { name: c.name }
+      });
+    }
   }
 };
 </script>
 
-<style scoped>
+<style module>
 .active {
   background-color: #ddd;
+}
+
+.red {
+  color: #f00;
 }
 </style>
