@@ -10,6 +10,8 @@
       </span>
     </nav>
 
+    <form-test></form-test>
+
     <!-- 路由出口 -->
     <keep-alive include="admin">
       <router-view></router-view>
@@ -18,14 +20,17 @@
 </template>
 
 <script>
-import {mapState, mapGetters} from 'vuex'
-
+import { mapState, mapGetters } from "vuex";
+import FormTest from "@/components/FormTest.vue";
 export default {
   name: "app",
   computed: {
-    ...mapState('user', ['isLogin']),
-    ...mapGetters('user', ['welcome']),
+    ...mapState("user", ["isLogin"]),
+    ...mapGetters("user", ["welcome"])
   },
+  components: {
+    FormTest
+  }
 };
 </script>
 
@@ -52,7 +57,7 @@ a {
 
 #app {
   /deep/ .inp {
-    border: 1px solid #2687e7
-  }  
+    border: 1px solid #2687e7;
+  }
 }
 </style>
