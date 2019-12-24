@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import Notice from '@/components/Notice.vue';
+
 export default {
   data() {
     return {
@@ -30,7 +32,11 @@ export default {
     login() {
       this.$refs["loginForm"].validate(valid => {
         if (valid) {
-          alert("submit");
+          // alert("submit");
+          this.$create(Notice, {
+            title: 'submit',
+            message: 'submit'
+          }).show()
         } else {
           console.log("error submit!");
           return false;
