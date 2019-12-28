@@ -1,10 +1,13 @@
 <template>
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
     <!-- <communication></communication> -->
     <!-- <slot-example></slot-example> -->
     <!-- <form-example></form-example> -->
+    <p @click="$store.commit('add')">counter: {{$store.state.counter}}</p>
+    <p @click="asyncAdd">async counter: {{$store.state.counter}}</p>
+    <p>double：{{$store.getters.doubleCounter}}</p>
   </div>
 </template>
 
@@ -22,6 +25,11 @@ export default {
     communication,
     SlotExample,
     FormExample
-  }
+  },
+  methods: {
+    asyncAdd() {
+      this.$store.dispatch('add').then(()=>alert('add!!'))
+    }
+  },
 }
 </script>
