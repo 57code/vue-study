@@ -23,6 +23,9 @@
       onInput(e) {
         // 派发一个input事件即可
         this.$emit('input', e.target.value)
+
+        // 通知父级执行校验
+        this.$parent.$emit('validate')
       }
     },
   }
