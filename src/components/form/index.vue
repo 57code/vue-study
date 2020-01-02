@@ -25,7 +25,7 @@ import ElementTest from "@/components/form/ElementTest.vue";
 import KInput from "@/components/form/KInput.vue";
 import KFormItem from "@/components/form/KFormItem.vue";
 import KForm from "@/components/form/KForm.vue";
-import Notice from "@/components/Notice.vue";
+// import Notice from "@/components/Notice.vue";
 
 export default {
   data() {
@@ -49,7 +49,7 @@ export default {
   methods: {
     login() {
       this.$refs["loginForm"].validate(valid => {
-        const notice = this.$create(Notice, {
+        const notice = this.$notice({
           title: "社会你杨哥喊你来搬砖",
           message: valid ? "请求登录!" : "校验失败!",
           duration: 2000
