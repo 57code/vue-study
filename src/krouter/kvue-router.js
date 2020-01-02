@@ -1,3 +1,6 @@
+import Link from './krouter-link'
+import View from './krouter-view'
+
 let Vue;
 
 // 1.实现一个插件：挂载$router
@@ -5,13 +8,32 @@ let Vue;
 class KVueRouter {
   constructor(options) {
     this.$options = options
+    console.log(this.$options);
+    
 
     // 需要创建响应式的current属性
+    // 利用Vue提供的defineReactive做响应化
+    // 这样将来current变化的时候，依赖的组件会重新render
     Vue.util.defineReactive(this, 'current', '/')
 
+    // this.app = new Vue({
+    //   data() {
+    //     return {
+    //       current: '/'
+    //     }
+    //   }
+    // })
+    
     // 监控url变化
     window.addEventListener('hashchange', this.onHashChange.bind(this))
     window.addEventListener('load', this.onHashChange.bind(this))
+
+
+    // 创建一个路由映射表
+    this.routeMap = {}
+    options.routes.forEach(route => {
+      this.routeMap[route.path] = route
+    })
   }
 
   onHashChange() {
@@ -39,34 +61,8 @@ KVueRouter.install = function (_Vue) {
 
 
   // 任务2：实现两个全局组件router-link和router-view
-  Vue.component('router-link', {
-    props: {
-      to: {
-        type: String,
-        required: true
-      },
-    },
-    render(h) {
-      // <a href="#/about">abc</a>
-      // <router-link to="/about">xxx</router-link>
-      // h(tag, data, children)
-      console.log(this.$slots);
-      return h('a', { attrs: { href: '#' + this.to } }, this.$slots.default)
-      // return <a href={'#' + this.to}>{this.$slots.default}</a>
-    }
-  })
-  Vue.component('router-view', {
-    render(h) {
-      //获取path对应的component
-      let component = null;
-      this.$router.$options.routes.forEach(route => {
-        if (route.path === this.$router.current) {
-          component = route.component
-        }
-      })
-      return h(component)
-    }
-  })
+  Vue.component('router-link', Link)
+  Vue.component('router-view', View)
 }
 
 export default KVueRouter
