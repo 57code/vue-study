@@ -1,6 +1,6 @@
 /*!
  * Vue.js v2.6.10
- * (c) 2014-2019 Evan You
+ * (c) 2014-2020 Evan You
  * Released under the MIT License.
  */
 (function (global, factory) {
@@ -3492,6 +3492,7 @@
     vm._c = function (a, b, c, d) { return createElement(vm, a, b, c, d, false); };
     // normalization is always applied for the public version, used in
     // user-written render functions.
+    // render(h) 此处的$createElement就是h
     vm.$createElement = function (a, b, c, d) { return createElement(vm, a, b, c, d, true); };
 
     // $attrs & $listeners are exposed for easier HOC creation.
@@ -4969,6 +4970,7 @@
 
       // a flag to avoid this being observed
       vm._isVue = true;
+      // 合并选项
       // merge options
       if (options && options._isComponent) {
         // optimize internal component instantiation
@@ -4987,14 +4989,15 @@
         initProxy(vm);
       }
       // expose real self
+      // 
       vm._self = vm;
-      initLifecycle(vm);
-      initEvents(vm);
-      initRender(vm);
-      callHook(vm, 'beforeCreate');
-      initInjections(vm); // resolve injections before data/props
-      initState(vm);
-      initProvide(vm); // resolve provide after data/props
+      initLifecycle(vm);  // $parent, $root, $children, $refs
+      initEvents(vm);     // 对父组件传入事件添加监听
+      initRender(vm);     // 声明$slots,$createElement()
+      callHook(vm, 'beforeCreate'); // 调用beforeCreate钩子
+      initInjections(vm); // 注入数据
+      initState(vm);      // 重要：数据初始化，响应式
+      initProvide(vm); // 提供数据
       callHook(vm, 'created');
 
       /* istanbul ignore if */
@@ -5066,16 +5069,18 @@
     return modified
   }
 
+  // 构造函数
   function Vue (options) {
     if (
       !(this instanceof Vue)
     ) {
       warn('Vue is a constructor and should be called with the `new` keyword');
     }
+    // 初始化
     this._init(options);
   }
 
-  initMixin(Vue);
+  initMixin(Vue);  // 通过该方法给Vue添加_init方法
   stateMixin(Vue);
   eventsMixin(Vue);
   lifecycleMixin(Vue);
@@ -5422,6 +5427,7 @@
     initAssetRegisters(Vue);
   }
 
+  // 定义全局api
   initGlobalAPI(Vue);
 
   Object.defineProperty(Vue.prototype, '$isServer', {
@@ -9033,14 +9039,17 @@
   extend(Vue.options.components, platformComponents);
 
   // install platform patch function
+  // 指定补丁方法：传入虚拟dom转换为真实dom
   Vue.prototype.__patch__ = inBrowser ? patch : noop;
 
   // public mount method
+  // 实现$mount
   Vue.prototype.$mount = function (
     el,
     hydrating
   ) {
     el = el && inBrowser ? query(el) : undefined;
+    // 初始化，将首次渲染结果替换el
     return mountComponent(this, el, hydrating)
   };
 
@@ -11880,7 +11889,9 @@
     return el && el.innerHTML
   });
 
+  // 保存原来的$mount
   var mount = Vue.prototype.$mount;
+  // 覆盖默认$mount
   Vue.prototype.$mount = function (
     el,
     hydrating
@@ -11895,10 +11906,12 @@
       return this
     }
 
+    // 解析option
     var options = this.$options;
     // resolve template/el and convert to render function
     if (!options.render) {
       var template = options.template;
+      // 模板解析 
       if (template) {
         if (typeof template === 'string') {
           if (template.charAt(0) === '#') {
@@ -11922,12 +11935,14 @@
       } else if (el) {
         template = getOuterHTML(el);
       }
+      // 如果存在模板，执行编译
       if (template) {
         /* istanbul ignore if */
         if ( config.performance && mark) {
           mark('compile');
         }
 
+        // 编译得到渲染函数
         var ref = compileToFunctions(template, {
           outputSourceRange: "development" !== 'production',
           shouldDecodeNewlines: shouldDecodeNewlines,
@@ -11947,6 +11962,7 @@
         }
       }
     }
+    // 执行挂载
     return mount.call(this, el, hydrating)
   };
 

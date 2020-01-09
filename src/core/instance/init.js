@@ -28,6 +28,7 @@ export function initMixin (Vue: Class<Component>) {
 
     // a flag to avoid this being observed
     vm._isVue = true
+    // 合并选项
     // merge options
     if (options && options._isComponent) {
       // optimize internal component instantiation
@@ -48,14 +49,15 @@ export function initMixin (Vue: Class<Component>) {
       vm._renderProxy = vm
     }
     // expose real self
+    // 
     vm._self = vm
-    initLifecycle(vm)
-    initEvents(vm)
-    initRender(vm)
-    callHook(vm, 'beforeCreate')
-    initInjections(vm) // resolve injections before data/props
-    initState(vm)
-    initProvide(vm) // resolve provide after data/props
+    initLifecycle(vm)  // $parent, $root, $children, $refs
+    initEvents(vm)     // 对父组件传入事件添加监听
+    initRender(vm)     // 声明$slots,$createElement()
+    callHook(vm, 'beforeCreate') // 调用beforeCreate钩子
+    initInjections(vm) // 注入数据
+    initState(vm)      // 重要：数据初始化，响应式
+    initProvide(vm) // 提供数据
     callHook(vm, 'created')
 
     /* istanbul ignore if */
