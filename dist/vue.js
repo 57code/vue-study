@@ -857,7 +857,9 @@
    * dynamically accessing methods on Array prototype
    */
 
+  // 获取数组原型
   var arrayProto = Array.prototype;
+  // 备份
   var arrayMethods = Object.create(arrayProto);
 
   var methodsToPatch = [
@@ -873,6 +875,7 @@
   /**
    * Intercept mutating methods and emit events
    */
+  // 覆盖7个方法
   methodsToPatch.forEach(function (method) {
     // cache original method
     var original = arrayProto[method];
@@ -880,8 +883,11 @@
       var args = [], len = arguments.length;
       while ( len-- ) args[ len ] = arguments[ len ];
 
+      // 执行原定任务
       var result = original.apply(this, args);
+      // 通知
       var ob = this.__ob__;
+      // 如果操作是插入操作，还需要额外响应化处理
       var inserted;
       switch (method) {
         case 'push':
@@ -919,19 +925,29 @@
    * object's property keys into getter/setters that
    * collect dependencies and dispatch updates.
    */
+  // 每一个响应式对象都会有一个ob
   var Observer = function Observer (value) {
     this.value = value;
+    // 为什么在Observer里面声明dep？
+    // object里面新增或者删除属性
+    // array中有变更方法
     this.dep = new Dep();
     this.vmCount = 0;
+    // 设置一个__ob__属性引用当前Observer实例
     def(value, '__ob__', this);
+
+    // 判断类型
     if (Array.isArray(value)) {
+      // 替换数组对象原型
       if (hasProto) {
         protoAugment(value, arrayMethods);
       } else {
         copyAugment(value, arrayMethods, arrayKeys);
       }
+      // 如果数组里面元素是对象还需要做响应化处理
       this.observeArray(value);
     } else {
+      // 对象直接处理
       this.walk(value);
     }
   };
@@ -990,6 +1006,8 @@
     if (!isObject(value) || value instanceof VNode) {
       return
     }
+
+    // 观察者，已经存在直接返回，否则创建新的实例
     var ob;
     if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
       ob = value.__ob__;
@@ -1018,6 +1036,7 @@
     customSetter,
     shallow
   ) {
+    // 和key一一对应
     var dep = new Dep();
 
     var property = Object.getOwnPropertyDescriptor(obj, key);
@@ -1032,14 +1051,19 @@
       val = obj[key];
     }
 
+    // 属性拦截，只要是对象类型均会返回childOb
     var childOb = !shallow && observe(val);
     Object.defineProperty(obj, key, {
       enumerable: true,
       configurable: true,
       get: function reactiveGetter () {
+        // 获取key对应的值
         var value = getter ? getter.call(obj) : val;
+        // 如果存在依赖
         if (Dep.target) {
+          // 收集依赖
           dep.depend();
+          // 如果存在子ob，子ob也收集这个依赖
           if (childOb) {
             childOb.dep.depend();
             if (Array.isArray(value)) {
@@ -1066,7 +1090,9 @@
         } else {
           val = newVal;
         }
+        // 如果新值是对象，也要做响应化
         childOb = !shallow && observe(newVal);
+        // 通知更新
         dep.notify();
       }
     });
@@ -4631,8 +4657,10 @@
   function initState (vm) {
     vm._watchers = [];
     var opts = vm.$options;
+    // 属性初始化
     if (opts.props) { initProps(vm, opts.props); }
     if (opts.methods) { initMethods(vm, opts.methods); }
+    // 数据响应式
     if (opts.data) {
       initData(vm);
     } else {
@@ -4706,6 +4734,7 @@
       );
     }
     // proxy data on instance
+    // 代理这些数据到实例上
     var keys = Object.keys(data);
     var props = vm.$options.props;
     var methods = vm.$options.methods;
@@ -4727,10 +4756,12 @@
           vm
         );
       } else if (!isReserved(key)) {
+        // 代理
         proxy(vm, "_data", key);
       }
     }
     // observe data
+    // 响应式操作
     observe(data, true /* asRootData */);
   }
 
@@ -5081,10 +5112,10 @@
   }
 
   initMixin(Vue);  // 通过该方法给Vue添加_init方法
-  stateMixin(Vue);
-  eventsMixin(Vue);
-  lifecycleMixin(Vue);
-  renderMixin(Vue);
+  stateMixin(Vue); // $set,$delete,$watch
+  eventsMixin(Vue); // $emit,$on,$off,$once
+  lifecycleMixin(Vue); // _update(),$forceUpdate(),$destroy()
+  renderMixin(Vue);  // _render(), $nextTick
 
   /*  */
 
