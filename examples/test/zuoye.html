@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Vue事件处理</title>
+</head>
+
+<body>
+    <div id="demo">
+        <h1>set/del</h1>
+        <p>{{obj.foo}}</p>
+    </div>
+    <script src="../../dist/vue.js"></script>
+    <script>
+        // 创建实例
+        const app = new Vue({
+            el: '#demo',
+            data() {
+                return {
+                    obj: {}
+                }
+            },
+            created () {
+                setTimeout(() => {
+                    Vue.set(this.obj,'foo','foooooooooo')
+                }, 1000);;
+            },
+        });
+        
+    </script>
+</body>
+</html>

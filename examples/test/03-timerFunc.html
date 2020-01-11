@@ -15,7 +15,7 @@
         // 创建实例
         const app = new Vue({
             el: '#demo',
-            data: { foo: '' },
+            data: { foo: 'ready' },
             mounted() {
                 setInterval(() => {                    
                     this.foo = Math.random()
@@ -25,7 +25,7 @@
                     this.$nextTick(() => {
                         console.log(p1.innerHTML)
                     })
-                }, 1000);
+                }, 3000);
             }
         });
     </script>

@@ -347,6 +347,8 @@ export function stateMixin (Vue: Class<Component>) {
   Vue.prototype.$set = set
   Vue.prototype.$delete = del
 
+  // unwatch = vm.$watch('$route', function(newVal){})
+  // vm.$watch('$route', {。。。})
   Vue.prototype.$watch = function (
     expOrFn: string | Function,
     cb: any,
