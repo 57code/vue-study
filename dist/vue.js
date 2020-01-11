@@ -1967,6 +1967,7 @@
   if (typeof Promise !== 'undefined' && isNative(Promise)) {
     var p = Promise.resolve();
     timerFunc = function () {
+      // 启动一个微任务
       p.then(flushCallbacks);
       // In problematic UIWebViews, Promise.then doesn't completely break, but
       // it can get stuck in a weird state where callbacks are pushed into the
@@ -2024,6 +2025,7 @@
     });
     if (!pending) {
       pending = true;
+      // 异步函数
       timerFunc();
     }
     // $flow-disable-line
@@ -4084,6 +4086,7 @@
         measure(("vue " + name + " patch"), startTag, endTag);
       };
     } else {
+      // 用户$mount()时，定义updateComponent
       updateComponent = function () {
         vm._update(vm._render(), hydrating);
       };
@@ -4400,6 +4403,8 @@
    */
   function queueWatcher (watcher) {
     var id = watcher.id;
+
+    // 去重，不存在才入队
     if (has[id] == null) {
       has[id] = true;
       if (!flushing) {
@@ -4421,6 +4426,7 @@
           flushSchedulerQueue();
           return
         }
+        // 异步刷新队列
         nextTick(flushSchedulerQueue);
       }
     }
