@@ -4956,6 +4956,8 @@
     Vue.prototype.$set = set;
     Vue.prototype.$delete = del;
 
+    // unwatch = vm.$watch('$route', function(newVal){})
+    // vm.$watch('$route', {。。。})
     Vue.prototype.$watch = function (
       expOrFn,
       cb,
