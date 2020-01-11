@@ -484,9 +484,11 @@ export function createPatchFunction (backend) {
 
     // 整理工作：必定有数组还剩下的元素未处理
     if (oldStartIdx > oldEndIdx) {
+      // 老的结束了，这种情况说明新的数组里还有剩下的节点
       refElm = isUndef(newCh[newEndIdx + 1]) ? null : newCh[newEndIdx + 1].elm
       addVnodes(parentElm, refElm, newCh, newStartIdx, newEndIdx, insertedVnodeQueue)
     } else if (newStartIdx > newEndIdx) {
+      // 新的结束了，此时删除老数组中剩下的即可
       removeVnodes(oldCh, oldStartIdx, oldEndIdx)
     }
   }
