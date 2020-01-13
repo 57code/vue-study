@@ -7,8 +7,8 @@
 
 <body>
     <div id="demo">
-        <h1>set/del</h1>
-        <p>{{obj.foo}}</p>
+        <h1>attr update</h1>
+        <p :title="foo">{{foo}}</p>
     </div>
     <script src="../../dist/vue.js"></script>
     <script>
@@ -17,12 +17,12 @@
             el: '#demo',
             data() {
                 return {
-                    obj: {}
+                    foo: 'foo'
                 }
             },
             created () {
                 setTimeout(() => {
-                    Vue.set(this.obj,'foo','foooooooooo')
+                    this.foo = 'fooooooooooooooooo'
                 }, 1000);;
             },
         });

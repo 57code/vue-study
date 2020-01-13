@@ -73,10 +73,14 @@ export function createPatchFunction (backend) {
 
   const { modules, nodeOps } = backend
 
+  // 循环modules
   for (i = 0; i < hooks.length; ++i) {
+    // cbs['create']=[]
     cbs[hooks[i]] = []
     for (j = 0; j < modules.length; ++j) {
+      // 如果存在对应钩子函数
       if (isDef(modules[j][hooks[i]])) {
+        // cbs['create']=[attrFn,classFn]
         cbs[hooks[i]].push(modules[j][hooks[i]])
       }
     }
@@ -575,6 +579,7 @@ export function createPatchFunction (backend) {
 
     // 属性更新 <div style="color:blue">  <div style="color:red">
     if (isDef(data) && isPatchable(vnode)) {
+      // cbs中关于属性更新的数组拿出来[attrFn,classFn,...]
       for (i = 0; i < cbs.update.length; ++i) cbs.update[i](oldVnode, vnode)
       if (isDef(i = data.hook) && isDef(i = i.update)) i(oldVnode, vnode)
     }
