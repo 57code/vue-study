@@ -10,6 +10,7 @@
     <div id="demo">
         <h1>Vue<span>模板编译</span></h1>
         <p v-if="foo">{{foo}}</p>
+        <b v-for="s in arr" :key="s">{{s}}</b>
         <comp @myclick="onMyClick"></comp>
         <input type="text" v-model="foo">
     </div>
@@ -20,12 +21,13 @@
         // 创建实例
         const app = new Vue({
             el: '#demo',
-            data: {foo:'foo'},
+            data: { foo: 'foo',arr:[1,2] },
             methods: {
                 onMyClick() {
-                    
+
                 }
             },
+
         });
         // 输出render函数
         console.log(app.$options.render);
