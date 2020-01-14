@@ -53,6 +53,8 @@ export function initGlobalAPI (Vue: GlobalAPI) {
 
   Vue.options = Object.create(null)
   ASSET_TYPES.forEach(type => {
+    // 三个空对象创建
+    // Vue.options['components']={}
     Vue.options[type + 's'] = Object.create(null)
   })
 
