@@ -201,6 +201,11 @@ export function parse (
     }
   }
 
+
+  // 核心代码：解析HTML
+  // <div id="demo">
+  //   <p></p>
+  // </div>
   parseHTML(template, {
     warn,
     expectHTML: options.expectHTML,
@@ -210,6 +215,7 @@ export function parse (
     shouldDecodeNewlinesForHref: options.shouldDecodeNewlinesForHref,
     shouldKeepComment: options.comments,
     outputSourceRange: options.outputSourceRange,
+    // 遇到开始标签执行start
     start (tag, attrs, unary, start, end) {
       // check namespace.
       // inherit parent ns if there is one
@@ -221,6 +227,7 @@ export function parse (
         attrs = guardIESVGBug(attrs)
       }
 
+      // 遇到开始标签，就创建一个ast对象
       let element: ASTElement = createASTElement(tag, attrs, currentParent)
       if (ns) {
         element.ns = ns
@@ -273,6 +280,8 @@ export function parse (
       if (platformIsPreTag(element.tag)) {
         inPre = true
       }
+
+      // 关键指令解析
       if (inVPre) {
         processRawAttrs(element)
       } else if (!element.processed) {
