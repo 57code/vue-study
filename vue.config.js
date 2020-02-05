@@ -7,16 +7,47 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
+const bodyParser = require("body-parser");
+
 module.exports = {
   publicPath: '/best-practice', // 部署应用包时的基本 URL
   devServer: {
     port: port,
+    before: app => {
+      app.use(bodyParser.json());
+
+      app.post("/dev-api/user/login", (req, res) => {
+        const { username } = req.body;
+
+        if (username === "admin" || username === "jerry") {
+          res.json({
+            code: 1,
+            data: username
+          });
+        } else {
+          res.json({
+            code: 10204,
+            message: "用户名或密码错误"
+          });
+        }
+      });
+
+      app.get("/dev-api/user/info", (req, res) => {
+        const auth = req.headers["authorization"];
+        const roles = auth.split(' ')[1] === "admin" ? ["admin"] : ["editor"];
+        res.json({
+          code: 1,
+          data: roles
+        });
+      });
+    }
   },
+
   configureWebpack: {
     // 向index.html注入标题
     name: title,
   },
-  chainWebpack(config){
+  chainWebpack(config) {
     config.module.rule('svg')
       .exclude.add(resolve('./src/icons'))
 
@@ -25,7 +56,7 @@ module.exports = {
       .include.add(resolve('./src/icons')).end()
       .use('svg-sprite-loader')
       .loader('svg-sprite-loader')
-        .options({symbolId: 'icon-[name]'})      
-      
+      .options({ symbolId: 'icon-[name]' })
+
   }
 };

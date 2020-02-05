@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "async-validator": "^3.2.3",
+    "axios": "^0.19.2",
     "core-js": "^3.4.3",
     "element-ui": "^2.4.5",
     "vue": "^2.6.10",
@@ -22,6 +23,7 @@
     "@vue/cli-plugin-vuex": "^4.1.2",
     "@vue/cli-service": "^4.1.0",
     "babel-eslint": "^10.0.3",
+    "body-parser": "^1.19.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "svg-sprite-loader": "^4.2.1",
