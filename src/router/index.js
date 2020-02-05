@@ -1,31 +1,44 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Vue from "vue";
+import Router from "vue-router";
 
-// 1.应用插件
-Vue.use(VueRouter)
+Vue.use(Router);
 
-const routes = [
+// 通用页面：不需要守卫，可直接访问
+export const constRoutes = [
   {
-    path: '/',
-    name: 'home',
-    component: Home
+    path: "/login",
+    component: () => import("@/views/Login"),
+    hidden: true // 导航菜单忽略该项
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: "/",
+    component: () =>
+      import(/* webpackChunkName: "home" */ "@/views/Home.vue"),
+    name: "home",
+    meta: {
+      title: "Home", // 导航菜单项标题
+      icon: "qq" // 导航菜单项图标
+    }
   }
-]
+];
 
-// 2.创建实例
-const router = new VueRouter({
-  mode: 'history',
+// 权限页面：受保护页面，要求用户登录并拥有访问权限的角色才能访问
+export const asyncRoutes = [
+  {
+    path: "/about",
+    component: () =>
+      import(/* webpackChunkName: "home" */ "@/views/About.vue"),
+    name: "about",
+    meta: {
+      title: "About",
+      icon: "qq",
+      roles: ['admin', 'editor']
+    },
+  }
+];
+
+export default new Router({
+  mode: "history",
   base: process.env.BASE_URL,
-  routes
-})
-
-export default router
+  routes: constRoutes
+});
