@@ -31,7 +31,7 @@ export const asyncRoutes = [
     name: "about",
     meta: {
       title: "About",
-      icon: "qq",
+      icon: "denglong",
       roles: ['admin','editor']
     },
   }

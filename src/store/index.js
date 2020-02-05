@@ -14,7 +14,8 @@ export default new Vuex.Store({
       return state.counter * 2
     },
     roles: state => state.user.roles,
-    hasRoles: state => state.user.roles && state.user.roles.length > 0
+    hasRoles: state => state.user.roles && state.user.roles.length > 0,
+    permission_routes: state => state.permission.routes
   },
   mutations: {
     add(state) {
