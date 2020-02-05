@@ -11,7 +11,9 @@ export default new Vuex.Store({
   getters: {
     doubleCounter(state) {
       return state.counter * 2
-    }
+    },
+    roles: state => state.user.roles,
+    hasRoles: state => state.user.roles && state.user.roles.length > 0
   },
   mutations: {
     add(state) {
