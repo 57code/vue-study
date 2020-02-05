@@ -10,6 +10,7 @@ import store from './store'
 // import store from './kstore'
 
 import '@/icons'
+import './permission'
 
 Vue.config.productionTip = false
 // 事件总线
