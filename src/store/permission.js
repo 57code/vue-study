@@ -6,7 +6,7 @@ const state = {
 };
 
 const mutations = {
-  SET_ROUTES: (state, routes) => {
+  setRoutes: (state, routes) => {
     state.addRoutes = routes;
     state.routes = constRoutes.concat(routes);
   }
@@ -17,8 +17,8 @@ const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
       // 根据角色做过滤处理
-      const accessedRoutes = filterAsyncRoutes(asyncRoutes, roles);;
-      commit("SET_ROUTES", accessedRoutes);
+      const accessedRoutes = filterAsyncRoutes(asyncRoutes, roles);
+      commit("setRoutes", accessedRoutes);
       resolve(accessedRoutes);
     });
   }
