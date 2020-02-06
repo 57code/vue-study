@@ -7,7 +7,7 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const bodyParser = require("body-parser");
+// const bodyParser = require("body-parser");
 
 module.exports = {
   publicPath: '/best-practice', // 部署应用包时的基本 URL
