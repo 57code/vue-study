@@ -1,0 +1,18 @@
+<div id="demo">
+    <!-- 出现静态节点嵌套情况下会做优化标记 -->
+    <h1>Vue<span>模板编译</span></h1>
+    <p>{{foo}}</p>
+    <comp></comp>
+</div>
+<script>
+    Vue.component('comp', {
+        template: '<div>I am comp</div>'
+    })
+    // 创建实例
+    const app = new Vue({
+        el: '#demo',
+        data: {foo:'foo'}
+    });
+    // 输出render函数
+    console.log(app.$options.render);
+</script>

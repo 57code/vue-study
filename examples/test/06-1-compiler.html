@@ -1,0 +1,31 @@
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Vue源码剖析</title>
+    <script src="../../dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="demo">
+        <h1>Vue模板<span>编译</span></h1>
+        <p v-if="foo">{{foo}}</p>
+        <comp></comp>
+    </div>
+    <script>
+        Vue.component('comp', {
+            template: '<div>I am comp</div>'
+        })
+        // 创建实例
+        const app = new Vue({
+            el: '#demo',
+            data: {foo:'foo'}
+        });
+        // 输出render函数
+        console.log(app.$options.render);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Vue事件处理</title>
+</head>
+
+<body>
+    <div id="demo">
+        <h1>attr update</h1>
+        <p :title="foo">{{foo}}</p>
+    </div>
+    <script src="../../dist/vue.js"></script>
+    <script>
+        // 创建实例
+        const app = new Vue({
+            el: '#demo',
+            data() {
+                return {
+                    foo: 'foo'
+                }
+            },
+            created () {
+                setTimeout(() => {
+                    this.foo = 'fooooooooooooooooo'
+                }, 1000);;
+            },
+        });
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Vue源码剖析</title>
+    <script src="../../dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="demo">
+        <h1>数据响应化</h1>
+        <p>{{obj.foo}}</p>
+    </div>
+    <script>
+        // 创建实例
+        // 会有几个Observer？Dep？Watcher？
+        //            2      2    1
+        const app = new Vue({
+            el: '#demo',
+            data: { obj: { foo: 'foo' } },
+            mounted() {
+                setTimeout(() => {
+                    this.obj.foo = 'fooooo'
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+
+</html>

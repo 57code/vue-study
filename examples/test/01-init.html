@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Vue源码剖析</title>
+    <script src="../../dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="demo">
+        <h1>初始化流程</h1>
+        <p>{{foo}}</p>
+        
+    </div>
+    <script>
+        // render > template > el
+        // 创建实例
+        const app = new Vue({
+            el: '#demo',
+            // template: '<div>template</div>',
+            // template: '#app',
+            // render(h){return h('div','render')},
+            data:{foo:'foo'}
+        })
+        console.log(app.$options.render);
+        
+    </script>
+</body>
+</html>
