@@ -20,7 +20,7 @@
 export default {
   props: ["val"],
   model: {
-    value: "val",
+    prop: "val",
     event: "change"
   },
   methods: {
