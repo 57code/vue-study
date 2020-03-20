@@ -17,6 +17,9 @@
     methods: {
         onInput(e) {
           this.$emit('input', e.target.value)
+
+          // 实时校验，通知父组件
+          this.$parent.$emit('validate')
         }
       },
   }
