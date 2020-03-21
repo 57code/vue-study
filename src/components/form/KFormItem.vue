@@ -54,7 +54,7 @@ export default {
       //     }
       //   });
       // });
-      
+      // validate方法会返回一个Promise
       return validator.validate({ [this.prop]: value }, errors => {
           if (errors) {
             // 校验失败
