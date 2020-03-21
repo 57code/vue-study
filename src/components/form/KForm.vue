@@ -26,7 +26,9 @@ export default {
       // 1.遍历所有FormItem，执行他们的validate方法
       // tasks是Promise数组
       const tasks = this.$children
-        .filter(item => item.prop)
+        .filter(item => {
+          return item.prop;
+        })
         .map(item => item.validate());
 
       Promise.all(tasks)

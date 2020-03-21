@@ -41,19 +41,31 @@ export default {
       const validator = new Schema({ [this.prop]: rules });
 
       // 3.执行校验, 参数1是校验目标
-      return new Promise((resolve, reject) => {
-        validator.validate({ [this.prop]: value }, errors => {
+      // return new Promise((resolve, reject) => {
+      //   validator.validate({ [this.prop]: value }, errors => {
+      //     if (errors) {
+      //       // 校验失败
+      //       this.error = errors[0].message;
+      //       reject()
+      //     } else {
+      //       // 校验通过
+      //       this.error = "";
+      //       resolve()
+      //     }
+      //   });
+      // });
+      
+      return validator.validate({ [this.prop]: value }, errors => {
           if (errors) {
             // 校验失败
             this.error = errors[0].message;
-            reject()
+ 
           } else {
             // 校验通过
             this.error = "";
-            resolve()
+ 
           }
         });
-      });
     }
   }
 };
