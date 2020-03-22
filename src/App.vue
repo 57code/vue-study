@@ -9,6 +9,7 @@
     <!-- <communication></communication> -->
     <!-- <slot-example></slot-example> -->
     <form-example></form-example>
+    <!-- <tree-test></tree-test> -->
   </div>
 </template>
 
@@ -17,6 +18,7 @@ import HelloWorld from './components/HelloWorld.vue'
 import communication from '@/components/communication';
 import SlotExample from '@/components/slots'
 import FormExample from '@/components/form'
+import TreeTest from '@/components/recursion';
 
 export default {
   name: 'app',
@@ -31,7 +33,8 @@ export default {
     HelloWorld,
     communication,
     SlotExample,
-    FormExample
+    FormExample,
+    TreeTest
   },
   mounted () {
     // this.$children[0].xx = 'ooooooooxxxxxxxxx';
