@@ -1,10 +1,10 @@
 <template>
   <el-form :model="userInfo" :rules="rules" ref="loginForm">
-    <el-form-item label="用户名" prop="name">
-      <el-input v-model="userInfo.name"></el-input>
+    <el-form-item label="用户名" prop="username">
+      <el-input type="text" v-model="userInfo.username"></el-input>
     </el-form-item>
     <el-form-item label="密码" prop="password">
-      <el-input v-model="userInfo.password" type="password"></el-input>
+      <el-input type="password" v-model="userInfo.password"></el-input>
     </el-form-item>
     <el-form-item>
       <el-button @click="login">登录</el-button>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <ElementTest></ElementTest> -->
+    <ElementTest></ElementTest>
     <!-- 设置数据模型和校验规则 -->
     <KForm :model="model" :rules="rules" ref="loginForm">
       <KFormItem label="用户名" prop="username">
