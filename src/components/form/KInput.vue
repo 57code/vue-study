@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 双向数据绑定：@input, :value -->
-    <input :value="value" @input="onInput" v-bind="$attrs">
+    <input type="type" :value="value" @input="onInput" v-bind="$attrs">
   </div>
 </template>
 
@@ -13,6 +13,10 @@
         type: String,
         default: ''
       },
+      type: {
+        type: String,
+        default: 'text'
+      }
     },
     methods: {
         onInput(e) {
