@@ -2,6 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import './plugins/element.js'
 import {create} from '@/utils/create'
+// import router from './router'
+import router from './krouter'
 
 Vue.config.productionTip = false
 // 事件总线
@@ -10,6 +12,8 @@ Vue.prototype.$create = create
 
 // new Vue结果是根实例  $root
 // App是根组件  $children[0]
+// 选项为什么要放进去
 new Vue({
-  render: h => h(App),
+  router,
+  render: h => h(App)
 }).$mount('#app')

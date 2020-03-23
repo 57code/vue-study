@@ -1,5 +1,10 @@
 <template>
   <div id="app">
+    <div id="nav">
+      <router-link to="/">Home</router-link> |
+      <router-link to="/about">About</router-link>
+    </div>
+    <router-view></router-view>
     <!-- <img src="./assets/logo.png">
     <HelloWorld msg="Welcome to Your Vue.js App" @click="onClick"/>
     <HelloWorld msg="Welcome to Your Vue.js App" ref="hw2">
@@ -9,7 +14,7 @@
     <!-- <communication></communication> -->
     <!-- <slot-example></slot-example> -->
     <!-- <form-example></form-example> -->
-    <NodeTest></NodeTest>
+    <!-- <NodeTest></NodeTest> -->
     <!-- <tree-test></tree-test> -->
   </div>
 </template>
