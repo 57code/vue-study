@@ -8,7 +8,8 @@
     </HelloWorld> -->
     <!-- <communication></communication> -->
     <!-- <slot-example></slot-example> -->
-    <form-example></form-example>
+    <!-- <form-example></form-example> -->
+    <NodeTest></NodeTest>
     <!-- <tree-test></tree-test> -->
   </div>
 </template>
@@ -19,6 +20,7 @@ import communication from '@/components/communication';
 import SlotExample from '@/components/slots'
 import FormExample from '@/components/form'
 import TreeTest from '@/components/recursion';
+import NodeTest from '@/components/recursion/NodeTest.vue';
 
 export default {
   name: 'app',
@@ -34,7 +36,8 @@ export default {
     communication,
     SlotExample,
     FormExample,
-    TreeTest
+    TreeTest,
+    NodeTest
   },
   mounted () {
     // this.$children[0].xx = 'ooooooooxxxxxxxxx';
@@ -54,7 +57,7 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  /* text-align: center; */
   color: #2c3e50;
   margin-top: 60px;
 }
