@@ -37,7 +37,7 @@
       console.log(this.$store);
       
       setTimeout(() => {
-        
+        // this.$store.state = {}
         this.$store.state.count++
       }, 1000);
       
