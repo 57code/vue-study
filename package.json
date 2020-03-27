@@ -44,8 +44,7 @@
     "commit": "git-cz"
   },
   "gitHooks": {
-    "pre-commit": "lint-staged",
-    "commit-msg": "node scripts/verify-commit-msg.js"
+    "pre-commit": "lint-staged"
   },
   "lint-staged": {
     "*.js": [
