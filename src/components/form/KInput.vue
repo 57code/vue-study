@@ -23,6 +23,9 @@
     methods: {
       onInput(e) {
         this.$emit('input', e.target.value)
+
+        // 值发生变化的时候就是需要校验的时候
+        this.$parent.$emit('validate')
       }
     },
   }
