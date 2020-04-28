@@ -5,6 +5,14 @@ export function create(Component, props) {
   // 1.组件实例怎么创建？
   // 方式1：组件配置对象 =》 Ctor = Vue.extend(Component)变成构造函数
   // =》 new Ctor()
+  // const Ctor = Vue.extend(Component)
+  // const comp = new Ctor()
+  // 属性怎么穿进去
+  // comp, 挂载和下面的鸡的方式一样吗comp.$mount()
+  // dom在哪里comp.$el
+  // 实例是谁comp
+
+  
   // 方式2：借鸡生蛋new Vue({render() {}}),在render中把Component作为根组件
   const vm = new Vue({
     // h是createElement函数，它可以返回虚拟dom
