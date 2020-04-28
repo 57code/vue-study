@@ -10,6 +10,11 @@ import HelloWorld from './components/HelloWorld.vue'
 
 export default {
   name: 'app',
+  provide() {
+    return {
+      foo: 'abc'
+    }
+  },
   components: {
     HelloWorld
   }
