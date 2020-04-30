@@ -2,8 +2,33 @@
 // 1.实现一个Router类并挂载期实例
 // 2.实现两个全局组件router-link和router-view
 let Vue;
-class VueRouter {
 
+class VueRouter {
+  // 核心任务：
+  // 1.监听url变化
+  constructor(options) {
+    this.$options = options;
+
+    // 缓存path和route映射关系
+    // 这样找组件更快
+    this.routeMap = {}
+    this.$options.routes.forEach(route => {
+      this.routeMap[route.path] = route
+    })
+
+    // 数据响应式
+    // 定义一个响应式的current，则如果他变了，那么使用它的组件会rerender
+    Vue.util.defineReactive(this, 'current', '')
+
+    // 请确保onHashChange中this指向当前实例
+    window.addEventListener('hashchange', this.onHashChange.bind(this))
+    window.addEventListener('load', this.onHashChange.bind(this))
+  }
+
+  onHashChange() {
+    // console.log(window.location.hash);
+    this.current = window.location.hash.slice(1) || '/'
+  }
 }
 
 // 插件需要实现install方法
@@ -46,7 +71,16 @@ VueRouter.install = function (_Vue) {
   })
   Vue.component('router-view', {
     render(h) {
-      return h('div', 'router-view content...')
+      // 根据current获取组件并render
+      // current怎么获取?
+      // console.log('render',this.$router.current);
+      // 获取要渲染的组件
+      let component = null
+      const { routeMap, current } = this.$router
+      if (routeMap[current]) {
+        component = routeMap[current].component
+      }
+      return h(component)
     }
   })
 }
