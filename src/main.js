@@ -4,6 +4,8 @@ import './plugins/element.js'
 import {create} from '@/utils/create'
 import Notice from '@/components/Notice'
 import router from './krouter'
+import store from './kstore'
+// import store from './store'
 // import router from './router'
 
 Vue.config.productionTip = false
@@ -16,6 +18,9 @@ Vue.prototype.$notice = (opts) => {
 }
 
 new Vue({
-  router, // 方便在组件中使用
+  // 方便在组件中使用
+  router,
+
+  store,
   render: h => h(App)
 }).$mount('#app')

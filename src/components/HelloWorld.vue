@@ -8,7 +8,10 @@
     <!-- 插槽 -->
     <!-- <SlotExample></SlotExample> -->
     <!-- 递归 -->
-    <Recursion></Recursion>
+    <!-- <Recursion></Recursion> -->
+    <!-- kvuex -->
+    <p @click="$store.commit('add')">counter: {{$store.state.counter}}</p>
+    <p @click="$store.dispatch('add')">async counter: {{$store.state.counter}}</p>
   </div>
 </template>
 
