@@ -4,9 +4,11 @@
     <!-- 组件通信 -->
     <!-- <Communication></Communication> -->
     <!-- 表单 -->
-    <FormExample></FormExample>
+    <!-- <FormExample></FormExample> -->
     <!-- 插槽 -->
     <!-- <SlotExample></SlotExample> -->
+    <!-- 递归 -->
+    <Recursion></Recursion>
   </div>
 </template>
 
@@ -14,6 +16,7 @@
 import Communication from '@/components/communication';
 import FormExample from '@/components/form';
 import SlotExample from '@/components/slots';
+import Recursion from '@/components/recursion'
 
 export default {
   name: 'HelloWorld',
@@ -23,7 +26,8 @@ export default {
   components: {
     Communication,
     FormExample,
-    SlotExample
+    SlotExample,
+    Recursion
   },
 }
 </script>
