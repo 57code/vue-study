@@ -2,7 +2,7 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <!-- 组件通信 -->
-    <!-- <Communication></Communication> -->
+    <!-- <Communication @foo="onFoo"></Communication> -->
     <!-- 表单 -->
     <!-- <FormExample></FormExample> -->
     <!-- 插槽 -->
@@ -28,6 +28,12 @@ export default {
     FormExample,
     SlotExample,
     Recursion
+  },
+  methods: {
+    onFoo() {
+      console.log('onFoo in HelloWorld');
+      
+    }
   },
 }
 </script>

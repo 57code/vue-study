@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @click="$emit('foo')">
     <!-- 展开$attrs对象 -->
     <h3 v-bind="$attrs">child2</h3>
     <button @click="sendToChild1">给child1发送消息</button>
