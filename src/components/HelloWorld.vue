@@ -12,6 +12,7 @@
     <!-- kvuex -->
     <p @click="$store.commit('add')">counter: {{$store.state.counter}}</p>
     <p @click="$store.dispatch('add')">async counter: {{$store.state.counter}}</p>
+    <!-- <p>{{$store.getters.doubleCount}}</p> -->
   </div>
 </template>
 
