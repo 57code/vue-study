@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app"></div>
+
+  <script>
+    // 数据响应式：
+    // Object.defineProperty()
+    const obj = {}
+
+    function defineReactive(obj, key, val) {
+      // 参数3是描述对象
+      Object.defineProperty(obj, key, {
+        get() {
+          console.log('get', key);
+          return val
+        },
+        set(newVal) {
+          if (newVal !== val) {
+            console.log('set', key);
+            val = newVal
+
+            update()
+          }
+        }
+      })
+    }
+
+    defineReactive(obj, 'foo', new Date())
+
+
+    function update() {
+      // dom操作
+      app.innerText = obj.foo.toLocaleTimeString()
+    }
+
+    setInterval(() => {
+      obj.foo = new Date()
+    }, 1000);
+    
+  </script>
+</body>
+
+</html>
