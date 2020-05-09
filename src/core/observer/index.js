@@ -41,17 +41,28 @@ export class Observer {
 
   constructor (value: any) {
     this.value = value
+
+    // 创建dep目的？
+    // 数组添加或删除成员 
+    // 对象添加或删除属性 Vue.set/delete
     this.dep = new Dep()
+
     this.vmCount = 0
+
+    // 定义__ob__保存当前Observer实例
     def(value, '__ob__', this)
+
+    // 判断类型做不同响应式操作
     if (Array.isArray(value)) {
       if (hasProto) {
         protoAugment(value, arrayMethods)
       } else {
         copyAugment(value, arrayMethods, arrayKeys)
       }
+      // 遍历处理数组中的项目
       this.observeArray(value)
     } else {
+      // 对象处理
       this.walk(value)
     }
   }
@@ -111,6 +122,8 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
   if (!isObject(value) || value instanceof VNode) {
     return
   }
+
+  // 创建Observer实例，如果已存在则返回，否则新创建
   let ob: Observer | void
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
@@ -139,6 +152,7 @@ export function defineReactive (
   customSetter?: ?Function,
   shallow?: boolean
 ) {
+  // 创建key对应的管家，1对1
   const dep = new Dep()
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
@@ -153,15 +167,19 @@ export function defineReactive (
     val = obj[key]
   }
 
+  // 如果是对象或数组可能产生子Observer实例
   let childOb = !shallow && observe(val)
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
+      // 依赖收集
       if (Dep.target) {
+        // dep和watcher互相建立关系
         dep.depend()
         if (childOb) {
+          // 将子ob和watcher互相建立管理
           childOb.dep.depend()
           if (Array.isArray(value)) {
             dependArray(value)

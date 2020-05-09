@@ -57,7 +57,7 @@ export function initMixin (Vue: Class<Component>) {
     initRender(vm) // 插槽、_c...
     callHook(vm, 'beforeCreate')
     initInjections(vm) // resolve injections before data/props
-    initState(vm) // 初始化data、prop、method
+    initState(vm) // 初始化data、prop、method并执行响应式
     initProvide(vm) // resolve provide after data/props
     callHook(vm, 'created') // 这里可以访问组件状态
 

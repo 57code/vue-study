@@ -30,6 +30,7 @@ export default class Dep {
 
   depend () {
     if (Dep.target) {
+      // 执行watcher的addDep方法
       Dep.target.addDep(this)
     }
   }

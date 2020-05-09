@@ -728,6 +728,7 @@
 
   Dep.prototype.depend = function depend () {
     if (Dep.target) {
+      // 执行watcher的addDep方法
       Dep.target.addDep(this);
     }
   };
@@ -857,7 +858,9 @@
    * dynamically accessing methods on Array prototype
    */
 
+  // 获取数组原型对象
   var arrayProto = Array.prototype;
+  // 复制一份
   var arrayMethods = Object.create(arrayProto);
 
   var methodsToPatch = [
@@ -875,13 +878,20 @@
    */
   methodsToPatch.forEach(function (method) {
     // cache original method
+    // 保存原始方法
     var original = arrayProto[method];
+    // 拦截该方法
     def(arrayMethods, method, function mutator () {
       var args = [], len = arguments.length;
       while ( len-- ) args[ len ] = arguments[ len ];
 
+      // 执行默认行为
       var result = original.apply(this, args);
+
+      // 额外扩展行为：通知更新
+      // 获取小秘书
       var ob = this.__ob__;
+      // 如果发生插入操作表示有新的成员进来了
       var inserted;
       switch (method) {
         case 'push':
@@ -892,8 +902,10 @@
           inserted = args.slice(2);
           break
       }
+      // 社会主义教育一番
       if (inserted) { ob.observeArray(inserted); }
       // notify change
+      // 通知更新
       ob.dep.notify();
       return result
     });
@@ -921,17 +933,28 @@
    */
   var Observer = function Observer (value) {
     this.value = value;
+
+    // 创建dep目的？
+    // 数组添加或删除成员 
+    // 对象添加或删除属性 Vue.set/delete
     this.dep = new Dep();
+
     this.vmCount = 0;
+
+    // 定义__ob__保存当前Observer实例
     def(value, '__ob__', this);
+
+    // 判断类型做不同响应式操作
     if (Array.isArray(value)) {
       if (hasProto) {
         protoAugment(value, arrayMethods);
       } else {
         copyAugment(value, arrayMethods, arrayKeys);
       }
+      // 遍历处理数组中的项目
       this.observeArray(value);
     } else {
+      // 对象处理
       this.walk(value);
     }
   };
@@ -990,6 +1013,8 @@
     if (!isObject(value) || value instanceof VNode) {
       return
     }
+
+    // 创建Observer实例，如果已存在则返回，否则新创建
     var ob;
     if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
       ob = value.__ob__;
@@ -1018,6 +1043,7 @@
     customSetter,
     shallow
   ) {
+    // 创建key对应的管家，1对1
     var dep = new Dep();
 
     var property = Object.getOwnPropertyDescriptor(obj, key);
@@ -1032,15 +1058,19 @@
       val = obj[key];
     }
 
+    // 如果是对象或数组可能产生子Observer实例
     var childOb = !shallow && observe(val);
     Object.defineProperty(obj, key, {
       enumerable: true,
       configurable: true,
       get: function reactiveGetter () {
         var value = getter ? getter.call(obj) : val;
+        // 依赖收集
         if (Dep.target) {
+          // dep和watcher互相建立关系
           dep.depend();
           if (childOb) {
+            // 将子ob和watcher互相建立管理
             childOb.dep.depend();
             if (Array.isArray(value)) {
               dependArray(value);
@@ -4501,9 +4531,11 @@
   Watcher.prototype.addDep = function addDep (dep) {
     var id = dep.id;
     if (!this.newDepIds.has(id)) {
+      // 建立watcher和dep关系
       this.newDepIds.add(id);
       this.newDeps.push(dep);
       if (!this.depIds.has(id)) {
+        // 再把watcher添加到dep里面
         dep.addSub(this);
       }
     }
@@ -4698,6 +4730,7 @@
   }
 
   function initData (vm) {
+    // 获取data选项
     var data = vm.$options.data;
     data = vm._data = typeof data === 'function'
       ? getData(data, vm)
@@ -4711,6 +4744,7 @@
       );
     }
     // proxy data on instance
+    // data/method/props不能重复
     var keys = Object.keys(data);
     var props = vm.$options.props;
     var methods = vm.$options.methods;
@@ -4732,10 +4766,12 @@
           vm
         );
       } else if (!isReserved(key)) {
+        // 数据代理
         proxy(vm, "_data", key);
       }
     }
     // observe data
+    // 递归数据响应化
     observe(data, true /* asRootData */);
   }
 
@@ -5002,7 +5038,7 @@
       initRender(vm); // 插槽、_c...
       callHook(vm, 'beforeCreate');
       initInjections(vm); // resolve injections before data/props
-      initState(vm); // 初始化data、prop、method
+      initState(vm); // 初始化data、prop、method并执行响应式
       initProvide(vm); // resolve provide after data/props
       callHook(vm, 'created'); // 这里可以访问组件状态
 
