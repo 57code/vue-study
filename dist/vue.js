@@ -3483,12 +3483,15 @@
     var options = vm.$options;
     var parentVnode = vm.$vnode = options._parentVnode; // the placeholder node in parent tree
     var renderContext = parentVnode && parentVnode.context;
+
+    // 处理插槽
     vm.$slots = resolveSlots(options._renderChildren, renderContext);
     vm.$scopedSlots = emptyObject;
     // bind the createElement fn to this instance
     // so that we get proper render context inside it.
     // args order: tag, data, children, normalizationType, alwaysNormalize
     // internal version is used by render functions compiled from templates
+    // 安装两个实例方法，用于渲染函数 render(h),这里的h其实是createElement
     vm._c = function (a, b, c, d) { return createElement(vm, a, b, c, d, false); };
     // normalization is always applied for the public version, used in
     // user-written render functions.
@@ -3927,6 +3930,7 @@
   }
 
   function lifecycleMixin (Vue) {
+    // 更新函数
     Vue.prototype._update = function (vnode, hydrating) {
       var vm = this;
       var prevEl = vm.$el;
@@ -3958,6 +3962,7 @@
       // updated in a parent's updated hook.
     };
 
+    // 强制更新
     Vue.prototype.$forceUpdate = function () {
       var vm = this;
       if (vm._watcher) {
@@ -3965,6 +3970,7 @@
       }
     };
 
+    // 销毁
     Vue.prototype.$destroy = function () {
       var vm = this;
       if (vm._isBeingDestroyed) {
@@ -4954,6 +4960,7 @@
   var uid$2 = 0;
 
   function initMixin (Vue) {
+    // 对Vue扩展，实现_init实例方法
     Vue.prototype._init = function (options) {
       var vm = this;
       // a uid
@@ -4970,6 +4977,7 @@
       // a flag to avoid this being observed
       vm._isVue = true;
       // merge options
+      // 选项合并
       if (options && options._isComponent) {
         // optimize internal component instantiation
         // since dynamic options merging is pretty slow, and none of the
@@ -4987,15 +4995,16 @@
         initProxy(vm);
       }
       // expose real self
+      // 初始化核心代码
       vm._self = vm;
-      initLifecycle(vm);
-      initEvents(vm);
-      initRender(vm);
+      initLifecycle(vm); // $parent/$children等等
+      initEvents(vm); // 事件监听
+      initRender(vm); // 插槽、_c...
       callHook(vm, 'beforeCreate');
       initInjections(vm); // resolve injections before data/props
-      initState(vm);
+      initState(vm); // 初始化data、prop、method
       initProvide(vm); // resolve provide after data/props
-      callHook(vm, 'created');
+      callHook(vm, 'created'); // 这里可以访问组件状态
 
       /* istanbul ignore if */
       if ( config.performance && mark) {
@@ -5066,20 +5075,23 @@
     return modified
   }
 
+  // Vue构造函数
   function Vue (options) {
     if (
       !(this instanceof Vue)
     ) {
       warn('Vue is a constructor and should be called with the `new` keyword');
     }
+    // 初始化
     this._init(options);
   }
 
-  initMixin(Vue);
-  stateMixin(Vue);
-  eventsMixin(Vue);
-  lifecycleMixin(Vue);
-  renderMixin(Vue);
+  // 扩展Vue构造函数，实现多个”实例方法“"实例属性”
+  initMixin(Vue); // _init()
+  stateMixin(Vue); // $data/$set/$watch等等
+  eventsMixin(Vue); // $on/$off/...
+  lifecycleMixin(Vue); // $_update()/$destroy/...
+  renderMixin(Vue); // $nextTick / _render()
 
   /*  */
 
@@ -5422,6 +5434,7 @@
     initAssetRegisters(Vue);
   }
 
+  // 初始化全局API
   initGlobalAPI(Vue);
 
   Object.defineProperty(Vue.prototype, '$isServer', {
@@ -9034,9 +9047,11 @@
   extend(Vue.options.components, platformComponents);
 
   // install platform patch function
+  // 安装平台补丁函数，
   Vue.prototype.__patch__ = inBrowser ? patch : noop;
 
   // public mount method
+  // 实现mount方法：调用mountComponent
   Vue.prototype.$mount = function (
     el,
     hydrating
@@ -11881,13 +11896,18 @@
     return el && el.innerHTML
   });
 
+  // 引入默认$mount方法，并扩展它
+  // 编译template
   var mount = Vue.prototype.$mount;
   Vue.prototype.$mount = function (
     el,
     hydrating
   ) {
+    // 查询得到真实dom
     el = el && query(el);
 
+    // 处理render或者template或者el三个选项
+    // 编译并得到渲染函数
     /* istanbul ignore if */
     if (el === document.body || el === document.documentElement) {
        warn(
@@ -11898,6 +11918,7 @@
 
     var options = this.$options;
     // resolve template/el and convert to render function
+    // render > template > el
     if (!options.render) {
       var template = options.template;
       if (template) {
@@ -11923,12 +11944,15 @@
       } else if (el) {
         template = getOuterHTML(el);
       }
+
+      // 获取到模板之后，编译之
       if (template) {
         /* istanbul ignore if */
         if ( config.performance && mark) {
           mark('compile');
         }
 
+        // 获取渲染函数
         var ref = compileToFunctions(template, {
           outputSourceRange: "development" !== 'production',
           shouldDecodeNewlines: shouldDecodeNewlines,
@@ -11948,6 +11972,7 @@
         }
       }
     }
+    // 执行挂载
     return mount.call(this, el, hydrating)
   };
 
@@ -11970,3 +11995,4 @@
   return Vue;
 
 })));
+//# sourceMappingURL=vue.js.map
