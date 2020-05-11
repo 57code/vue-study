@@ -6,9 +6,9 @@ name: CI
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -19,22 +19,32 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # 安装node
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v1.4.2
-    
-    # 迁出代码
-    - uses: actions/checkout@v2
+      # 安装node
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v1.4.2
 
-    # 安装依赖并打包
-    - name: Run install & build script
-      run: npm install && npm run build
+      # 迁出代码
+      - uses: actions/checkout@v2
 
-    # 上传到服务器
-    - name: Deploy to Server
-      uses: SamKirkland/FTP-Deploy-Action@3.1.0
-      with:
-        ftp-server: ftp://47.105.126.118/
-        ftp-username: ftp
-        ftp-password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./dist
+      # 安装依赖并打包
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+
+      - name: Build Project
+        run: |
+          npm install
+          npm run build --if-present
+
+      - name: List output files
+        run: ls
+
+      # 上传到服务器
+      - name: FTP-Deploy-Action
+        uses: SamKirkland/FTP-Deploy-Action@3.1.0
+        with:
+          ftp-server: ftp://47.105.126.118/
+          ftp-username: ftp
+          ftp-password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: build # This folder is NOT going to upload by default unless you add it to .git-ftp-include
