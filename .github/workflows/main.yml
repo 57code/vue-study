@@ -24,7 +24,7 @@ jobs:
       uses: actions/setup-node@v1.4.2
     
     # 迁出代码
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
 
     # 安装依赖并打包
     - name: Run install & build script
