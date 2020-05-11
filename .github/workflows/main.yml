@@ -47,4 +47,4 @@ jobs:
           ftp-server: ftp://47.105.126.118/
           ftp-username: ftp
           ftp-password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: build # This folder is NOT going to upload by default unless you add it to .git-ftp-include
+          local-dir: dist # This folder is NOT going to upload by default unless you add it to .git-ftp-include
