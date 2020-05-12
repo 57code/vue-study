@@ -49,7 +49,7 @@ jobs:
         uses: sebastianpopp/ftp-action@releases/v2
         with:
           host: "ftp://47.105.126.118/"
-          user: "ftp"
+          user: "ftp_user"
           password: ${{ secrets.FTP_PASSWORD }}
           localDir: "dist"
           remoteDir: "vue-study"
