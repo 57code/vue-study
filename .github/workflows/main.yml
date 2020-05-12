@@ -37,10 +37,19 @@ jobs:
         run: ls -a dist # 显示生成的目录文件
 
       # 上传到服务器
-      - name: FTP-Deploy-Action
-        uses: SamKirkland/FTP-Deploy-Action@3.1.0
+      # - name: FTP-Deploy-Action
+      #   uses: SamKirkland/FTP-Deploy-Action@3.1.0
+      #   with:
+      #     ftp-server: ftp://47.105.126.118/
+      #     ftp-username: ftp
+      #     ftp-password: ${{ secrets.FTP_PASSWORD }}
+      #     local-dir: dist # This folder is NOT going to upload by default unless you add it to .git-ftp-include
+
+      - name: Upload ftp
+        uses: sebastianpopp/ftp-action@releases/v2
         with:
-          ftp-server: ftp://47.105.126.118/
-          ftp-username: ftp
-          ftp-password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: dist # This folder is NOT going to upload by default unless you add it to .git-ftp-include
+          host: "ftp://47.105.126.118/"
+          user: "ftp"
+          password: ${{ secrets.FTP_PASSWORD }}
+          localDir: "dist"
+          # remoteDir: "www"
