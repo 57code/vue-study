@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head></head>
+
+<body>
+  <div id="app"></div>
+
+  <!--安装并引入:npm i snabbdom-->
+  <script src="../../node_modules/snabbdom/dist/snabbdom.js"></script>
+  <script src="../../node_modules/snabbdom/dist/snabbdom-style.js"></script>
+
+  <script>
+
+    // 之前编写的响应式函数
+    function defineReactive(obj, key, val) {
+      Object.defineProperty(obj, key, {
+        get() {
+          return val
+        },
+        set(newVal) {
+          val = newVal
+          // 通知更新
+          update()
+        }
+      })
+    }
+
+    // 导入patch的工厂init，h是产生vnode的工厂
+    const { init, h } = snabbdom
+    // 获取patch函数
+    const patch = init([snabbdom_style.default])
+
+    // 上次vnode，由patch()返回
+    let vnode;
+
+    // 更新函数，将数据操作转换为dom操作，返回新vnode
+    function update() {
+      if (!vnode) {
+        // 初始化，没有上次vnode，传入宿主元素和vnode
+        vnode = patch(app, render())
+      }
+      else {
+        // 更新，传入新旧vnode对比并做更新
+        vnode = patch(vnode, render())
+      }
+    }
+
+    // 渲染函数，返回vnode描述dom结构
+    function render() {
+      return h('div', { style: { color: 'red' } }, obj.foo)
+    }
+
+    // 数据
+    const obj = {}
+
+    // 定义响应式
+    defineReactive(obj, 'foo', '')
+
+    // 赋一个日期作为初始值
+    obj.foo = new Date().toLocaleTimeString()
+
+    // 定时改变数据，更新函数会重新执行
+    setInterval(() => {
+      obj.foo = new Date().toLocaleTimeString()
+    }, 1000);
+  </script>
+</body>
+
+</html>
