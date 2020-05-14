@@ -210,6 +210,7 @@ export function genFor (
   }
 
   el.forProcessed = true // avoid recursion
+  // _l(arr, function(alias){})
   return `${altHelper || '_l'}((${exp}),` +
     `function(${alias}${iterator1}${iterator2}){` +
       `return ${(altGen || genElement)(el, state)}` +

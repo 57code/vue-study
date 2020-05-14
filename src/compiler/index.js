@@ -12,6 +12,7 @@ export const createCompiler = createCompilerCreator(function baseCompile (
   template: string,
   options: CompilerOptions
 ): CompiledResult {
+  // 1.解析：将模板字符串解析为AST对象
   const ast = parse(template.trim(), options)
   if (options.optimize !== false) {
     optimize(ast, options)

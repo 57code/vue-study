@@ -80,6 +80,8 @@ export function parse (
   template: string,
   options: CompilerOptions
 ): ASTElement | void {
+
+  // 处理选项
   warn = options.warn || baseWarn
 
   platformIsPreTag = options.isPreTag || no
@@ -94,6 +96,7 @@ export function parse (
 
   delimiters = options.delimiters
 
+  // 核心步骤
   const stack = []
   const preserveWhitespace = options.preserveWhitespace !== false
   const whitespaceOption = options.whitespace
@@ -201,6 +204,7 @@ export function parse (
     }
   }
 
+  // 核心方法
   parseHTML(template, {
     warn,
     expectHTML: options.expectHTML,
@@ -210,6 +214,7 @@ export function parse (
     shouldDecodeNewlinesForHref: options.shouldDecodeNewlinesForHref,
     shouldKeepComment: options.comments,
     outputSourceRange: options.outputSourceRange,
+    // 遇上开始标签处理，比如<div>
     start (tag, attrs, unary, start, end) {
       // check namespace.
       // inherit parent ns if there is one
@@ -221,6 +226,7 @@ export function parse (
         attrs = guardIESVGBug(attrs)
       }
 
+      // 创建AST对象
       let element: ASTElement = createASTElement(tag, attrs, currentParent)
       if (ns) {
         element.ns = ns
@@ -277,6 +283,7 @@ export function parse (
         processRawAttrs(element)
       } else if (!element.processed) {
         // structural directives
+        // 处理结构型指令
         processFor(element)
         processIf(element)
         processOnce(element)
@@ -289,6 +296,7 @@ export function parse (
         }
       }
 
+      // 自闭和标签 <img/>
       if (!unary) {
         currentParent = element
         stack.push(element)
@@ -296,7 +304,7 @@ export function parse (
         closeElement(element)
       }
     },
-
+    // 结束标签，比如</div>
     end (tag, start, end) {
       const element = stack[stack.length - 1]
       // pop stack
@@ -307,7 +315,7 @@ export function parse (
       }
       closeElement(element)
     },
-
+    // 文本解析
     chars (text: string, start: number, end: number) {
       if (!currentParent) {
         if (process.env.NODE_ENV !== 'production') {
@@ -488,6 +496,7 @@ function processRef (el) {
 
 export function processFor (el: ASTElement) {
   let exp
+  // v-for="item in items"
   if ((exp = getAndRemoveAttr(el, 'v-for'))) {
     const res = parseFor(exp)
     if (res) {
