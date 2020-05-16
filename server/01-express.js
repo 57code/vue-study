@@ -4,7 +4,13 @@ const express = require('express')
 const app = express()
 
 app.get('/', function (req, res) {
-  res.send('Hello World')
+  const html = `
+    <div id="app">
+      <h1>开课吧</h1>
+      <p>开课吧真不错</p>
+    </div>
+  `
+  res.send(html)
 })
 
 app.listen(3000)
