@@ -44,10 +44,12 @@ const componentVNodeHooks = {
       const mountedNode: any = vnode // work around flow
       componentVNodeHooks.prepatch(mountedNode, mountedNode)
     } else {
+      // 根据vnode创建组件实例
       const child = vnode.componentInstance = createComponentInstanceForVnode(
         vnode,
         activeInstance
       )
+      // 挂载
       child.$mount(hydrating ? vnode.elm : undefined, hydrating)
     }
   },
@@ -144,6 +146,7 @@ export function createComponent (
     }
   }
 
+  // 对传入数据做处理
   data = data || {}
 
   // resolve constructor options in case global mixins are applied after
@@ -151,11 +154,13 @@ export function createComponent (
   resolveConstructorOptions(Ctor)
 
   // transform component v-model data into props & events
+  // 双绑相关逻辑
   if (isDef(data.model)) {
     transformModel(Ctor.options, data)
   }
 
   // extract props
+  // 抽取属性
   const propsData = extractPropsFromVNodeData(data, Ctor, tag)
 
   // functional component
@@ -165,6 +170,7 @@ export function createComponent (
 
   // extract listeners, since these needs to be treated as
   // child component listeners instead of DOM listeners
+  // 事件处理
   const listeners = data.on
   // replace with listeners with .native modifier
   // so it gets processed during parent component patch.
@@ -183,10 +189,14 @@ export function createComponent (
   }
 
   // install component management hooks onto the placeholder node
+  // 安装组件管理钩子函数，它是组件实例化等的关键地方
+  // 未来会在patch的时候执行
   installComponentHooks(data)
 
   // return a placeholder vnode
+  // 组件名称定义规则
   const name = Ctor.options.name || tag
+  // vue-component-1-comp
   const vnode = new VNode(
     `vue-component-${Ctor.cid}${name ? `-${name}` : ''}`,
     data, undefined, undefined, undefined, context,
