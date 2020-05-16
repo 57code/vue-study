@@ -1,6 +1,12 @@
 <template>
   <div id="app">
     <HelloWorld msg="Hello, Vue!"></HelloWorld>
+    <p @click="$store.commit('add')">{{$store.state.count}}</p>
+    <nav>
+      <router-link to="/">index</router-link>
+      <router-link to="/detail">detail</router-link>
+    </nav>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -11,6 +17,10 @@ export default {
   components: {
     HelloWorld
   },
+  asyncData({store, route}) {
+    // 调用者会传入store和route实例
+    return store.dispatch('getCount')
+  }
 }
 </script>
 
