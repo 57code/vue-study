@@ -71,3 +71,45 @@ function watch(cb1: () => void, cb2?: (v1: any, v2: any) => void): void {
   }
 }
 // watch()
+
+interface Foo {
+  foo:string
+}
+class Bar implements Foo {
+  foo:string = ''
+}
+class Baz implements Foo {
+  foo:string = ''
+}
+function abc(a: Foo) {
+  a.foo
+}
+
+// 泛型
+// interface Result {
+//   ok: 0 | 1;
+//   data: Feature[];
+// }
+
+interface Result<T> {
+  ok: 0 | 1;
+  data: T;
+}
+
+// 类装饰器
+function log(fn: (key: string) => void) {
+  return function (target: Function) {
+    target.prototype.log = function(key: string) {
+      fn(this[key])
+    }
+  }
+}
+
+@log(window.alert)
+class Foo2 {
+  bar = 'bar'
+}
+
+const foo2 = new Foo2()
+// @ts-ignore
+foo2.log('bar')

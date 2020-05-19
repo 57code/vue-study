@@ -4,7 +4,11 @@ export type Feature = {
   name: string;
 };
 
-export type Select = {
+// export type Select = {
+//   selected: boolean
+// }
+// 接口形式
+export interface Select {
   selected: boolean
 }
 
