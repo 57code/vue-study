@@ -9,6 +9,8 @@ import router from './krouter'
 // import store from './store'
 import store from './kstore'
 
+import './test'
+
 Vue.config.productionTip = false
 // 事件总线
 Vue.prototype.$bus = new Vue()
