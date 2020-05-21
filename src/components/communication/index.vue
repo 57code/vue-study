@@ -21,7 +21,8 @@
       }
     },
     components: {
-      Child1, Child2
+      Child1, Child2,
+      // Child3: () => import('./Child3.vue')
     },
     methods: {
       onSomeEvent(msg) {
@@ -35,6 +36,11 @@
         console.log('来自老爹的回调函数处理', this);
         
       }
+    },
+    mounted () {
+      // $children持有所有自定义组件
+      // 它不保证顺序
+      console.log(this.$children);
     },
   }
 </script>
