@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>hello vue3</title>
+</head>
+<body>
+  <div id="app">
+    <h1 @click="onclick">{{message}}</h1>
+    <comp></comp>
+  </div>
+
+  <script src="../dist/vue.global.js"></script>
+  <script>
+    // 创建实例编程函数的方式
+    const {createApp} = Vue
+    
+    const app = createApp({
+      data() {
+        return {
+          message: 'hello vue3'
+        }
+      },
+      methods: {
+        onclick() {
+          console.log('click me');
+          
+        }
+      },
+    })
+    // 声明一个组件
+    app.component('comp', {
+      template: '<div>comp</div>'
+    })
+    app.mount('#app')
+    console.log(app);
+    
+  </script>
+</body>
+</html>

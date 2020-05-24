@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>composition api</title>
+</head>
+
+<body>
+  <div id="app">
+    <h1 @click="onclick">{{message}}</h1>
+    <p>{{reverseMessage}}</p>
+    <p>{{counter}}</p>
+  </div>
+
+  <script src="../dist/vue.global.js"></script>
+  <script>
+    // 创建实例编程函数的方式
+    const { createApp, reactive, computed, onMounted, ref, toRefs } = Vue
+
+    const app = createApp({
+      setup() {
+        // 声明响应式数据
+        const state = reactive({
+          message: 'hello vue3',
+          reverseMessage: computed(() => state.message.split('').reverse().join(''))
+        })
+
+        // 单值响应式，ref将原始值包装为对象
+        const counter = ref(0)
+
+        // 直接声明回调函数
+        function onclick() {
+          // console.log('click me');
+          state.message = state.message.split('').reverse().join('')
+        }
+
+
+        // 生命周期
+        onMounted(() => {
+          console.log('mounted');
+          
+        })
+
+        // 修改Ref对象，要设置其value属性
+        setInterval(() => {
+          counter.value++
+        }, 1000);
+
+        // 返回一个渲染函数上下文对象
+        // toRefs(proxy)可以把proxy里面每个属性都转换为响应式的数据
+        return { ...toRefs(state), onclick, counter }
+      }
+    })
+
+    app.mount('#app')
+    console.log(app);
+
+  </script>
+</body>
+
+</html>

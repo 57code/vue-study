@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>composition api</title>
+  <script src="../dist/vue.global.js"></script>
+</head>
+
+<body>
+  <div>
+    <h1>逻辑组合</h1>
+    <div id="app"></div>
+  </div>
+
+  <script>
+    const { createApp, reactive, onMounted, onUnmounted, toRefs } = Vue;
+
+    // vue2中逻辑复用常用Mixin方式
+    // 缺点是：
+    // 1.命名冲突
+    // 2.来源不明
+
+    // 鼠标位置侦听
+    function useMouse() {
+      // 数据响应化
+      const state = reactive({ x: 0, y: 0 })
+      const update = e => {
+        state.x = e.pageX
+        state.y = e.pageY
+      }
+      onMounted(() => {
+        window.addEventListener('mousemove', update)
+      })
+      onUnmounted(() => {
+        window.removeEventListener('mousemove', update)
+      })
+      // 转换所有key为响应式数据
+      return toRefs(state)
+    }
+    // 事件监测
+    function useTime() {
+      const state = reactive({ time: new Date() })
+      onMounted(() => {
+        setInterval(() => {
+          state.time = new Date()
+        }, 1000)
+      })
+      return toRefs(state)
+    }
+    // 逻辑组合
+    const MyComp = {
+      template: `
+        <div>x: {{ x }} y: {{ y }}</div>
+        <p>time: {{time}}</p>
+      `,
+      setup() {
+        // 使用鼠标逻辑
+        const { x, y } = useMouse()
+        // 使用时间逻辑
+        const { time } = useTime()
+        // 返回使用
+        return { x, y, time }
+      }
+    }
+    createApp(MyComp).mount('#app')
+  </script>
+</body>
+
+</html>
