@@ -21,20 +21,6 @@
   "tsd": {
     "directory": "test-dts"
   },
-  "gitHooks": {
-    "pre-commit": "lint-staged",
-    "commit-msg": "node scripts/verifyCommit.js"
-  },
-  "lint-staged": {
-    "*.js": [
-      "prettier --write",
-      "git add"
-    ],
-    "*.ts?(x)": [
-      "prettier --parser=typescript --write",
-      "git add"
-    ]
-  },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.3.9",
     "@rollup/plugin-json": "^4.0.0",
