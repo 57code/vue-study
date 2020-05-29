@@ -51,12 +51,17 @@
     methods: {
       login() {
         this.$refs.form.validate(isValid => {
-          if (isValid) {
-            console.log('请求登录！！！');
+          // if (isValid) {
+          //   console.log('请求登录！！！');
             
-          } else {
-            alert('校验失败！！！！')
-          }
+          // } else {
+          //   alert('校验失败！！！！')
+          // }
+          this.$notice({
+            title: '校验结果',
+            message: isValid ? '请求登录' : '校验失败',
+            duration: 2000
+          }).show()
         })
       }
     },

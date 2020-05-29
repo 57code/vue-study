@@ -23,6 +23,7 @@
 
         // 数据变化，需要执行校验
         this.$parent.$emit('validate')
+        // this.$dispatch('KFormItem', 'validate')
       }
     },
   }

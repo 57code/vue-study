@@ -15,6 +15,7 @@ import Communication from '@/components/communication';
 import FormExample from '@/components/form';
 import SlotExample from '@/components/slots';
 
+// 导出的是组件配置对象，它是一个普通js对象
 export default {
   name: 'HelloWorld',
   props: {
