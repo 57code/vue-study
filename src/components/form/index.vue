@@ -3,12 +3,15 @@
     <!-- <ElementTest></ElementTest> -->
 
     <!-- KForm -->
-    <KForm :model="model" :rules="rules">
+    <KForm :model="model" :rules="rules" ref="form">
       <KFormItem label="用户名" prop="username">
         <KInput v-model="model.username"></KInput>
       </KFormItem>
       <KFormItem label="密码" prop="password">
         <KInput v-model="model.password"></KInput>
+      </KFormItem>
+      <KFormItem>
+        <button @click="login">登录</button>
       </KFormItem>
     </KForm>
     {{model}}
@@ -44,6 +47,18 @@
       KInput,
       KFormItem,
       KForm
+    },
+    methods: {
+      login() {
+        this.$refs.form.validate(isValid => {
+          if (isValid) {
+            console.log('请求登录！！！');
+            
+          } else {
+            alert('校验失败！！！！')
+          }
+        })
+      }
     },
   }
 </script>
