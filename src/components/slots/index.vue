@@ -6,7 +6,7 @@
       <!-- 具名插槽 -->
       <template v-slot:header>开课吧全栈</template>
       <!-- 匿名插槽 -->
-      <template>content...</template>
+      <template v-slot:default>content...</template>
       <!-- 作用域插槽 -->
       <template v-slot:footer="{fc}">{{fc}}</template>
     </Layout>
