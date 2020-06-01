@@ -7,6 +7,8 @@
     <FormExample></FormExample>
     <!-- 插槽 -->
     <!-- <SlotExample></SlotExample> -->
+    <!-- 递归 -->
+    <TreeExample></TreeExample>
   </div>
 </template>
 
@@ -14,6 +16,7 @@
 import Communication from '@/components/communication';
 import FormExample from '@/components/form';
 import SlotExample from '@/components/slots';
+import TreeExample from '@/components/recursion';
 
 // 导出的是组件配置对象，它是一个普通js对象
 export default {
@@ -24,7 +27,8 @@ export default {
   components: {
     Communication,
     FormExample,
-    SlotExample
+    SlotExample,
+    TreeExample
   },
 }
 </script>
