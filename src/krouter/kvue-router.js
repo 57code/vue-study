@@ -7,6 +7,12 @@ class VueRouter {
     // 保存选项备用
     this.$options = options
 
+    // 处理routes
+    this.routeMap = {}
+    this.$options.routes.forEach(route => {
+      this.routeMap[route.path] = route
+    })
+
     // 创建current保存当前url
     // 为了让使用current的组件重新渲染
     // 他应该是响应式的
@@ -47,12 +53,8 @@ VueRouter.install = function (_Vue) {
   Vue.component('router-view', {
     render(h) {
       // console.log('router-view render', this.$router.current);
-      let component = null
-      const { $options, current } = this.$router
-      const route = $options.routes.find(route => route.path === current)
-      if (route) {
-        component = route.component
-      }
+      const {routeMap, current} = this.$router
+      const component = routeMap[current] ? routeMap[current].component : null
       return h(component)
     }
   })
