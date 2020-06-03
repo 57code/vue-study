@@ -158,6 +158,8 @@ class Compiler {
   }
 
   // dir:要做的指令名称
+  // 一旦发现一个动态绑定，都要做两件事情，首先解析动态值；其次创建更新函数
+  // 未来如果对应的exp它的值发生变化，执行这个watcher的更新函数
   update(node, exp, dir) {
     // 初始化
     const fn = this[dir + 'Updater']
