@@ -2,13 +2,7 @@ let Vue
 
 // 声明Store类
 class Store {
-  constructor(options) {
-    this._vm = new Vue({
-      // data中的值都会做响应化处理
-      data: {
-        $$state: options.state
-      }
-    })
+  constructor(options) {    
 
     // 保存mutations
     this._mutations = options.mutations
@@ -27,14 +21,29 @@ class Store {
     // 1.首先要定义getters让外面访问
     this.getters = {}
     const getters = options.getters
+    const computed = {}
     Object.keys(getters).forEach(key => {
-      // 2.用户在getters里面定义的的函数需要传递state
+      // 2.构造计算属性的对象
+      computed[key] = function() {
+        // 3.用户在getters里面定义的的函数需要传递state
+        return getters[key](store.state)
+      }
       Object.defineProperty(this.getters, key, {
+        // 4.只写get，表示只读
         get() {
-          // 3.只写get，表示只读
-          return getters[key](store.state)
+          // 5.返回computed计算结果
+          return computed[key]()
         }
       })
+    })
+
+    // 6.设置计算属性
+    this._vm = new Vue({
+      // data中的值都会做响应化处理
+      data: {
+        $$state: options.state
+      },
+      computed
     })
   }
 
