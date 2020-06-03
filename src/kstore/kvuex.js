@@ -23,11 +23,26 @@ class Store {
     this.dispatch = function boundDispatch(type, payload) {
       dispatch.call(store, type, payload)
     }
+
+    // 1.首先要定义getters让外面访问
+    this.getters = {}
+    const getters = options.getters
+    Object.keys(getters).forEach(key => {
+      // 2.用户在getters里面定义的的函数需要传递state
+      Object.defineProperty(this.getters, key, {
+        get() {
+          // 3.只写get，表示只读
+          return getters[key](store.state)
+        }
+      })
+    })
   }
 
   // 存取器使之成为只读
   get state() {
-    return this._vm._data.$$state
+    console.log(this._vm._data === this._vm.$data);
+    
+    return this._vm.$data.$$state
   }
 
   set state(v) {

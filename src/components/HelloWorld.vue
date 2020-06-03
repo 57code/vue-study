@@ -4,6 +4,7 @@
     <!-- $store是哪来的 -->
     <p @click="$store.commit('add')">sync {{$store.state.counter}}</p>
     <p @click="$store.dispatch('add')">async {{$store.state.counter}}</p>
+    <p>doubleCounter: {{$store.getters.doubleCounter}}</p>
     <!-- 组件通信 -->
     <!-- <Communication></Communication> -->
     <!-- 表单 -->
