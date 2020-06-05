@@ -110,6 +110,7 @@ function initProps (vm: Component, propsOptions: Object) {
 }
 
 function initData (vm: Component) {
+  // 获取data对象
   let data = vm.$options.data
   data = vm._data = typeof data === 'function'
     ? getData(data, vm)
@@ -123,6 +124,7 @@ function initData (vm: Component) {
     )
   }
   // proxy data on instance
+  // 代理、重复判断
   const keys = Object.keys(data)
   const props = vm.$options.props
   const methods = vm.$options.methods
@@ -148,6 +150,7 @@ function initData (vm: Component) {
     }
   }
   // observe data
+  // 对data做响应化处理
   observe(data, true /* asRootData */)
 }
 

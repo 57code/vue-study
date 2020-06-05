@@ -25,8 +25,12 @@ methodsToPatch.forEach(function (method) {
   // cache original method
   const original = arrayProto[method]
   def(arrayMethods, method, function mutator (...args) {
+    // 数组方法的默认行为
     const result = original.apply(this, args)
+
+    // 变更通知：获取小管家
     const ob = this.__ob__
+    // 插入操作：会导致新元素进入，他们需要社会主义教育
     let inserted
     switch (method) {
       case 'push':
@@ -39,6 +43,7 @@ methodsToPatch.forEach(function (method) {
     }
     if (inserted) ob.observeArray(inserted)
     // notify change
+    // 小管家通知更新
     ob.dep.notify()
     return result
   })

@@ -41,10 +41,15 @@ export class Observer {
 
   constructor (value: any) {
     this.value = value
+    // 小管家
     this.dep = new Dep()
     this.vmCount = 0
     def(value, '__ob__', this)
+
+
+    // 判断传入value类型，做相应处理
     if (Array.isArray(value)) {
+      // 覆盖数组实例的原型
       if (hasProto) {
         protoAugment(value, arrayMethods)
       } else {
@@ -52,6 +57,7 @@ export class Observer {
       }
       this.observeArray(value)
     } else {
+      // 对象处理
       this.walk(value)
     }
   }
@@ -111,7 +117,9 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
   if (!isObject(value) || value instanceof VNode) {
     return
   }
+  // 返回一个Observer实例
   let ob: Observer | void
+  // 如果做过响应式，那么__ob__存在的，直接返回
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
   } else if (
@@ -121,6 +129,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
     Object.isExtensible(value) &&
     !value._isVue
   ) {
+    // 如果为处理，创建一个新实例
     ob = new Observer(value)
   }
   if (asRootData && ob) {
@@ -139,6 +148,7 @@ export function defineReactive (
   customSetter?: ?Function,
   shallow?: boolean
 ) {
+  // 大管家，和key 1：1
   const dep = new Dep()
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
@@ -153,15 +163,24 @@ export function defineReactive (
     val = obj[key]
   }
 
+  // 递归，如果val是对象，则获得一个子Observer实例
   let childOb = !shallow && observe(val)
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter () {
+      // 依赖收集
       const value = getter ? getter.call(obj) : val
+      // Dep.target就是Watcher实例
       if (Dep.target) {
+        // dep和watcher之间是n:n
+        // computed,watch
+        // 双向添加两者关系
         dep.depend()
+        // 若存在子Ob
         if (childOb) {
+          // 把当前watcher和子ob中的dep建立关系
+          // 对象属性变化或者数组元素变化需要小管家通知更新
           childOb.dep.depend()
           if (Array.isArray(value)) {
             dependArray(value)

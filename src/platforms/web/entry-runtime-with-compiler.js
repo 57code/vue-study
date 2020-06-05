@@ -14,11 +14,13 @@ const idToTemplate = cached(id => {
   return el && el.innerHTML
 })
 
+// 扩展$mount：判断是否需要编译出渲染函数
 const mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
+  // 宿主元素
   el = el && query(el)
 
   /* istanbul ignore if */
@@ -29,8 +31,11 @@ Vue.prototype.$mount = function (
     return this
   }
 
+  // 处理选项：render/template/el
   const options = this.$options
   // resolve template/el and convert to render function
+  // render不存在才判断template
+  // render > template > el
   if (!options.render) {
     let template = options.template
     if (template) {
@@ -62,6 +67,7 @@ Vue.prototype.$mount = function (
         mark('compile')
       }
 
+      // 运行时编译：将模板编译为render函数
       const { render, staticRenderFns } = compileToFunctions(template, {
         outputSourceRange: process.env.NODE_ENV !== 'production',
         shouldDecodeNewlines,
