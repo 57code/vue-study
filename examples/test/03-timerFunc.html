@@ -21,15 +21,22 @@
                 console.log('1:' + this.foo);
                 this.foo = Math.random()
                 console.log('2:' + this.foo);
+
                 this.foo = Math.random()
                 console.log('3:' + this.foo);
                 // 异步行为，此时内容没变
                 console.log('p1.innerHTML:' + p1.innerHTML)
 
+                // Promise.resolve().then(() => {
+                //     // 这里才是最新的值
+                //     console.log('p1.innerHTML:' + p1.innerHTML)
+                // }) 
+
                 this.$nextTick(() => {
                     // 这里才是最新的值
                     console.log('p1.innerHTML:' + p1.innerHTML)
-                })
+                })   
+                
             }
         });
     </script>

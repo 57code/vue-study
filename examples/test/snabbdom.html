@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app"></div>
+
+  <!-- npm i snabbdom -->
+  <script src="../../node_modules/snabbdom/dist/snabbdom.js"></script>
+  <script>
+    function defineReactive(obj, key, val) {
+      Object.defineProperty(obj, key, {
+        get() {
+          return val
+        },
+        set(v) {
+          val = v
+
+          update()
+        }
+      })
+    }
+
+    const obj = {}
+    defineReactive(obj, 'foo', '')
+
+
+    // snabbdom
+    const {init, h} = snabbdom
+    const patch = init([])
+    // old vnode上次渲染结果
+    let vnode
+    function update() {
+      if(!vnode) {
+        // init,传入真实dom
+        vnode = patch(app, render())
+      } else {
+        vnode = patch(vnode, render())
+      }
+      console.log(vnode);
+      
+    }
+
+    function render() {
+      return h('div', obj.foo)
+    }
+
+    // 业务代码
+    setInterval(() => {
+      obj.foo = new Date().toLocaleTimeString()
+    }, 1000);
+
+  </script>
+</body>
+</html>

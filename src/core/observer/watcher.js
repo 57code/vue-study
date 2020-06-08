@@ -165,11 +165,13 @@ export default class Watcher {
    */
   update () {
     /* istanbul ignore else */
+    // computed
     if (this.lazy) {
       this.dirty = true
     } else if (this.sync) {
       this.run()
     } else {
+      // 入队
       queueWatcher(this)
     }
   }
@@ -180,6 +182,8 @@ export default class Watcher {
    */
   run () {
     if (this.active) {
+      // 执行get方法，如果当前watcher是render watcher
+      // 此get会是updateComponent()
       const value = this.get()
       if (
         value !== this.value ||
