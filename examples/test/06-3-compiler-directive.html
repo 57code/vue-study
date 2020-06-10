@@ -10,8 +10,8 @@
     <div id="demo">
         <h1>Vue<span>模板编译</span></h1>
         <!-- 观察v-if、v-for的解析 -->
-        <p v-if="foo">{{foo}}</p>
-        <b v-for="s in arr" :key="s">{{s}}</b>
+        <!-- <p v-if="foo">{{foo}}</p> -->
+        <b v-for="s in arr" :key="s" v-if="s">{{s}}</b>
         <comp></comp>
     </div>
     <script>
@@ -25,6 +25,8 @@
         });
         // 输出render函数
         console.log(app.$options.render);
+        console.log(app);
+        
     </script>
 </body>
 

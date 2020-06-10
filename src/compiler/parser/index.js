@@ -82,6 +82,7 @@ export function parse (
 ): ASTElement | void {
   warn = options.warn || baseWarn
 
+  // 扩展parser
   platformIsPreTag = options.isPreTag || no
   platformMustUseProp = options.mustUseProp || no
   platformGetTagNamespace = options.getTagNamespace || no
@@ -92,8 +93,10 @@ export function parse (
   preTransforms = pluckModuleFunction(options.modules, 'preTransformNode')
   postTransforms = pluckModuleFunction(options.modules, 'postTransformNode')
 
+  // {{}}
   delimiters = options.delimiters
 
+  // 解析相关变量
   const stack = []
   const preserveWhitespace = options.preserveWhitespace !== false
   const whitespaceOption = options.whitespace
@@ -201,6 +204,7 @@ export function parse (
     }
   }
 
+  // 解析html核心代码
   parseHTML(template, {
     warn,
     expectHTML: options.expectHTML,
@@ -210,6 +214,7 @@ export function parse (
     shouldDecodeNewlinesForHref: options.shouldDecodeNewlinesForHref,
     shouldKeepComment: options.comments,
     outputSourceRange: options.outputSourceRange,
+    // 遇到起始标签调用
     start (tag, attrs, unary, start, end) {
       // check namespace.
       // inherit parent ns if there is one
@@ -221,6 +226,7 @@ export function parse (
         attrs = guardIESVGBug(attrs)
       }
 
+      
       let element: ASTElement = createASTElement(tag, attrs, currentParent)
       if (ns) {
         element.ns = ns

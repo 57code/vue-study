@@ -189,6 +189,9 @@ export function genFor (
   altGen?: Function,
   altHelper?: string
 ): string {
+  // v-for="item in items"
+  // exp === items
+  // alias === item
   const exp = el.for
   const alias = el.alias
   const iterator1 = el.iterator1 ? `,${el.iterator1}` : ''
@@ -210,6 +213,7 @@ export function genFor (
   }
 
   el.forProcessed = true // avoid recursion
+  // '_l(exp, function(alias){})'
   return `${altHelper || '_l'}((${exp}),` +
     `function(${alias}${iterator1}${iterator2}){` +
       `return ${(altGen || genElement)(el, state)}` +
