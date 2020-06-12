@@ -34,6 +34,7 @@ import {
 
 // inline hooks to be invoked on component VNodes during patch
 const componentVNodeHooks = {
+  // 实例化和挂载
   init (vnode: VNodeWithData, hydrating: boolean): ?boolean {
     if (
       vnode.componentInstance &&
@@ -44,10 +45,12 @@ const componentVNodeHooks = {
       const mountedNode: any = vnode // work around flow
       componentVNodeHooks.prepatch(mountedNode, mountedNode)
     } else {
+      // 创建组件实例
       const child = vnode.componentInstance = createComponentInstanceForVnode(
         vnode,
         activeInstance
       )
+      // 子组件挂载
       child.$mount(hydrating ? vnode.elm : undefined, hydrating)
     }
   },
@@ -98,6 +101,7 @@ const componentVNodeHooks = {
 
 const hooksToMerge = Object.keys(componentVNodeHooks)
 
+// 返回自定义组件的vnode
 export function createComponent (
   Ctor: Class<Component> | Function | Object | void,
   data: ?VNodeData,
@@ -144,6 +148,7 @@ export function createComponent (
     }
   }
 
+  // 数据处理
   data = data || {}
 
   // resolve constructor options in case global mixins are applied after
@@ -165,6 +170,7 @@ export function createComponent (
 
   // extract listeners, since these needs to be treated as
   // child component listeners instead of DOM listeners
+  // 事件处理
   const listeners = data.on
   // replace with listeners with .native modifier
   // so it gets processed during parent component patch.
@@ -183,6 +189,7 @@ export function createComponent (
   }
 
   // install component management hooks onto the placeholder node
+  // 安装组件管理钩子：未来会做组件初始化（实例创建、挂载）
   installComponentHooks(data)
 
   // return a placeholder vnode
@@ -223,6 +230,8 @@ export function createComponentInstanceForVnode (
   return new vnode.componentOptions.Ctor(options)
 }
 
+// 给data中添加一些钩子函数，未来等待patch时候调用
+// 下面的函数，处理用户传入钩子和默认钩子合并一下
 function installComponentHooks (data: VNodeData) {
   const hooks = data.hook || (data.hook = {})
   for (let i = 0; i < hooksToMerge.length; i++) {

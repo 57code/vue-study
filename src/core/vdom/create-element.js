@@ -25,6 +25,7 @@ const ALWAYS_NORMALIZE = 2
 
 // wrapper function for providing a more flexible interface
 // without getting yelled at by flow
+// h('div', {}, [child1,...])
 export function createElement (
   context: Component,
   tag: any,
@@ -44,6 +45,7 @@ export function createElement (
   return _createElement(context, tag, data, children, normalizationType)
 }
 
+// vnode生成在这里
 export function _createElement (
   context: Component,
   tag?: string | Class<Component> | Function | Object,
@@ -92,10 +94,14 @@ export function _createElement (
   } else if (normalizationType === SIMPLE_NORMALIZE) {
     children = simpleNormalizeChildren(children)
   }
+
+  // h('div')
+  // h(Component)
   let vnode, ns
   if (typeof tag === 'string') {
     let Ctor
     ns = (context.$vnode && context.$vnode.ns) || config.getTagNamespace(tag)
+    // 原生元素，比如div，p
     if (config.isReservedTag(tag)) {
       // platform built-in elements
       if (process.env.NODE_ENV !== 'production' && isDef(data) && isDef(data.nativeOn)) {
@@ -110,6 +116,7 @@ export function _createElement (
       )
     } else if ((!data || !data.pre) && isDef(Ctor = resolveAsset(context.$options, 'components', tag))) {
       // component
+      // 自定义组件处理在这里
       vnode = createComponent(Ctor, data, context, children, tag)
     } else {
       // unknown or unlisted namespaced elements
