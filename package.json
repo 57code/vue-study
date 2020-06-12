@@ -13,7 +13,7 @@
     "vue": "^2.6.10",
     "vue-router": "^3.1.2",
     "vue-server-renderer": "^2.6.10",
-    "vuex": "^3.1.1"
+    "vuex": "^3.4.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.2.0",

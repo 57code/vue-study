@@ -19,6 +19,7 @@ const renderer = createBundleRenderer(bundle, {
 
 // 路由和同构
 app.get('*', async (req, res) => {
+  // req.url : 'abc.html'
   //  { url: req.url}
   const context = {
     url: req.url
