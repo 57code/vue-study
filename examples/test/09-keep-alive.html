@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>keep-alive组件工作原理</title>
+</head>
+
+<body>
+    <div id="demo">
+        <h1>keep-alive机制</h1> 
+        <input type="checkbox" v-model="isShow">
+        <!--内部组件切换时不会-->
+        <keep-alive>
+            <comp v-if="isShow"></comp>
+        </keep-alive>
+    </div>
+    <script src="../../dist/vue.js"></script>
+    <script>
+        // 声明自定义组件 
+        Vue.component('comp', {
+            template: ` <div>comp</div> `,
+            created() { console.log('comp created!'); }
+        })
+        // 创建实例 
+        const app = new Vue({
+            el: '#demo',
+            data: { isShow: true }
+        });
+        console.log(app.$options.render);
+    </script>
+</body>
+
+</html>

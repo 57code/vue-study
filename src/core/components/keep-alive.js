@@ -50,18 +50,21 @@ function pruneCacheEntry (
 
 const patternTypes: Array<Function> = [String, RegExp, Array]
 
+// 组件配置
 export default {
   name: 'keep-alive',
   abstract: true,
 
   props: {
-    include: patternTypes,
-    exclude: patternTypes,
-    max: [String, Number]
+    include: patternTypes, // 包含哪些需要缓存组件
+    exclude: patternTypes, // 排除那些不需要缓存组件
+    max: [String, Number]  // 缓存最大数量
   },
 
   created () {
+    // 缓存对象 {[key]: vdom}
     this.cache = Object.create(null)
+    // 记录缓存数量
     this.keys = []
   },
 
@@ -81,44 +84,61 @@ export default {
   },
 
   render () {
+    // 获取插槽内容
     const slot = this.$slots.default
+    // 获取首个子组件vnode
     const vnode: VNode = getFirstComponentChild(slot)
+    // 获取其选项
     const componentOptions: ?VNodeComponentOptions = vnode && vnode.componentOptions
+    // 选项存在
     if (componentOptions) {
       // check pattern
+      // 获取子组件名称
       const name: ?string = getComponentName(componentOptions)
+      // 获取keep-alive组件设置属性
       const { include, exclude } = this
+      // 如果设置包含组件名，那么查看当前首个子组件不包含在include中
       if (
         // not included
         (include && (!name || !matches(include, name))) ||
         // excluded
+        // 如果设置排除选项，排除那些在排除名单中存在的组件
         (exclude && name && matches(exclude, name))
       ) {
+        // 以上两种情况不做任何处理
         return vnode
       }
 
+      // 获取缓存和keys数组
       const { cache, keys } = this
+      // 当前组件key的获取
       const key: ?string = vnode.key == null
         // same constructor may get registered as different local components
         // so cid alone is not enough (#3269)
         ? componentOptions.Ctor.cid + (componentOptions.tag ? `::${componentOptions.tag}` : '')
         : vnode.key
+      // 先查缓存
       if (cache[key]) {
+        // 替换为缓存的组件实例
         vnode.componentInstance = cache[key].componentInstance
         // make current key freshest
         remove(keys, key)
         keys.push(key)
       } else {
+        // 没有缓存，缓存它
         cache[key] = vnode
         keys.push(key)
         // prune oldest entry
+        // 修剪最老的缓存项
         if (this.max && keys.length > parseInt(this.max)) {
           pruneCacheEntry(cache, keys[0], keys, this._vnode)
         }
       }
 
+      // 关键动作：标记子组件为keepAlive
       vnode.data.keepAlive = true
     }
+    // 返回vnode
     return vnode || (slot && slot[0])
   }
 }

@@ -37,11 +37,12 @@ const componentVNodeHooks = {
   // 实例化和挂载
   init (vnode: VNodeWithData, hydrating: boolean): ?boolean {
     if (
-      vnode.componentInstance &&
-      !vnode.componentInstance._isDestroyed &&
-      vnode.data.keepAlive
+      vnode.componentInstance && // 实例已经存在
+      !vnode.componentInstance._isDestroyed && // 未被销毁
+      vnode.data.keepAlive // 被标记为keepAlive
     ) {
       // kept-alive components, treat as a patch
+      // 对于缓存组件，只需patch即可
       const mountedNode: any = vnode // work around flow
       componentVNodeHooks.prepatch(mountedNode, mountedNode)
     } else {
@@ -73,6 +74,7 @@ const componentVNodeHooks = {
       componentInstance._isMounted = true
       callHook(componentInstance, 'mounted')
     }
+    // 缓存组件
     if (vnode.data.keepAlive) {
       if (context._isMounted) {
         // vue-router#1212
@@ -90,6 +92,7 @@ const componentVNodeHooks = {
   destroy (vnode: MountedComponentVNode) {
     const { componentInstance } = vnode
     if (!componentInstance._isDestroyed) {
+      // 不是缓存组件直接销毁
       if (!vnode.data.keepAlive) {
         componentInstance.$destroy()
       } else {
