@@ -9,7 +9,8 @@ const { createRenderer } = require('vue-server-renderer')
 const renderer = createRenderer()
 
 // 路由和同构
-app.get('/', async (req, res) => {
+app.get('*', async (req, res) => {
+//  { url: req.url}
   // 创建vue实例
   const vm = new Vue({
     data() {
@@ -17,7 +18,13 @@ app.get('/', async (req, res) => {
         name: '村长真棒'
       }
     },
-    template: '<div>{{name}}</div>'
+    template: '<div @click="onclick">{{name}}</div>',
+    methods: {
+      onclick() {
+        console.log('click!');
+        
+      }
+    },
   })
   try {
     // 渲染获取html字符串
