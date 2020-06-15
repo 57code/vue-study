@@ -2,7 +2,7 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
     <p @click="add">{{counter}}</p>
-    <HelloWorld @add-feature="addFeature"/>
+    <HelloWorld @add-feature="addFeature" msg="ts in vue"/>
     <TsxComp msg="tsx comp"></TsxComp>
   </div>
 </template>
