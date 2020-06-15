@@ -1,63 +1,88 @@
 <template>
-  <div>
-    <!-- store是哪来的，state是响应式的 -->
-    <!-- Store类得有commit方法可以执行mutation -->
-    <p @click="$store.commit('add')">{{$store.state.count}}</p>
-    <p @click="$store.dispatch('asyncAdd')">async:{{$store.state.count}}</p>
-    <!-- <p>{{$store.getters.doubleCount}}</p> -->
-
-    <p>{{xx}}</p>
-    <button @click="sayHi">say hi</button>
-    <!-- $attrs -->
-    <p v-on="$listeners">{{$attrs.msg}}</p>
-    <!-- provide/inject -->
-    <p>{{bar2}}</p>
-    <p>{{app.$options.name}}</p>
-    <!-- 插槽 -->
-    <slot></slot>
-    <div>
-      <slot name="content" baz="content from child"></slot>
-    </div>
+  <div class="hello">
+    <p>
+      <input type="text" @keyup.enter="addFeature" />
+    </p>
+    <ul>
+      <li
+        v-for="feature in features"
+        :key="feature.id"
+        :class="{selected: feature.selected}"
+      >{{feature.name}}</li>
+      <li>特性总数：{{count}}</li>
+    </ul>
+    
   </div>
 </template>
 
-<script>
-  export default {
-    inject: {
-      bar2: 'bar',
-      app: 'app'
-    },
-    data() {
-      return {
-        xx: 'xx',
-        bar: 'my bar'
-      }
-    },
-    mounted() {
-      console.log(this.$store);
-      
-      setTimeout(() => {
-        // this.$store.state = {}
-        this.$store.state.count++
-      }, 1000);
-      
-      // 监听事件
-      this.$root.$on('foo', msg => {
-        console.log(msg);
-        
-      })
-    },
-    methods: {
-      sayHi() {
-        // 派发者和监听者是同一个
-        // this.$parent.$emit('foo', 'something from brother')
-        this.$root.$emit('foo', 'something from brother')
+<script lang="ts">
+// class-style组件
+import { Component, Prop, Vue } from "vue-property-decorator";
 
-      }
-    },
+type Feature = {
+  id: number;
+  name: string;
+};
+
+type Select = {
+  selected: boolean;
+};
+
+type FeatureSelect = Feature & Select;
+
+@Component
+export default class HelloWorld extends Vue {
+  // 类的属性将直接转换为data
+  features: FeatureSelect[] = [];
+
+  // 生命周期同名方法作为同名钩子使用
+  created() {
+    this.features = [
+      { id: 1, name: "类型注解", selected: false },
+      { id: 2, name: "静态类型检测", selected: true }
+    ];
   }
+
+  // 方法直接作为methods选项
+  addFeature(e: KeyboardEvent) {
+    // 获取input的value属性
+    // 如果用户特别确定类型，可以做类型断言
+    const inp = e.target as HTMLInputElement;
+    const val = inp.value;
+    const feature: FeatureSelect = {
+      id: this.features.length + 1,
+      name: val,
+      selected: false
+    };
+    this.features.push(feature);
+    inp.value = "";
+  }
+
+  // 存取器作为计算属性存在
+  get count() {
+    return this.features.length
+  }
+}
+
+// options-style
+// export default Vue.extend({
+//   props: ['msg'],
+//   mounted () {
+//     this.msg;
+//   },
+// })
 </script>
 
+<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+h3 {
+  margin: 40px 0 0;
+}
+a {
+  color: #42b983;
+}
 
+.selected {
+  background-color: rgb(186, 222, 245);
+}
 </style>
