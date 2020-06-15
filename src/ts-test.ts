@@ -121,11 +121,10 @@ class Foo {
 // 类装饰器参数是装饰的class
 function log(fn: any) {
   return function (target: Function) {
-    // console.log(typeof target);
-    
     target.prototype.log = function () {
+      // 移到这里比较
+      console.log(target===Foo);
       fn(this.bar);
-      
     }
   }
 }
