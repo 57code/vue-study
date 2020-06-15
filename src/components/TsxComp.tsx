@@ -1,4 +1,5 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { CreateElement } from 'vue';
 
 @Component
 export default class HelloWorld extends Vue {
@@ -11,7 +12,7 @@ export default class HelloWorld extends Vue {
     
   }
   
-  render(h) {
+  render(h: CreateElement) {
     // jsx
     return <div class="hello">
       <h1 onClick={this.onclick}>{ this.msg }</h1>

@@ -105,3 +105,41 @@ class Child extends Parent {
 const child = new Child()
 const parent2 = new Parent()
 parent2.foo
+
+
+// 装饰器
+@log(window.alert)
+class Foo {
+  bar = 'bar'
+
+  @rec
+  setBar(val: string) {
+    this.bar = val
+  }
+}
+
+// 类装饰器参数是装饰的class
+function log(fn: any) {
+  return function (target: Function) {
+    // console.log(typeof target);
+    
+    target.prototype.log = function () {
+      fn(this.bar);
+      
+    }
+  }
+}
+
+// 参数1是Foo实例
+function rec(target: any, name: string, descriptor: any) {
+  // 这里通过修改descriptor.value扩展了bar方法
+  const baz = descriptor.value;
+  descriptor.value = function(val: string) {
+      console.log('run method', name);
+      baz.call(this, val);
+  }
+}
+
+const foo = new Foo()
+// @ts-ignore
+foo.log()

@@ -1,15 +1,17 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld />
+    <p @click="add">{{counter}}</p>
+    <HelloWorld @add-feature="addFeature"/>
     <TsxComp msg="tsx comp"></TsxComp>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import HelloWorld from './components/HelloWorld.vue';
+import HelloWorld, {FeatureSelect} from './components/HelloWorld.vue';
 import TsxComp from './components/TsxComp'
+import cm from '@/store/counter'
 
 @Component({
   components: {
@@ -17,7 +19,20 @@ import TsxComp from './components/TsxComp'
     TsxComp
   },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  addFeature(feature: FeatureSelect) {
+    console.log(feature.name);
+    
+  }
+
+  get counter() {
+    return cm.count
+  }
+
+  add() {
+    cm.add()
+  }
+}
 </script>
 
 <style>
