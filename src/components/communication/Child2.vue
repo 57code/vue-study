@@ -21,8 +21,8 @@
       }
     },
   }
+};
 </script>
 
 <style scoped>
-
 </style>

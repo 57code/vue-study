@@ -36,6 +36,9 @@
         
       }
     },
+    mounted () {
+      this.$children[1].sendToChild1();
+    },
   }
 </script>
 
