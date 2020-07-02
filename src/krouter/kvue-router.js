@@ -9,12 +9,18 @@ class KVueRouter {
     // 响应式数据
     const initial = window.location.hash.slice(1) || '/'
     KVue.util.defineReactive(this, 'current', initial)
-    
+
     // this.current = '/'
 
     // 监听事件
     window.addEventListener('hashchange', this.onHashChange.bind(this))
     window.addEventListener('load', this.onHashChange.bind(this))
+
+    // 缓存路由映射关系
+    this.routeMap = {}
+    this.$options.routes.forEach(route => {
+      this.routeMap[route.path] = route
+    });
   }
 
   onHashChange() {
@@ -73,10 +79,14 @@ KVueRouter.install = function (Vue) {
   Vue.component('router-view', {
     render(h) {
       // 1.获取路由器实例
-      const routes = this.$router.$options.routes
-      const current = this.$router.current
-      const route = routes.find(route => route.path === current)
-      const comp = route ? route.component : null
+      // const routes = this.$router.$options.routes
+      // const current = this.$router.current
+      // const route = routes.find(route => route.path === current)
+      // const comp = route ? route.component : null
+
+      const { routeMap, current } = this.$router
+      const comp = routeMap[current] ? routeMap[current].component : null;
+
       // 获取路由表 '/'
       return h(comp)
     }
