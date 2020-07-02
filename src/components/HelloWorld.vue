@@ -3,7 +3,7 @@
     <h1>{{ msg }}</h1>
     <p @click="$store.commit('add')">counter: {{$store.state.counter}}</p>
     <p @click="$store.dispatch('add')">async counter: {{$store.state.counter}}</p>
-    <p>doubleCounter: {{$store.getters.doubleCounter}}</p>
+    <!-- <p>doubleCounter: {{$store.getters.doubleCounter}}</p> -->
     <!-- 组件通信 -->
     <!-- <Communication></Communication> -->
     <!-- 表单 -->
