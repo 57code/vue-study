@@ -13,12 +13,12 @@ class Store {
 
     // 绑定this到store实例
     const store = this
-    const {commit, action} = store
+    const {commit, dispatch} = store
     this.commit = function boundCommit(type, payload) {
       commit.call(store, type, payload)
     }
-    this.action = function boundAction(type, payload) {
-      return action.call(store, type, payload)
+    this.dispatch = function boundDispatch(type, payload) {
+      return dispatch.call(store, type, payload)
     }
 
     // getters
