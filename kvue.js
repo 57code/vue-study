@@ -53,6 +53,9 @@ class KVue {
 
     // 代理
     proxy(this)
+
+    // 编译
+    new Compile('#app', this)
   }
 }
 
@@ -68,5 +71,55 @@ class Observer {
   walk(obj) {
     Object.keys(obj).forEach(
       key => defineReactive(obj, key, obj[key]))
+  }
+}
+
+
+// 编译过程
+// new Compile(el, vm)
+class Compile {
+  constructor(el, vm) {
+    this.$vm = vm
+
+    this.$el = document.querySelector(el)
+
+    // 编译模板
+    if (this.$el) {
+      this.compile(this.$el)
+    }
+  }
+
+  compile(el) {
+    // 递归遍历el
+    el.childNodes.forEach(node => {
+      // 判断其类型
+      if (this.isElement(node)) {
+        console.log('编译元素', node.nodeName);
+        
+      } else if (this.isInter(node)){
+        // console.log('编译插值表达式', node.textContent);
+        this.compileText(node)
+      }
+
+      if(node.childNodes) {
+        this.compile(node)
+      }
+    })
+  }
+
+  // 插值文本编译
+  compileText(node) {
+    // 获取匹配表达式
+    node.textContent = this.$vm[RegExp.$1]
+  }
+  
+  // 元素
+  isElement(node) {
+    return node.nodeType === 1
+  }
+
+  // 判断是否是插值表达式{{xx}}
+  isInter(node) {
+    return node.nodeType === 3 && /\{\{(.*)\}\}/.test(node.textContent)
   }
 }
