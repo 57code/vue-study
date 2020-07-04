@@ -133,6 +133,11 @@ class Compile {
         const dir = attrName.substring(2)
         // 执行指令
         this[dir] && this[dir](node, exp)
+      } 
+      
+      else if(attrName.startWith('@')){
+        // 
+        
       }
 
     })

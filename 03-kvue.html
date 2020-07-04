@@ -8,7 +8,7 @@
 </head>
 <body>
   <div id="app">
-    <p>{{counter}}</p>
+    <p @click="onclick">{{counter}}</p>
     <p k-text="counter"></p>
     <p k-html="desc"></p>
   </div>
@@ -21,6 +21,13 @@
       data: {
         counter: 1,
         desc: 'kvue<span style="color:red">真棒</span>'
+      },
+      methods: {
+        onclick() {
+          // this必须是组件实例
+          console.log(this);
+          
+        }
       },
     })
     setInterval(() => {
