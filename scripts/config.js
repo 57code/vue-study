@@ -35,6 +35,7 @@ const resolve = p => {
   }
 }
 
+// 打包配置
 const builds = {
   // Runtime only (CommonJS). Used by bundlers e.g. Webpack & Browserify
   'web-runtime-cjs-dev': {
