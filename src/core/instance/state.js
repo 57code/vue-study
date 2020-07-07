@@ -50,6 +50,7 @@ export function initState (vm: Component) {
   const opts = vm.$options
   if (opts.props) initProps(vm, opts.props)
   if (opts.methods) initMethods(vm, opts.methods)
+  // 数据响应式处理
   if (opts.data) {
     initData(vm)
   } else {
@@ -111,6 +112,7 @@ function initProps (vm: Component, propsOptions: Object) {
 
 function initData (vm: Component) {
   let data = vm.$options.data
+  // data类型是函数执行之
   data = vm._data = typeof data === 'function'
     ? getData(data, vm)
     : data || {}
@@ -123,6 +125,7 @@ function initData (vm: Component) {
     )
   }
   // proxy data on instance
+  // 校验和代理
   const keys = Object.keys(data)
   const props = vm.$options.props
   const methods = vm.$options.methods
@@ -148,6 +151,7 @@ function initData (vm: Component) {
     }
   }
   // observe data
+  // 执行递归处理
   observe(data, true /* asRootData */)
 }
 

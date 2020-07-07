@@ -728,6 +728,7 @@
 
   Dep.prototype.depend = function depend () {
     if (Dep.target) {
+      // 实际执行的是watcher的addDep()
       Dep.target.addDep(this);
     }
   };
@@ -857,9 +858,12 @@
    * dynamically accessing methods on Array prototype
    */
 
+  // 获取数组原型
   var arrayProto = Array.prototype;
+  // 复制一份
   var arrayMethods = Object.create(arrayProto);
 
+  // 7个需要覆盖的方法
   var methodsToPatch = [
     'push',
     'pop',
@@ -875,13 +879,19 @@
    */
   methodsToPatch.forEach(function (method) {
     // cache original method
+    // 缓存原始方法
     var original = arrayProto[method];
     def(arrayMethods, method, function mutator () {
       var args = [], len = arguments.length;
       while ( len-- ) args[ len ] = arguments[ len ];
 
+      // 执行原始方法
       var result = original.apply(this, args);
+
+      // 扩展行为：通知更新
       var ob = this.__ob__;
+
+      // 有三个操作是新元素加入
       var inserted;
       switch (method) {
         case 'push':
@@ -892,8 +902,10 @@
           inserted = args.slice(2);
           break
       }
+      // 新加入元素需要执行响应式处理
       if (inserted) { ob.observeArray(inserted); }
       // notify change
+      // 小管家通知更新
       ob.dep.notify();
       return result
     });
@@ -924,7 +936,10 @@
     this.dep = new Dep();
     this.vmCount = 0;
     def(value, '__ob__', this);
+
+    // 根据传入数据类型做相应处理
     if (Array.isArray(value)) {
+      // 如果是数组，走原型覆盖
       if (hasProto) {
         protoAugment(value, arrayMethods);
       } else {
@@ -932,6 +947,7 @@
       }
       this.observeArray(value);
     } else {
+      // 否则是对象，遍历处理
       this.walk(value);
     }
   };
@@ -944,6 +960,7 @@
   Observer.prototype.walk = function walk (obj) {
     var keys = Object.keys(obj);
     for (var i = 0; i < keys.length; i++) {
+      // 每个key都执行defineReactive方法
       defineReactive(obj, keys[i]);
     }
   };
@@ -965,6 +982,7 @@
    */
   function protoAugment (target, src) {
     /* eslint-disable no-proto */
+    // 修改数组实例的原型为我们覆盖过7个方法的原型对象
     target.__proto__ = src;
     /* eslint-enable no-proto */
   }
@@ -990,8 +1008,11 @@
     if (!isObject(value) || value instanceof VNode) {
       return
     }
+    // 获取一个Observer实例
+    // 执行过程中出现一个对象，就会创建一个Observer
     var ob;
     if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
+      // 如果已经是响应式数据直接返回其ob
       ob = value.__ob__;
     } else if (
       shouldObserve &&
@@ -1000,6 +1021,7 @@
       Object.isExtensible(value) &&
       !value._isVue
     ) {
+      // 如果首次创建一个新实例
       ob = new Observer(value);
     }
     if (asRootData && ob) {
@@ -1018,6 +1040,7 @@
     customSetter,
     shallow
   ) {
+    // key对应的管家dep
     var dep = new Dep();
 
     var property = Object.getOwnPropertyDescriptor(obj, key);
@@ -1032,15 +1055,21 @@
       val = obj[key];
     }
 
+    // 有可能递归
     var childOb = !shallow && observe(val);
     Object.defineProperty(obj, key, {
       enumerable: true,
       configurable: true,
       get: function reactiveGetter () {
         var value = getter ? getter.call(obj) : val;
+        // 依赖收集
         if (Dep.target) {
+          // dep n:n watcher
+          // 组件内会有很多key，所以一个watcher会有多个dep
           dep.depend();
+          // 如果存在子ob：主要用于未来对象可能有属性增删，数组会有元素增删
           if (childOb) {
+            // 对象内部小管家要和当前watcher建立关系
             childOb.dep.depend();
             if (Array.isArray(value)) {
               dependArray(value);
@@ -4497,9 +4526,12 @@
   Watcher.prototype.addDep = function addDep (dep) {
     var id = dep.id;
     if (!this.newDepIds.has(id)) {
+      // 如果没有保存过关系，保存一下
+      // 创建watcher和dep的关系
       this.newDepIds.add(id);
       this.newDeps.push(dep);
       if (!this.depIds.has(id)) {
+        // 反向创建dep和watcher关系
         dep.addSub(this);
       }
     }
@@ -4634,6 +4666,7 @@
     var opts = vm.$options;
     if (opts.props) { initProps(vm, opts.props); }
     if (opts.methods) { initMethods(vm, opts.methods); }
+    // 数据响应式处理
     if (opts.data) {
       initData(vm);
     } else {
@@ -4695,6 +4728,7 @@
 
   function initData (vm) {
     var data = vm.$options.data;
+    // data类型是函数执行之
     data = vm._data = typeof data === 'function'
       ? getData(data, vm)
       : data || {};
@@ -4707,6 +4741,7 @@
       );
     }
     // proxy data on instance
+    // 校验和代理
     var keys = Object.keys(data);
     var props = vm.$options.props;
     var methods = vm.$options.methods;
@@ -4732,6 +4767,7 @@
       }
     }
     // observe data
+    // 执行递归处理
     observe(data, true /* asRootData */);
   }
 
