@@ -17,10 +17,10 @@
         // 创建实例
         const app = new Vue({
             el: '#demo',
-            data: { arr: [1,2,3] },
+            data: { arr: ['a','b','c','d'] },
             mounted() {
                 setTimeout(() => {
-                    this.arr.push(4)
+                    this.arr.splice(2, 0, 'e')                    
                 }, 1000);
             }
         });
