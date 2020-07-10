@@ -181,6 +181,7 @@ export default class Watcher {
    */
   run () {
     if (this.active) {
+      // 
       const value = this.get()
       if (
         value !== this.value ||

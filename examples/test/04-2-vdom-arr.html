@@ -18,6 +18,38 @@
         const app = new Vue({
             el: '#demo',
             data: { arr: ['a','b','c','d'] },
+            // 使用key
+            // a b c d
+            // a b e c d
+
+            // b c d
+            // b e c d
+
+            // c d
+            // e c d
+
+            // c
+            // e c
+
+            // []
+            // e // 创建一次，插入
+
+
+            // 不使用key  undefined === undefined
+            // a b c d
+            // a b e c d
+
+            // b c d
+            // b e c d
+
+            // c d
+            // e c d  update c e
+
+            // d
+            // c d update c d
+
+            // []
+            // d  create d  insert d
             mounted() {
                 setTimeout(() => {
                     this.arr.splice(2, 0, 'e')                    

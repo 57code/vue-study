@@ -17,19 +17,35 @@
             el: '#demo',
             data: { foo: 'ready~~' },
             mounted() {
+                // 批量、异步
+                // 每次赋值，watcher入队
+
+                // $nextTick()把传入回调函数放入callbacks队尾
+
+                
                 this.foo = Math.random()
                 console.log('1:' + this.foo);
+                
                 this.foo = Math.random()
                 console.log('2:' + this.foo);
+
                 this.foo = Math.random()
                 console.log('3:' + this.foo);
-                // 异步行为，此时内容没变
-                console.log('p1.innerHTML:' + p1.innerHTML)
 
+                // 异步行为，此时内容没变
+                console.log('p1.innerHTML:' + p1.innerHTML) // ready~~
+
+                // [callbacks, fn]
+                // Promise.resolve().then(() => {
+                //     console.log('promise, p1.innerHTML:' + p1.innerHTML)
+                // })
+                
                 this.$nextTick(() => {
                     // 这里才是最新的值
                     console.log('p1.innerHTML:' + p1.innerHTML)
                 })
+                
+                
             }
         });
     </script>

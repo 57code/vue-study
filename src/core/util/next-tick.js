@@ -7,6 +7,7 @@ import { isIE, isIOS, isNative } from './env'
 
 export let isUsingMicroTask = false
 
+// 存储用户传入回调
 const callbacks = []
 let pending = false
 
@@ -40,6 +41,7 @@ let timerFunc
 // Promise is available, we will use it:
 /* istanbul ignore next, $flow-disable-line */
 if (typeof Promise !== 'undefined' && isNative(Promise)) {
+  // 首选Promise
   const p = Promise.resolve()
   timerFunc = () => {
     p.then(flushCallbacks)
@@ -84,11 +86,13 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   }
 }
 
+// 此处nextTick就是熟悉的Vue.nextTick
 export function nextTick (cb?: Function, ctx?: Object) {
   let _resolve
   callbacks.push(() => {
     if (cb) {
       try {
+        // 调用传入回调
         cb.call(ctx)
       } catch (e) {
         handleError(e, ctx, 'nextTick')
@@ -99,6 +103,7 @@ export function nextTick (cb?: Function, ctx?: Object) {
   })
   if (!pending) {
     pending = true
+    // 异步执行
     timerFunc()
   }
   // $flow-disable-line
