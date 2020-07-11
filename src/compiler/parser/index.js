@@ -76,6 +76,7 @@ export function createASTElement (
 /**
  * Convert HTML string to AST.
  */
+// 三个parser： HTML/ text / filter
 export function parse (
   template: string,
   options: CompilerOptions
@@ -87,13 +88,16 @@ export function parse (
   platformGetTagNamespace = options.getTagNamespace || no
   const isReservedTag = options.isReservedTag || no
   maybeComponent = (el: ASTElement) => !!el.component || !isReservedTag(el.tag)
-
+  // 选项合并
   transforms = pluckModuleFunction(options.modules, 'transformNode')
   preTransforms = pluckModuleFunction(options.modules, 'preTransformNode')
   postTransforms = pluckModuleFunction(options.modules, 'postTransformNode')
 
+  // {{}}
   delimiters = options.delimiters
 
+  // 解析过程
+  // <div><span></span></div>
   const stack = []
   const preserveWhitespace = options.preserveWhitespace !== false
   const whitespaceOption = options.whitespace
@@ -201,6 +205,7 @@ export function parse (
     }
   }
 
+  // 核心解析算法
   parseHTML(template, {
     warn,
     expectHTML: options.expectHTML,
@@ -210,6 +215,7 @@ export function parse (
     shouldDecodeNewlinesForHref: options.shouldDecodeNewlinesForHref,
     shouldKeepComment: options.comments,
     outputSourceRange: options.outputSourceRange,
+    // 开始标签
     start (tag, attrs, unary, start, end) {
       // check namespace.
       // inherit parent ns if there is one
@@ -221,6 +227,7 @@ export function parse (
         attrs = guardIESVGBug(attrs)
       }
 
+      // 创建一个ast元素
       let element: ASTElement = createASTElement(tag, attrs, currentParent)
       if (ns) {
         element.ns = ns
@@ -277,6 +284,7 @@ export function parse (
         processRawAttrs(element)
       } else if (!element.processed) {
         // structural directives
+        // 结构型指令处理
         processFor(element)
         processIf(element)
         processOnce(element)

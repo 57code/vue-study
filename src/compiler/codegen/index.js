@@ -40,6 +40,7 @@ export type CodegenResult = {
   staticRenderFns: Array<string>
 };
 
+// ast =》 code string
 export function generate (
   ast: ASTElement | void,
   options: CompilerOptions

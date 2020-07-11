@@ -12,6 +12,7 @@ export const createCompiler = createCompilerCreator(function baseCompile (
   template: string,
   options: CompilerOptions
 ): CompiledResult {
+  // 1.解析：将传入template解析为ast
   const ast = parse(template.trim(), options)
   if (options.optimize !== false) {
     optimize(ast, options)
