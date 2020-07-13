@@ -13,12 +13,27 @@
     </div>
     <script>
         Vue.component('comp', {
-            template: '<div>I am comp</div>'
+            template: '<div>I am comp</div>',
         })
         // 创建实例
+        // vue根实例
+        // App根组件
+        // comp组件
         const app = new Vue({
             el: '#demo'
         });
+
+        console.log(app.$options.render);
+        
+        
+        // 生命周期 ，带子组件的
+        // parent create
+        //      parent beforeMount
+        //          child create
+        //          child beforeMount
+        //          child mounted
+        //      parent mounted 
+
     </script>
 </body>
 
