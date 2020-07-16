@@ -1,63 +1,74 @@
 <template>
-  <div>
-    <!-- store是哪来的，state是响应式的 -->
-    <!-- Store类得有commit方法可以执行mutation -->
-    <p @click="$store.commit('add')">{{$store.state.count}}</p>
-    <p @click="$store.dispatch('asyncAdd')">async:{{$store.state.count}}</p>
-    <!-- <p>{{$store.getters.doubleCount}}</p> -->
-
-    <p>{{xx}}</p>
-    <button @click="sayHi">say hi</button>
-    <!-- $attrs -->
-    <p v-on="$listeners">{{$attrs.msg}}</p>
-    <!-- provide/inject -->
-    <p>{{bar2}}</p>
-    <p>{{app.$options.name}}</p>
-    <!-- 插槽 -->
-    <slot></slot>
+  <div class="hello">
+    <h1>{{msg}}</h1>
+    <!-- 新增特性 -->
     <div>
-      <slot name="content" baz="content from child"></slot>
+      <input type="text" @keyup.enter="addFeature" />
     </div>
+    <!-- 特性列表 -->
+    <ul>
+      <li
+        v-for="feature in features"
+        :key="feature.id"
+        :class="{selected: feature.selected}"
+      >{{feature.name}}</li>
+    </ul>
   </div>
 </template>
 
-<script>
-  export default {
-    inject: {
-      bar2: 'bar',
-      app: 'app'
-    },
-    data() {
-      return {
-        xx: 'xx',
-        bar: 'my bar'
-      }
-    },
-    mounted() {
-      console.log(this.$store);
-      
-      setTimeout(() => {
-        // this.$store.state = {}
-        this.$store.state.count++
-      }, 1000);
-      
-      // 监听事件
-      this.$root.$on('foo', msg => {
-        console.log(msg);
-        
-      })
-    },
-    methods: {
-      sayHi() {
-        // 派发者和监听者是同一个
-        // this.$parent.$emit('foo', 'something from brother')
-        this.$root.$emit('foo', 'something from brother')
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { FeatureSelect } from "@/types";
 
-      }
-    },
+// class-style
+@Component
+export default class HelloWorld extends Vue {
+  @Prop() private msg!: string;
+
+  // 属性将成为data中数据
+  features: FeatureSelect[] = [];
+
+  addFeature(e: KeyboardEvent) {
+    // 类型断言
+    const inp = e.target as HTMLInputElement;
+    const feature: FeatureSelect = {
+      id: this.features.length + 1,
+      name: inp.value,
+      selected: false
+    };
+    this.features.push(feature);
+    inp.value = "";
   }
+
+  // 生命周期
+  created() {
+    this.features = [
+      { id: 1, name: "类型注解", selected: false },
+      { id: 2, name: "编译类型语言", selected: true }
+    ];
+  }
+}
+
+// option-style
+// import Vue from 'vue'
+// export default Vue.extend({
+//   data(){
+
+//   }
+// })
 </script>
 
+<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+h3 {
+  margin: 40px 0 0;
+}
 
+a {
+  color: #42b983;
+}
+
+.selected {
+  background-color: rgb(187, 240, 244);
+}
 </style>
