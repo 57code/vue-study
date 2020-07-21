@@ -1,0 +1,15 @@
+<div id="app"></div>
+
+<script src="04.js"></script>
+<script>
+  // 做响应式数据
+  const data = reactive({foo: 'foo'})
+
+  effect(() => {
+    app.innerText = data.foo
+  })
+
+  setTimeout(() => {
+    data.foo = 'fooooooooooooooo'
+  }, 1000);
+</script>
