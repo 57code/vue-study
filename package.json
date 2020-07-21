@@ -25,19 +25,6 @@
   "tsd": {
     "directory": "test-dts"
   },
-  "gitHooks": {
-    "pre-commit": "ls-lint && lint-staged",
-    "commit-msg": "node scripts/verifyCommit.js"
-  },
-  "lint-staged": {
-    "*.js": [
-      "prettier --write"
-    ],
-    "*.ts?(x)": [
-      "eslint",
-      "prettier --parser=typescript --write"
-    ]
-  },
   "engines": {
     "node": ">=10.0.0"
   },
