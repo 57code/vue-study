@@ -1,0 +1,48 @@
+<div id="app">
+  <h1>{{message}}</h1>
+  <p @click="add">{{count}}</p>
+  <p>{{doubleCount}}</p>
+  <p>{{num}}</p>
+</div>
+
+<script src="../dist/vue.global.js"></script>
+<script>
+  // 创建实例方式变化了
+  const { createApp, reactive, computed, ref, toRefs } = Vue
+  const app = createApp({
+    setup() {
+      // reactivity api 
+      // message相关
+      const data = reactive({
+        message: 'hello,vue3',
+      })
+
+      setTimeout(() => {
+        data.message = 'vue3,hello'
+      }, 1000);
+
+      // setInterval(() => {
+      //   data.count++
+      // }, 1000);
+
+
+      // count相关
+      const counter = reactive({
+        count: 0,
+        doubleCount: computed(() => counter.count * 2)
+      })
+
+      function add() {
+        counter.count++
+      }
+
+      // 单值响应式, ref()返回Ref对象，如果要修改它的值，访问value属性
+      const num = ref(0)
+      setInterval(() => {
+        num.value++
+      }, 1000);
+      
+      return { ...toRefs(data), add, ...toRefs(counter), num }
+    }
+  }).mount('#app')
+</script>

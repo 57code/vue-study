@@ -19,8 +19,11 @@ __DEV__=false yarn dev
 const execa = require('execa')
 const { fuzzyMatchTarget } = require('./utils')
 const args = require('minimist')(process.argv.slice(2))
+// 目标，默认vue
 const target = args._.length ? fuzzyMatchTarget(args._)[0] : 'vue'
+// 格式，--formats -f
 const formats = args.formats || args.f
+// 映射，--sourcemap -s
 const sourceMap = args.sourcemap || args.s
 const commit = execa.sync('git', ['rev-parse', 'HEAD']).stdout.slice(0, 7)
 

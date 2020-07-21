@@ -1,0 +1,22 @@
+<div id="app">
+  <h1>{{message}}</h1>
+  <comp></comp>
+</div>
+
+<script src="../dist/vue.global.js"></script>
+<script>
+  // 创建实例方式变化了
+  const {createApp} = Vue
+  const app = createApp({
+    data() {
+      return {
+        'message': 'hello, vue3'
+      }
+    },
+  })
+  // 以前全局方法，变成实例方法
+  app.component('comp', {
+    template: '<div>comp</div>'
+  })
+  app.mount('#app')
+</script>
