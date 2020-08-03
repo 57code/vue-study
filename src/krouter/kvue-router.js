@@ -8,6 +8,13 @@ class VueRouter {
   constructor(options) {
     this.$options = options
 
+    // 缓存path和route映射关系
+    this.routeMap = {}
+    this.$options.routes.forEach(
+      route => {
+        this.routeMap[route.path] = route
+      })
+    // console.log(route);
     
     // 需要定义一个响应式的current属性
     const initial = window.location.hash.slice(1) || '/'
@@ -64,14 +71,9 @@ VueRouter.install = function(Vue) {
   })
   Vue.component('router-view', {
     render(h) {
-      let component = null
       // 找到当前url对应的组件
-      const route = this.$router.$options.routes.find(route => route.path === this.$router.current)
-      console.log(route);
-      
-      if (route) {
-        component = route.component
-      }
+      const {routeMap, current} = this.$router
+      const component = routeMap[current] ? routeMap[current].component : null
       // 渲染传入组件
       return h(component)
     }
