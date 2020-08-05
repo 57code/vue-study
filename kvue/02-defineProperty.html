@@ -1,0 +1,32 @@
+<div id="app"></div>
+<script>
+  // Object.defineProperty()
+// 拦截：对某个对象的某个key做拦截
+function defineReactive(obj, key, val) {
+  Object.defineProperty(obj, key, {
+    get() {
+      console.log('get', key);
+      return val
+    },
+    set(newVal) {
+      if (val !== newVal) {
+        val = newVal
+        console.log('set', key);
+        update()
+      }
+    }
+  })
+}
+
+const obj = {}
+
+defineReactive(obj, 'foo', new Date().toLocaleTimeString())
+
+function update() {
+  app.innerHTML = obj.foo
+}
+
+setInterval(() => {
+  obj.foo = new Date().toLocaleTimeString()
+}, 1000);
+</script>
