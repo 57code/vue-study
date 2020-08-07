@@ -26,7 +26,10 @@
             mounted() {
                 
                 setTimeout(() => {
-                    this.obj.foo = 'fooooo'
+                    // this.obj.foo = 'fooooo'
+                    // 如果要观察大总管工作情况，可以在observer/index.js
+                    // 的set()方法中添加断点，约在line 229
+                    this.$set(this.obj, 'bar', 'barrrrr')
                 }, 1000);
             }
         });
