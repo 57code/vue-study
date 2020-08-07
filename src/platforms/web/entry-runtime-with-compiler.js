@@ -14,11 +14,14 @@ const idToTemplate = cached(id => {
   return el && el.innerHTML
 })
 
+// web平台需要扩展$mount：
+// 
 const mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
+  // 获取dom元素
   el = el && query(el)
 
   /* istanbul ignore if */
@@ -31,7 +34,10 @@ Vue.prototype.$mount = function (
 
   const options = this.$options
   // resolve template/el and convert to render function
+  // el < template < render
+  // render优先级最高
   if (!options.render) {
+    // 没有render才找template
     let template = options.template
     if (template) {
       if (typeof template === 'string') {
@@ -54,14 +60,18 @@ Vue.prototype.$mount = function (
         return this
       }
     } else if (el) {
+      // 最后才是el元素内部的内容作为模板
       template = getOuterHTML(el)
     }
+
+    // 如果存在模板，我们需要编译它，结果将会是一个render函数
     if (template) {
       /* istanbul ignore if */
       if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
         mark('compile')
       }
 
+      // 获取render
       const { render, staticRenderFns } = compileToFunctions(template, {
         outputSourceRange: process.env.NODE_ENV !== 'production',
         shouldDecodeNewlines,
@@ -69,6 +79,7 @@ Vue.prototype.$mount = function (
         delimiters: options.delimiters,
         comments: options.comments
       }, this)
+      // 将它设置到组件选项上
       options.render = render
       options.staticRenderFns = staticRenderFns
 
@@ -79,6 +90,7 @@ Vue.prototype.$mount = function (
       }
     }
   }
+  // mount方法默认任务
   return mount.call(this, el, hydrating)
 }
 

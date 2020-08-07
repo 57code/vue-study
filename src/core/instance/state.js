@@ -109,6 +109,7 @@ function initProps (vm: Component, propsOptions: Object) {
   toggleObserving(true)
 }
 
+// 数据响应式
 function initData (vm: Component) {
   let data = vm.$options.data
   data = vm._data = typeof data === 'function'
@@ -148,6 +149,7 @@ function initData (vm: Component) {
     }
   }
   // observe data
+  // 遍历data并做响应式处理
   observe(data, true /* asRootData */)
 }
 
