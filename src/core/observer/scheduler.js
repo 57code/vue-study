@@ -92,6 +92,7 @@ function flushSchedulerQueue () {
     }
     id = watcher.id
     has[id] = null
+    // 关键代码：执行run函数
     watcher.run()
     // in dev build, check and stop circular updates.
     if (process.env.NODE_ENV !== 'production' && has[id] != null) {
@@ -162,7 +163,9 @@ function callActivatedHooks (queue) {
  * pushed when the queue is being flushed.
  */
 export function queueWatcher (watcher: Watcher) {
+  // 获取秘书id
   const id = watcher.id
+  // 判断是否已经入队，去重
   if (has[id] == null) {
     has[id] = true
     if (!flushing) {
@@ -184,6 +187,9 @@ export function queueWatcher (watcher: Watcher) {
         flushSchedulerQueue()
         return
       }
+      // 如果没有在等待状态
+      // 使用nextTick将flushSchedulerQueue入队
+      // 尝试异步方式将该函数放入微任务队列
       nextTick(flushSchedulerQueue)
     }
   }

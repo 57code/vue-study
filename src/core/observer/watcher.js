@@ -171,6 +171,7 @@ export default class Watcher {
     } else if (this.sync) {
       this.run()
     } else {
+      // 秘书入队
       queueWatcher(this)
     }
   }
@@ -179,6 +180,7 @@ export default class Watcher {
    * Scheduler job interface.
    * Will be called by the scheduler.
    */
+  // 小秘书真正执行任务函数
   run () {
     if (this.active) {
       const value = this.get()

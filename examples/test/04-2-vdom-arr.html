@@ -17,10 +17,51 @@
         // 创建实例
         const app = new Vue({
             el: '#demo',
-            data: { arr: [1,2,3] },
+            data: { arr: ['A','B','C','D'] },
             mounted() {
                 setTimeout(() => {
-                    this.arr.push(4)
+                    // this.arr.push(4)
+                    // A B C D
+                    // A E B C D
+
+                    // 1.两个开头
+                    // B C D
+                    // E B C D
+
+                    // 2.两个结束
+                    // B C
+                    // E B C
+                    
+                    // 3.两个结束
+                    // B 
+                    // E B 
+
+                    // 4.两个结束
+                    //  
+                    // E  
+
+                    // 5.创建E，追加
+
+
+                    // 如果没有key
+                    // A B C D
+                    // A E B C D 
+
+                    // B C D
+                    // E B C D 更新一次
+
+                    // C D
+                    // B C D 更新二次
+
+                    // D
+                    // C D 更新三次
+
+                    // 
+                    // D 更新四次
+
+                    // 创建D，并追加
+        
+                    this.arr.splice(1, 0, 'E')
                 }, 1000);
             }
         });

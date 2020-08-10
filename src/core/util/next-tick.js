@@ -39,6 +39,7 @@ let timerFunc
 // completely stops working after triggering a few times... so, if native
 // Promise is available, we will use it:
 /* istanbul ignore next, $flow-disable-line */
+// 首选Promise
 if (typeof Promise !== 'undefined' && isNative(Promise)) {
   const p = Promise.resolve()
   timerFunc = () => {
@@ -84,8 +85,11 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   }
 }
 
+// 此方法就是我们平时使用$nextTick方法
 export function nextTick (cb?: Function, ctx?: Object) {
   let _resolve
+  // 用户传递的回调函数会被放入calbacks里面
+  // 前面刷新函数就是执行callback中的所有回调
   callbacks.push(() => {
     if (cb) {
       try {
@@ -99,6 +103,7 @@ export function nextTick (cb?: Function, ctx?: Object) {
   })
   if (!pending) {
     pending = true
+    // 定时器函数启动
     timerFunc()
   }
   // $flow-disable-line

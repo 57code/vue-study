@@ -17,22 +17,29 @@
             el: '#demo',
             data: { foo: 'ready~~' },
             mounted() {
+               
+               
                 
                 this.foo = Math.random()
                 console.log('1:' + this.foo);
+
                 this.foo = Math.random()
                 console.log('2:' + this.foo);
                 
+               
+                
                 this.foo = Math.random()
                 console.log('3:' + this.foo);
+
                 // 异步行为，此时内容没变
                 console.log('p1.innerHTML:' + p1.innerHTML)
 
-                
+                // 独立微任务放入队列
                 // Promise.resolve().then(()=>{
                 //     console.log('promise:' + p1.innerHTML);
                 // })
                 
+                // 前面的赋值行为已经让flushSchedulerQueue先入队了
                 this.$nextTick(() => {
                     // 这里才是最新的值
                     console.log('p1.innerHTML:' + p1.innerHTML)
