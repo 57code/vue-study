@@ -76,6 +76,10 @@ export function createASTElement (
 /**
  * Convert HTML string to AST.
  */
+// compiler/index中调用的parse
+// 目标：template字符串转换为ast
+// <div>...</div>
+// {tag:'div', type:1}
 export function parse (
   template: string,
   options: CompilerOptions
@@ -88,12 +92,14 @@ export function parse (
   const isReservedTag = options.isReservedTag || no
   maybeComponent = (el: ASTElement) => !!el.component || !isReservedTag(el.tag)
 
+  // 其他平台转换函数
   transforms = pluckModuleFunction(options.modules, 'transformNode')
   preTransforms = pluckModuleFunction(options.modules, 'preTransformNode')
   postTransforms = pluckModuleFunction(options.modules, 'postTransformNode')
 
   delimiters = options.delimiters
 
+  // 配对stack
   const stack = []
   const preserveWhitespace = options.preserveWhitespace !== false
   const whitespaceOption = options.whitespace
@@ -201,6 +207,7 @@ export function parse (
     }
   }
 
+  // 开始解析
   parseHTML(template, {
     warn,
     expectHTML: options.expectHTML,
@@ -211,6 +218,7 @@ export function parse (
     shouldKeepComment: options.comments,
     outputSourceRange: options.outputSourceRange,
     start (tag, attrs, unary, start, end) {
+      // 遇到开始标签
       // check namespace.
       // inherit parent ns if there is one
       const ns = (currentParent && currentParent.ns) || platformGetTagNamespace(tag)
@@ -221,6 +229,7 @@ export function parse (
         attrs = guardIESVGBug(attrs)
       }
 
+      // 生成ast对象
       let element: ASTElement = createASTElement(tag, attrs, currentParent)
       if (ns) {
         element.ns = ns

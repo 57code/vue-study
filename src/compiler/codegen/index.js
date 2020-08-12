@@ -40,11 +40,13 @@ export type CodegenResult = {
   staticRenderFns: Array<string>
 };
 
+// 渲染函数代码生成
 export function generate (
   ast: ASTElement | void,
   options: CompilerOptions
 ): CodegenResult {
   const state = new CodegenState(options)
+  // 递归遍历ast，并且生成对应js代码字符串
   const code = ast ? genElement(ast, state) : '_c("div")'
   return {
     render: `with(this){return ${code}}`,
