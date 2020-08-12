@@ -44,6 +44,8 @@ export function createElement (
   return _createElement(context, tag, data, children, normalizationType)
 }
 
+// 传入的tag，data，children这些数据创建一个vnode
+// 区分保留标签和自定义组件
 export function _createElement (
   context: Component,
   tag?: string | Class<Component> | Function | Object,
@@ -92,10 +94,15 @@ export function _createElement (
   } else if (normalizationType === SIMPLE_NORMALIZE) {
     children = simpleNormalizeChildren(children)
   }
+  // 从这里开始：
+  // 如果tag是字符串，这是最常见的形式
+  // h('div')
+  // h(Component)
   let vnode, ns
   if (typeof tag === 'string') {
     let Ctor
     ns = (context.$vnode && context.$vnode.ns) || config.getTagNamespace(tag)
+    // 保留标签，如div
     if (config.isReservedTag(tag)) {
       // platform built-in elements
       if (process.env.NODE_ENV !== 'production' && isDef(data) && isDef(data.nativeOn)) {
@@ -108,8 +115,11 @@ export function _createElement (
         config.parsePlatformTagName(tag), data, children,
         undefined, undefined, context
       )
-    } else if ((!data || !data.pre) && isDef(Ctor = resolveAsset(context.$options, 'components', tag))) {
-      // component
+    } else if ((
+      !data || !data.pre) && 
+      isDef(Ctor = resolveAsset(context.$options, 'components', tag))) {
+      // component 自定义组件
+      // 上面语句获取组件构造函数
       vnode = createComponent(Ctor, data, context, children, tag)
     } else {
       // unknown or unlisted namespaced elements

@@ -33,6 +33,7 @@ import {
 } from 'weex/runtime/recycle-list/render-component-template'
 
 // inline hooks to be invoked on component VNodes during patch
+// 系统自带默认组件管理钩子
 const componentVNodeHooks = {
   init (vnode: VNodeWithData, hydrating: boolean): ?boolean {
     if (
@@ -41,13 +42,16 @@ const componentVNodeHooks = {
       vnode.data.keepAlive
     ) {
       // kept-alive components, treat as a patch
+      // 如果有缓存，走该逻辑
       const mountedNode: any = vnode // work around flow
       componentVNodeHooks.prepatch(mountedNode, mountedNode)
     } else {
+      // 根据组件vnode创建一个组件实例
       const child = vnode.componentInstance = createComponentInstanceForVnode(
         vnode,
         activeInstance
       )
+      // 挂载组件
       child.$mount(hydrating ? vnode.elm : undefined, hydrating)
     }
   },
@@ -98,6 +102,7 @@ const componentVNodeHooks = {
 
 const hooksToMerge = Object.keys(componentVNodeHooks)
 
+// 传入组件构造函数，返回vnode
 export function createComponent (
   Ctor: Class<Component> | Function | Object | void,
   data: ?VNodeData,
@@ -151,10 +156,12 @@ export function createComponent (
   resolveConstructorOptions(Ctor)
 
   // transform component v-model data into props & events
+  // v-model额外处理
   if (isDef(data.model)) {
     transformModel(Ctor.options, data)
   }
 
+  // 数据处理 h('div', {attrs:{}, on,nativeOn})
   // extract props
   const propsData = extractPropsFromVNodeData(data, Ctor, tag)
 
@@ -183,9 +190,12 @@ export function createComponent (
   }
 
   // install component management hooks onto the placeholder node
+  // 安装自定义组件管理钩子函数
   installComponentHooks(data)
 
   // return a placeholder vnode
+  // 自定义组件vnode：comp
+  // vue-component-1-comp
   const name = Ctor.options.name || tag
   const vnode = new VNode(
     `vue-component-${Ctor.cid}${name ? `-${name}` : ''}`,
@@ -223,6 +233,7 @@ export function createComponentInstanceForVnode (
   return new vnode.componentOptions.Ctor(options)
 }
 
+// 组件管理钩子
 function installComponentHooks (data: VNodeData) {
   const hooks = data.hook || (data.hook = {})
   for (let i = 0; i < hooksToMerge.length; i++) {

@@ -128,6 +128,7 @@ export function createPatchFunction (backend) {
 
   let creatingElmInVPre = 0
 
+  // 递归创建节点
   function createElm (
     vnode,
     insertedVnodeQueue,
@@ -147,10 +148,13 @@ export function createPatchFunction (backend) {
     }
 
     vnode.isRootInsert = !nested // for transition enter check
+
+    // 自定义组件的处理在这里
     if (createComponent(vnode, insertedVnodeQueue, parentElm, refElm)) {
       return
     }
 
+    // 下面处理保留标签
     const data = vnode.data
     const children = vnode.children
     const tag = vnode.tag
@@ -194,10 +198,12 @@ export function createPatchFunction (backend) {
           insert(parentElm, vnode.elm, refElm)
         }
       } else {
+        // 父节点创建完成，紧接着创建子节点
         createChildren(vnode, children, insertedVnodeQueue)
         if (isDef(data)) {
           invokeCreateHooks(vnode, insertedVnodeQueue)
         }
+        // 插入子节点
         insert(parentElm, vnode.elm, refElm)
       }
 
@@ -213,19 +219,26 @@ export function createPatchFunction (backend) {
     }
   }
 
+  // 自定义组件创建
   function createComponent (vnode, insertedVnodeQueue, parentElm, refElm) {
+    // vnode.data中会有前面安装的管理钩子
     let i = vnode.data
     if (isDef(i)) {
       const isReactivated = isDef(vnode.componentInstance) && i.keepAlive
+      // 获取初始化钩子
       if (isDef(i = i.hook) && isDef(i = i.init)) {
+        // 执行组件的初始化：实例创建和挂载
         i(vnode, false /* hydrating */)
       }
       // after calling the init hook, if the vnode is a child component
       // it should've created a child instance and mounted it. the child
       // component also has set the placeholder vnode's elm.
       // in that case we can just return the element and be done.
+      // 下一步就是把前面挂载得到的dom插入到父节点中
       if (isDef(vnode.componentInstance)) {
+        // 初始化组件：属性操作
         initComponent(vnode, insertedVnodeQueue)
+        // 插入到parentElm
         insert(parentElm, vnode.elm, refElm)
         if (isTrue(isReactivated)) {
           reactivateComponent(vnode, insertedVnodeQueue, parentElm, refElm)
@@ -792,6 +805,7 @@ export function createPatchFunction (backend) {
         const parentElm = nodeOps.parentNode(oldElm)
 
         // create new node
+        // 初始化首次执行创建，整棵树的创建
         createElm(
           vnode,
           insertedVnodeQueue,
