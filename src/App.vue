@@ -1,6 +1,12 @@
 <template>
   <div id="app">
+    <nav>
+      <router-link to="/">index</router-link>
+      <router-link to="/detail">detail</router-link>
+    </nav>
+    <h2 @click="$store.commit('add')">{{$store.state.count}}</h2>
     <HelloWorld msg="vue ssr"></HelloWorld>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -10,7 +16,7 @@ import HelloWorld from '@/components/HelloWorld.vue'
 export default {
   components: {
     HelloWorld
-  },
+  }
 }
 </script>
 
