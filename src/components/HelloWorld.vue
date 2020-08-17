@@ -1,40 +1,73 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
+    <!-- <h1>{{ msg }}</h1> -->
     <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
+      <input type="text" @keyup.enter="addFeature" />
     </p>
-    <h3>Installed CLI Plugins</h3>
+    <!-- 列举ts特性 -->
     <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-typescript" target="_blank" rel="noopener">typescript</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
+      <li
+        v-for="feature in features"
+        :key="feature.id"
+        :class="{selected: feature.selected}"
+      >{{feature.name}}</li>
+      <li>特性总数：{{count}}</li>
     </ul>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from "vue-property-decorator";
 
+// Feature类型
+// type Feature = {
+//   id: number;
+//   name: string;
+// };
+
+interface Feature {
+  id: number;
+  name: string;
+}
+
+type Select = {
+  selected: boolean;
+};
+
+type FeatureSelect = Feature & Select;
+
+// 导出的组件构造函数
 @Component
 export default class HelloWorld extends Vue {
-  @Prop() private msg!: string;
+  features: FeatureSelect[] = [];
+
+  // 方法作为methods中的选项
+  addFeature(e: KeyboardEvent) {
+    // 获取input元素
+    // as: 类型断言，使类型更加具体，不是类型转换
+    const inp = e.target as HTMLInputElement;
+    const feature: FeatureSelect = {
+      id: this.features.length + 1,
+      name: inp.value,
+      selected: false,
+    };
+    this.features.push(feature);
+
+    inp.value = "";
+  }
+
+  // 生命周期
+  created() {
+    this.features = [
+      { id: 1, name: "类型注解", selected: false },
+      { id: 2, name: "编译型语言", selected: true },
+    ];
+  }
+
+  // 存取器可以定义计算属性
+  get count() {
+    return this.features.length
+  }
 }
 </script>
 
@@ -47,11 +80,12 @@ ul {
   list-style-type: none;
   padding: 0;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
+
 a {
   color: #42b983;
+}
+
+.selected {
+  background-color: #ddd;
 }
 </style>
