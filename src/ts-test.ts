@@ -92,3 +92,39 @@ class Parent {
   }
 }
 
+
+// 装饰器原理
+function log(fn: any) {
+  return function (target: Function) {
+    target.prototype.log = function () {
+      // console.log('log:', this.bar);
+      fn('log:' + this.bar)
+    }
+  }
+}
+
+// 方法装饰器
+function rec(target: any, name: string, descriptor: any) {
+  // 这里通过修改descriptor.value扩展了bar方法
+  const baz = descriptor.value;
+  // 覆盖value，修改了class内部的method
+  descriptor.value = function(val: string) {
+      console.log('run method', name);
+      baz.call(this, val);
+  }
+}
+
+@log(window.alert)
+class Foo {
+  bar = 'bar'
+
+  @rec
+  setBar(val: string) {
+    this.bar = val
+  }
+}
+
+const foo = new Foo()
+
+// @ts-ignore
+foo.log()
