@@ -8,7 +8,9 @@ if (!process.env.TARGET) {
 }
 
 const masterVersion = require('./package.json').version
+// 包目录
 const packagesDir = path.resolve(__dirname, 'packages')
+// 子模块目录，默认vue
 const packageDir = path.resolve(packagesDir, process.env.TARGET)
 const name = path.basename(packageDir)
 const resolve = p => path.resolve(packageDir, p)
@@ -80,6 +82,7 @@ function createConfig(format, output, plugins = []) {
     process.exit(1)
   }
 
+  // 前面传入映射配置
   output.sourcemap = !!process.env.SOURCE_MAP
   output.externalLiveBindings = false
 
@@ -96,6 +99,7 @@ function createConfig(format, output, plugins = []) {
 
   const shouldEmitDeclarations = process.env.TYPES != null && !hasTSChecked
 
+  // ts支持
   const tsPlugin = ts({
     check: process.env.NODE_ENV === 'production' && !hasTSChecked,
     tsconfig: path.resolve(__dirname, 'tsconfig.json'),
@@ -114,6 +118,7 @@ function createConfig(format, output, plugins = []) {
   // during a single build.
   hasTSChecked = true
 
+  // 入口
   const entryFile = /runtime$/.test(format) ? `src/runtime.ts` : `src/index.ts`
 
   const external =
