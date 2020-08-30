@@ -22,6 +22,8 @@
       onInput(e) {
         this.$emit('input', e.target.value)
         
+        // 触发校验
+        this.$parent.$emit('validate')
       }
     },
   }
