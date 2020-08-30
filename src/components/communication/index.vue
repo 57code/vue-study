@@ -4,7 +4,7 @@
     <!-- props, 自定义事件 -->
     <Child1 msg="some msg from parent" @some-event="onSomeEvent"></Child1>
     <!-- 事件总线 -->
-    <Child2 ref="child2"></Child2>
+    <Child2 ref="child2" foo="fooooo" @hello="onHello"></Child2>
   </div>
 </template>
 
@@ -13,12 +13,21 @@
   import Child2 from '@/components/communication/Child2.vue'
   
   export default {
+    provide() {
+      return {
+        bar: 'barrrrrr'
+      }
+    },
     components: {
       Child1, Child2
     },
     methods: {
       onSomeEvent(msg) {
         console.log('Communition:', msg);
+      },
+      onHello() {
+        console.log('来自孙子的问候');
+        
       }
     },
     mounted () {
