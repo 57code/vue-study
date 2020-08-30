@@ -7,6 +7,7 @@ function create(Component, props) {
   // new Ctor()
   // 方式二：借鸡生蛋
   const vm = new Vue({
+    // h是createElement(Comp, {attrs, props, on}, children)
     render: (h) => h(Component, { props }),
   }).$mount(); // 挂载将虚拟dom转换为dom
 
