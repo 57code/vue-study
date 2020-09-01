@@ -6,7 +6,13 @@ let Vue;
 class KVueRouter {
   constructor(options) {
     this.$options = options;
-    console.log(Vue);
+    
+    // 缓存path和route映射关系
+    this.routeMap = {}
+    this.$options.routes.forEach(route => {
+      this.routeMap[route.path] = route
+    })
+    
     // 响应式数据，响应式实现依赖于Vue
     // current保存当前url
     // defineReactive给一个obj定义一个响应式属性 #/about
@@ -68,14 +74,16 @@ KVueRouter.install = function(_Vue) {
     render(h) {
       // 获取current对应的组件并且渲染之
       // console.log(this.$router.current);
-      let component = null;
-      const route = this.$router.$options.routes.find(
-        (route) => route.path === this.$router.current
-      );
-      if (route) {
-        component = route.component
-      }
-      // h(Component)
+      // let component = null;
+      // const route = this.$router.$options.routes.find(
+      //   (route) => route.path === this.$router.current
+      // );
+      // if (route) {
+      //   component = route.component
+      // }
+      
+      const {routeMap, current} = this.$router
+      const component = routeMap[current] ? routeMap[current].component : null
       return h(component);
     },
   });
