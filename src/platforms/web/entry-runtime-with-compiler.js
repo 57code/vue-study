@@ -14,11 +14,12 @@ const idToTemplate = cached(id => {
   return el && el.innerHTML
 })
 
+// 扩展$mount
 const mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
-  el?: string | Element,
+  el?: string | Element, // ？表示可选参数，：后面表示类型
   hydrating?: boolean
-): Component {
+): Component { // 返回值
   el = el && query(el)
 
   /* istanbul ignore if */
@@ -29,10 +30,15 @@ Vue.prototype.$mount = function (
     return this
   }
 
+  // 获取选项
   const options = this.$options
   // resolve template/el and convert to render function
+  // 没有render选项，才执行编译
+  // render优先级最高
   if (!options.render) {
     let template = options.template
+    // template优先级次之
+    // 将template编译为render函数
     if (template) {
       if (typeof template === 'string') {
         if (template.charAt(0) === '#') {
@@ -56,12 +62,14 @@ Vue.prototype.$mount = function (
     } else if (el) {
       template = getOuterHTML(el)
     }
+    // 执行编译
     if (template) {
       /* istanbul ignore if */
       if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
         mark('compile')
       }
 
+      // 编译得到render
       const { render, staticRenderFns } = compileToFunctions(template, {
         outputSourceRange: process.env.NODE_ENV !== 'production',
         shouldDecodeNewlines,
@@ -69,6 +77,7 @@ Vue.prototype.$mount = function (
         delimiters: options.delimiters,
         comments: options.comments
       }, this)
+      // 重新设置到选项上
       options.render = render
       options.staticRenderFns = staticRenderFns
 
@@ -79,6 +88,8 @@ Vue.prototype.$mount = function (
       }
     }
   }
+  // render：获取vdom
+  // 挂载：将vdom转换为dom
   return mount.call(this, el, hydrating)
 }
 

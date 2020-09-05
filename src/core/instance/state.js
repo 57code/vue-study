@@ -336,12 +336,15 @@ export function stateMixin (Vue: Class<Component>) {
       warn(`$props is readonly.`, this)
     }
   }
+  // 1.定义两个属性
   Object.defineProperty(Vue.prototype, '$data', dataDef)
   Object.defineProperty(Vue.prototype, '$props', propsDef)
 
+  // 2.挂载两个实例方法
   Vue.prototype.$set = set
   Vue.prototype.$delete = del
 
+  // 3.侦听器
   Vue.prototype.$watch = function (
     expOrFn: string | Function,
     cb: any,

@@ -25,6 +25,7 @@ const weexFactoryPlugin = {
   }
 }
 
+// 解析前缀
 const aliases = require('./alias')
 const resolve = p => {
   const base = p.split('/')[0]
