@@ -41,10 +41,14 @@ export class Observer {
 
   constructor (value: any) {
     this.value = value
+    // 创建一个Dep实例，data: {obj: {}}
+    // 大管家：对象动态删除、增加属性，负责通知更新
     this.dep = new Dep()
     this.vmCount = 0
     def(value, '__ob__', this)
+    // 判断value类型做对应处理
     if (Array.isArray(value)) {
+      // array
       if (hasProto) {
         protoAugment(value, arrayMethods)
       } else {
@@ -52,6 +56,7 @@ export class Observer {
       }
       this.observeArray(value)
     } else {
+      // object
       this.walk(value)
     }
   }
@@ -111,6 +116,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
   if (!isObject(value) || value instanceof VNode) {
     return
   }
+  // 避免重复处理：如果存在__ob__说明做过响应式处理
   let ob: Observer | void
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
@@ -139,6 +145,7 @@ export function defineReactive (
   customSetter?: ?Function,
   shallow?: boolean
 ) {
+  // 小管家：和key一对一，值如果发生变化，负责通知更新
   const dep = new Dep()
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
@@ -153,14 +160,17 @@ export function defineReactive (
     val = obj[key]
   }
 
+  // 递归处理，如果val是对象会得到一个Ob实例
   let childOb = !shallow && observe(val)
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
+      // 依赖收集
       if (Dep.target) {
         dep.depend()
+        // 如果存在子ob，大管家也要和当前watcher建立关系
         if (childOb) {
           childOb.dep.depend()
           if (Array.isArray(value)) {

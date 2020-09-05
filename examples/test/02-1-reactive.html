@@ -13,11 +13,20 @@
     </div>
     <script>
         // 创建实例
+        // 一个组件一个watcher
+        // 一个对象一个Observer
+        // 一个key一个Dep
         // 会有几个Observer？Dep？Watcher？
-        //            2      2    1
+                //     2     2   1
+                //     2     4   1
+                //     2     6   1
         const app = new Vue({
             el: '#demo',
-            data: { obj: { foo: 'foo' } },
+            data: { 
+                obj: { 
+                    foo: 'foo' 
+                } 
+            },
             mounted() {
                 setTimeout(() => {
                     this.obj.foo = 'fooooo'

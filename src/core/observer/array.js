@@ -23,9 +23,13 @@ const methodsToPatch = [
  */
 methodsToPatch.forEach(function (method) {
   // cache original method
+  // 缓存原始方法
   const original = arrayProto[method]
+  // 覆盖它
   def(arrayMethods, method, function mutator (...args) {
+    // 执行原始方法
     const result = original.apply(this, args)
+    // 扩展：变更通知，获取ob
     const ob = this.__ob__
     let inserted
     switch (method) {
@@ -37,6 +41,7 @@ methodsToPatch.forEach(function (method) {
         inserted = args.slice(2)
         break
     }
+    // 有新成员加入，那么也会做响应式处理
     if (inserted) ob.observeArray(inserted)
     // notify change
     ob.dep.notify()

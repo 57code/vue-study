@@ -50,6 +50,7 @@ export function initState (vm: Component) {
   const opts = vm.$options
   if (opts.props) initProps(vm, opts.props)
   if (opts.methods) initMethods(vm, opts.methods)
+  // 数据响应式
   if (opts.data) {
     initData(vm)
   } else {
@@ -111,6 +112,7 @@ function initProps (vm: Component, propsOptions: Object) {
 
 function initData (vm: Component) {
   let data = vm.$options.data
+  // 判断选项类型
   data = vm._data = typeof data === 'function'
     ? getData(data, vm)
     : data || {}
@@ -148,6 +150,7 @@ function initData (vm: Component) {
     }
   }
   // observe data
+  // 数据响应式
   observe(data, true /* asRootData */)
 }
 
