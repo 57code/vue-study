@@ -15,8 +15,12 @@
         // 创建实例
         const app = new Vue({
             el: '#demo',
-            data: { foo: 'ready~~' },
+            data: { 
+                foo: 'ready~~' 
+            },
             mounted() {
+                
+                // 后面的状态修改使得flushCallbacks先进入微任务队列
                 this.foo = Math.random()
                 console.log('1:' + this.foo);
                 this.foo = Math.random()
@@ -26,6 +30,12 @@
                 // 异步行为，此时内容没变
                 console.log('p1.innerHTML:' + p1.innerHTML)
 
+                Promise.resolve().then(() => {
+                    
+                    console.log('promise:' + p1.innerHTML)
+                })
+                
+                // callbacks [cb, flushSchedulerQueue]
                 this.$nextTick(() => {
                     // 这里才是最新的值
                     console.log('p1.innerHTML:' + p1.innerHTML)
