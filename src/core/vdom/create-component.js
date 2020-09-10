@@ -34,6 +34,7 @@ import {
 
 // inline hooks to be invoked on component VNodes during patch
 const componentVNodeHooks = {
+  // 未来某个时刻组件会执行init创建实例并挂载
   init (vnode: VNodeWithData, hydrating: boolean): ?boolean {
     if (
       vnode.componentInstance &&
@@ -44,10 +45,12 @@ const componentVNodeHooks = {
       const mountedNode: any = vnode // work around flow
       componentVNodeHooks.prepatch(mountedNode, mountedNode)
     } else {
+      // 创建组件实例
       const child = vnode.componentInstance = createComponentInstanceForVnode(
         vnode,
         activeInstance
       )
+      // 挂载
       child.$mount(hydrating ? vnode.elm : undefined, hydrating)
     }
   },
@@ -144,6 +147,8 @@ export function createComponent (
     }
   }
 
+
+  // <comp v-model="xxx" @my-click="aaa">xxxx</comp>
   data = data || {}
 
   // resolve constructor options in case global mixins are applied after
@@ -156,6 +161,7 @@ export function createComponent (
   }
 
   // extract props
+  // {attrs:{}, props:{}}
   const propsData = extractPropsFromVNodeData(data, Ctor, tag)
 
   // functional component
@@ -165,6 +171,7 @@ export function createComponent (
 
   // extract listeners, since these needs to be treated as
   // child component listeners instead of DOM listeners
+  // {on:{}, nativeOn:{}}
   const listeners = data.on
   // replace with listeners with .native modifier
   // so it gets processed during parent component patch.
@@ -183,10 +190,12 @@ export function createComponent (
   }
 
   // install component management hooks onto the placeholder node
+  // 安装组件钩子，未来在父组件patch时会调用
   installComponentHooks(data)
 
   // return a placeholder vnode
   const name = Ctor.options.name || tag
+  // vue-component-1-comp
   const vnode = new VNode(
     `vue-component-${Ctor.cid}${name ? `-${name}` : ''}`,
     data, undefined, undefined, undefined, context,
@@ -224,6 +233,7 @@ export function createComponentInstanceForVnode (
 }
 
 function installComponentHooks (data: VNodeData) {
+  // 合并用户编写钩子和默认钩子
   const hooks = data.hook || (data.hook = {})
   for (let i = 0; i < hooksToMerge.length; i++) {
     const key = hooksToMerge[i]

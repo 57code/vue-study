@@ -94,6 +94,7 @@ export function parse (
 
   delimiters = options.delimiters
 
+  // 这就是验证用的栈
   const stack = []
   const preserveWhitespace = options.preserveWhitespace !== false
   const whitespaceOption = options.whitespace
@@ -201,6 +202,7 @@ export function parse (
     }
   }
 
+  // 开始解析
   parseHTML(template, {
     warn,
     expectHTML: options.expectHTML,
@@ -211,6 +213,7 @@ export function parse (
     shouldKeepComment: options.comments,
     outputSourceRange: options.outputSourceRange,
     start (tag, attrs, unary, start, end) {
+      // 遇到开始标签
       // check namespace.
       // inherit parent ns if there is one
       const ns = (currentParent && currentParent.ns) || platformGetTagNamespace(tag)
@@ -289,6 +292,7 @@ export function parse (
         }
       }
 
+      // 不是自闭和标签
       if (!unary) {
         currentParent = element
         stack.push(element)

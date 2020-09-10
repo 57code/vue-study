@@ -125,6 +125,7 @@ export function createPatchFunction (backend) {
 
   let creatingElmInVPre = 0
 
+  // 创建节点
   function createElm (
     vnode,
     insertedVnodeQueue,
@@ -144,10 +145,12 @@ export function createPatchFunction (backend) {
     }
 
     vnode.isRootInsert = !nested // for transition enter check
+    // 自定义组件创建
     if (createComponent(vnode, insertedVnodeQueue, parentElm, refElm)) {
       return
     }
 
+    // 原生标签创建
     const data = vnode.data
     const children = vnode.children
     const tag = vnode.tag
@@ -210,11 +213,14 @@ export function createPatchFunction (backend) {
     }
   }
 
+  // 自定义组件创建
   function createComponent (vnode, insertedVnodeQueue, parentElm, refElm) {
+    // 获取组件钩子
     let i = vnode.data
     if (isDef(i)) {
       const isReactivated = isDef(vnode.componentInstance) && i.keepAlive
       if (isDef(i = i.hook) && isDef(i = i.init)) {
+        // 执行组件init钩子：创建组件实例并挂载
         i(vnode, false /* hydrating */)
       }
       // after calling the init hook, if the vnode is a child component
@@ -222,7 +228,9 @@ export function createPatchFunction (backend) {
       // component also has set the placeholder vnode's elm.
       // in that case we can just return the element and be done.
       if (isDef(vnode.componentInstance)) {
+        // 属性操作
         initComponent(vnode, insertedVnodeQueue)
+        // 节点插入
         insert(parentElm, vnode.elm, refElm)
         if (isTrue(isReactivated)) {
           reactivateComponent(vnode, insertedVnodeQueue, parentElm, refElm)

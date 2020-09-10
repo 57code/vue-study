@@ -1,0 +1,74 @@
+<div id="app">
+  {{foo}}
+</div>
+<script>
+  function defineReactive(obj, key, val) {
+    Object.defineProperty(obj, key, {
+      get() {
+        return val
+      },
+      set(newVal) {
+        if (newVal !== val) {            
+          val = newVal
+          update()
+        }
+      }
+    })
+  }
+
+  const obj = {}
+  let prevVnode = null
+  defineReactive(obj, 'foo', '')
+  obj.foo = new Date().toLocaleTimeString()
+
+  // 返回VNode
+  function h(tag, props, children) {
+    return {tag, props, children}
+  }
+  
+  // function compile(template) {
+  //   // return new Function(code)
+  // }
+  
+  function render() {
+    return h('div', {id: 'app'}, obj.foo)
+  }
+  function patch(n1, n2) {
+    if (n1.nodeType) {
+      // init，创建新节点并添加到app旁边
+      const el = document.createElement(n2.tag)
+      // props
+
+      // children
+      if (typeof n2.children === 'string') {
+        el.textContent = n2.children
+      } else {
+        // 多个子节点，需要递归 略
+      }
+
+      // 插入
+      const parent = n1.parentElement
+      parent.insertBefore(el, n1.nextSibling)
+      parent.removeChild(n1)
+      n2.el = el
+    }
+
+    return n2
+  }
+  function update() {
+    // app.textContent = obj.foo
+    // 1.首先执行render获取最新vnode， 再patch
+    // 先判断是初始化还是更新
+    if(!prevVnode) {
+      // init render
+      prevVnode = patch(app, render())
+    } else {
+      // update
+      prevVnode = patch(prevVnode, render())
+    }
+  }
+
+  // setInterval(() => {
+  //   obj.foo = new Date().toLocaleTimeString()
+  // }, 1000);
+</script>

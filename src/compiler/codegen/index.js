@@ -162,6 +162,9 @@ function genIfConditions (
     return altEmpty || '_e()'
   }
 
+  // v-if="exp"
+  // exp ? genTernaryExp(condition.block) : 
+  //  genIfConditions(conditions, state, altGen, altEmpty)
   const condition = conditions.shift()
   if (condition.exp) {
     return `(${condition.exp})?${
@@ -189,8 +192,9 @@ export function genFor (
   altGen?: Function,
   altHelper?: string
 ): string {
-  const exp = el.for
-  const alias = el.alias
+  // v-for="item in items"
+  const exp = el.for // items
+  const alias = el.alias // item
   const iterator1 = el.iterator1 ? `,${el.iterator1}` : ''
   const iterator2 = el.iterator2 ? `,${el.iterator2}` : ''
 
@@ -210,6 +214,7 @@ export function genFor (
   }
 
   el.forProcessed = true // avoid recursion
+  // _l(items, function(item){...})
   return `${altHelper || '_l'}((${exp}),` +
     `function(${alias}${iterator1}${iterator2}){` +
       `return ${(altGen || genElement)(el, state)}` +
