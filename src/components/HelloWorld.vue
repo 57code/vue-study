@@ -1,40 +1,83 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
+    <h1>特性列表</h1>
+    <!-- 新增特性  -->
+    <p><input type="text" @keydown.enter="addFeature" /></p>
+    <!-- 特性列表 -->
     <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-typescript" target="_blank" rel="noopener">typescript</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
+      <li
+        v-for="feature in features"
+        :key="feature.id"
+        :class="{ selected: feature.selected }"
+      >
+        {{ feature.name }}
+      </li>
+      <li>特性总数：{{ count }}</li>
     </ul>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from "vue-property-decorator";
+import Axios from 'axios'
+
+// 类型别名
+type Feature = {
+  id: number;
+  name: string;
+};
+
+// 交叉类型
+type FeatureSelect = Feature & { selected: boolean };
+
+interface Result<T> {
+  ok: 0 | 1;
+  data: T;
+}
+
+// 泛型方法
+function getResult<T>(): Promise<Result<T>> {
+  const data: any = [
+    { id: 1, name: "类型注解", selected: false },
+    { id: 2, name: "编译型语言", selected: true },
+  ];
+  return Promise.resolve({
+    ok: 1,
+    data,
+  });
+}
 
 @Component
 export default class HelloWorld extends Vue {
-  @Prop() private msg!: string;
+  features: FeatureSelect[] = [];
+
+  async created() {
+    // this.features = (await getResult<FeatureSelect[]>()).data;
+    // getResult<FeatureSelect[]>().then(result => {
+    //   this.features = result.data
+    // })
+    Axios.get<FeatureSelect[]>('/api/list').then(res => {
+      this.features = res.data
+    })
+  }
+
+  addFeature(e: KeyboardEvent) {
+    // 断言：用户确定变量的类型，可以使用断言
+    const inp = e.target as HTMLInputElement;
+    const feature: FeatureSelect = {
+      id: this.features.length + 1,
+      name: inp.value,
+      selected: false,
+    };
+    this.features.push(feature);
+
+    inp.value = "";
+  }
+
+  // 存取器作为计算属性
+  get count() {
+    return this.features.length;
+  }
 }
 </script>
 
@@ -43,15 +86,12 @@ export default class HelloWorld extends Vue {
 h3 {
   margin: 40px 0 0;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
+
 a {
   color: #42b983;
+}
+
+.selected {
+  background-color: rgb(191, 244, 231);
 }
 </style>
