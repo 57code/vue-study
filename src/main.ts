@@ -10,7 +10,9 @@ import router from './krouter'
 import store from './kstore'
 
 import './ts-test'
+import Axios from 'axios'
 
+Vue.prototype.$axios = Axios
 Vue.config.productionTip = false
 // 事件总线
 Vue.prototype.$bus = new Vue()
