@@ -1,6 +1,10 @@
 const port  = 7070
 const path = require('path')
 const resolve = dir => path.join(__dirname, dir)
+
+console.log(process.env.foo);
+console.log(process.env.VUE_APP_DONG);
+
 module.exports = {
   publicPath: '/best-practice',
   devServer: {

@@ -14,7 +14,8 @@
 </template>
 <script>
 // import '@/icons/svg/wx.svg'
-
+console.log(process.env.foo);
+console.log(process.env.VUE_APP_DONG);
 export default {
   
 }
