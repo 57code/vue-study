@@ -5,6 +5,7 @@ import router from './krouter'
 import store from './kstore'
 // import router from './router'
 // import store from './store'
+import '@/icons'
 
 Vue.config.productionTip = false
 // 事件总线
