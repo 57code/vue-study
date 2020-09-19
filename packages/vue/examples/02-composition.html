@@ -1,0 +1,53 @@
+
+<div id="app">
+  <h1 @click="onclick">{{message}}</h1>
+  <p>{{counter}}</p>
+  <p>{{doubleCounter}}</p>
+</div>
+
+<script src="../dist/vue.global.js"></script>
+<script>
+  const {createApp, reactive, computed, onMounted, watch, ref, toRefs } = Vue
+  
+  function useCounter() {
+    // 创建响应式数据
+    const state = reactive({
+        counter: 0,
+        doubleCounter: computed(() => state.counter * 2)
+      })
+
+      setInterval(() => {
+        state.counter++
+      }, 1000)
+
+      onMounted(() => {
+        state.counter = 10
+      })
+
+      watch(() => state.counter, (val, oldVal) => {
+        console.log('counter change:' + val);
+        
+      })
+
+      return state
+  }
+  
+  // 组合api
+  const app = createApp({
+    setup() {
+      
+      const state = useCounter()
+
+      // 单值响应式: 利用Ref对象包装, 交互需要使用ref.value
+      const message = ref('hello, vue3!')
+      function onclick() {
+        console.log('click me!');
+        message.value = 'vue3, hello!'
+      }
+
+      // 返回上下文
+      return {...toRefs(state), message, onclick}
+    }
+  })
+  app.mount('#app')
+</script>
