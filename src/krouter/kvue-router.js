@@ -11,7 +11,7 @@ class VueRouter {
 
     // 把current作为响应式数据
     // 将来发生变化，router-view的render函数能够再次执行
-    const initial = window.location.hash.slice('#') || "/";
+    const initial = window.location.hash.slice(1) || "/";
     Vue.util.defineReactive(this, 'current', initial)
 
     // 监听hash变化
