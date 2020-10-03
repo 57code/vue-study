@@ -15,13 +15,36 @@ class Store {
 
     this._mutations = options.mutations
     this._actions = options.actions
+    this._getters = options.getters || {}
 
     this.commit = this.commit.bind(this)
     this.dispatch = this.dispatch.bind(this)
 
     this.getters = {}
+    this.defineReactive() // 将传入的getters配置自定义响应式
     // defineProperty(this.getters, 'doubleCounter', {get(){}})
     // 最后还能利用vue计算属性做缓存
+  }
+
+  // 天王盖地虎
+  defineReactive() {
+    const getters = this._getters
+    let result = null
+    Object.keys(getters).forEach(key => {
+      Object.defineProperty(this.getters, key, {
+        get: () => {
+          const entry = getters[key]
+          if (!entry) {
+            console.error('unkown getters key');
+          }
+          result = entry.call(this, this.state)
+          if (result === undefined) {
+            console.error('getters must be return value');
+          }
+          return result
+        }
+      })
+    })
   }
 
   get state() {
