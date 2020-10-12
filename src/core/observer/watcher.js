@@ -128,8 +128,10 @@ export default class Watcher {
   addDep (dep: Dep) {
     const id = dep.id
     if (!this.newDepIds.has(id)) {
+      // 添加当前watcher和传入dep的关系
       this.newDepIds.add(id)
       this.newDeps.push(dep)
+      // 反向给dep添加当前watcher关系
       if (!this.depIds.has(id)) {
         dep.addSub(this)
       }

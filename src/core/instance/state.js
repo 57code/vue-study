@@ -123,6 +123,7 @@ function initData (vm: Component) {
     )
   }
   // proxy data on instance
+  // 避免命名冲突
   const keys = Object.keys(data)
   const props = vm.$options.props
   const methods = vm.$options.methods
@@ -144,10 +145,12 @@ function initData (vm: Component) {
         vm
       )
     } else if (!isReserved(key)) {
+      // 代理
       proxy(vm, `_data`, key)
     }
   }
   // observe data
+  // 遍历data，做响应式处理
   observe(data, true /* asRootData */)
 }
 

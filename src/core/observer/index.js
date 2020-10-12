@@ -36,15 +36,17 @@ export function toggleObserving (value: boolean) {
  */
 export class Observer {
   value: any;
-  dep: Dep;
+  dep: Dep; // 大管家：负责对象如果有动态新增或删除属性时通知更新，数组有新元素增加和删除，通知更新
   vmCount: number; // number of vms that have this object as root $data
 
   constructor (value: any) {
     this.value = value
     this.dep = new Dep()
     this.vmCount = 0
+    // 给Ob实例定义一个—__ob__保存当前实例
     def(value, '__ob__', this)
     if (Array.isArray(value)) {
+      // 数组处理
       if (hasProto) {
         protoAugment(value, arrayMethods)
       } else {
@@ -52,6 +54,7 @@ export class Observer {
       }
       this.observeArray(value)
     } else {
+      // 对象处理
       this.walk(value)
     }
   }
@@ -62,6 +65,7 @@ export class Observer {
    * value type is Object.
    */
   walk (obj: Object) {
+    // 遍历所有属性，执行defineReactive
     const keys = Object.keys(obj)
     for (let i = 0; i < keys.length; i++) {
       defineReactive(obj, keys[i])
@@ -111,6 +115,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
   if (!isObject(value) || value instanceof VNode) {
     return
   }
+  // 每个对象一个Ob实例，作用是判断对象类型做相应处理
   let ob: Observer | void
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
@@ -121,6 +126,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
     Object.isExtensible(value) &&
     !value._isVue
   ) {
+    // 初始化创建一次
     ob = new Observer(value)
   }
   if (asRootData && ob) {
@@ -132,6 +138,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
 /**
  * Define a reactive property on an Object.
  */
+// 给一个对象定一个响应式属性
 export function defineReactive (
   obj: Object,
   key: string,
@@ -139,6 +146,8 @@ export function defineReactive (
   customSetter?: ?Function,
   shallow?: boolean
 ) {
+  // dep和key 1：1
+  // 如果key的值变化，通知更新
   const dep = new Dep()
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
@@ -153,6 +162,7 @@ export function defineReactive (
     val = obj[key]
   }
 
+  // 递归遍历
   let childOb = !shallow && observe(val)
   Object.defineProperty(obj, key, {
     enumerable: true,
@@ -160,7 +170,8 @@ export function defineReactive (
     get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
       if (Dep.target) {
-        dep.depend()
+        dep.depend() // dep和watcher互相添加映射关系
+        // 子Ob实例也要添加映射关系
         if (childOb) {
           childOb.dep.depend()
           if (Array.isArray(value)) {
