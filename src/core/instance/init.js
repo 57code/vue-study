@@ -13,6 +13,7 @@ import { extend, mergeOptions, formatComponentName } from '../util/index'
 let uid = 0
 
 export function initMixin (Vue: Class<Component>) {
+  // 实现_init初始化方法
   Vue.prototype._init = function (options?: Object) {
     const vm: Component = this
     // a uid
@@ -28,6 +29,8 @@ export function initMixin (Vue: Class<Component>) {
 
     // a flag to avoid this being observed
     vm._isVue = true
+
+    // 1.合并选项
     // merge options
     if (options && options._isComponent) {
       // optimize internal component instantiation
@@ -48,13 +51,15 @@ export function initMixin (Vue: Class<Component>) {
       vm._renderProxy = vm
     }
     // expose real self
+
+    // 初始化核心逻辑
     vm._self = vm
-    initLifecycle(vm)
-    initEvents(vm)
-    initRender(vm)
-    callHook(vm, 'beforeCreate')
+    initLifecycle(vm) // $parent/$root/...
+    initEvents(vm) // 自定义事件监听
+    initRender(vm) // $slots/$createElement
+    callHook(vm, 'beforeCreate') 
     initInjections(vm) // resolve injections before data/props
-    initState(vm)
+    initState(vm) // props/methods/data/computed/watch
     initProvide(vm) // resolve provide after data/props
     callHook(vm, 'created')
 
@@ -65,6 +70,7 @@ export function initMixin (Vue: Class<Component>) {
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
 
+    // 当设置了el选项时，自动调用$mount
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }
