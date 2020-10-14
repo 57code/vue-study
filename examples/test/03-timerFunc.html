@@ -15,20 +15,30 @@
         // 创建实例
         const app = new Vue({
             el: '#demo',
-            data: { foo: 'ready~~' },
+            data: { foo: '0' },
             mounted() {
+                
+
                 this.foo = Math.random()
-                console.log('1:' + this.foo);
+                console.log('1:' + this.foo); 
                 this.foo = Math.random()
                 console.log('2:' + this.foo);
                 this.foo = Math.random()
                 console.log('3:' + this.foo);
                 // 异步行为，此时内容没变
-                console.log('p1.innerHTML:' + p1.innerHTML)
+                console.log('p1.innerHTML:' + p1.innerHTML) // ?
 
+
+                // [flushCallbacks, cb1]
+                //    callbacks: [flushScheduleQueue, cb2]
+                Promise.resolve().then(() => {
+                    console.log('promise p1.innerHTML:' + p1.innerHTML)
+                })
+                
+                // [cb, flushSchexxxx]
                 this.$nextTick(() => {
                     // 这里才是最新的值
-                    console.log('p1.innerHTML:' + p1.innerHTML)
+                    console.log('p1.innerHTML:' + p1.innerHTML) // ?
                 })
             }
         });

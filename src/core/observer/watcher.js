@@ -170,6 +170,7 @@ export default class Watcher {
     } else if (this.sync) {
       this.run()
     } else {
+      // watcher入队
       queueWatcher(this)
     }
   }
@@ -178,8 +179,10 @@ export default class Watcher {
    * Scheduler job interface.
    * Will be called by the scheduler.
    */
+  // watcher真正执行更新的函数
   run () {
     if (this.active) {
+      // 调用watcher的get方法
       const value = this.get()
       if (
         value !== this.value ||
