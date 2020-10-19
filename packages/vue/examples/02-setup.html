@@ -1,0 +1,23 @@
+<div id="app">
+  {{title}} {{myfoo}}
+</div>
+
+<script src="../dist/vue.global.js"></script>
+<script>
+  const { createApp, ref } = Vue
+  createApp({
+    props: {
+      foo: {
+        type: String,
+        default: ''
+      },
+    },
+    setup(props, {emit, slots, attrs}) {
+      return {
+        title: ref('hello,vue3'),
+        myfoo: props.foo
+      }
+    }
+  }, {foo:'bar'})
+  .mount('#app')
+</script>

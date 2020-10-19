@@ -8,7 +8,9 @@ if (!process.env.TARGET) {
 }
 
 const masterVersion = require('./package.json').version
+// 指向packages目录
 const packagesDir = path.resolve(__dirname, 'packages')
+// 包目录，默认vue
 const packageDir = path.resolve(packagesDir, process.env.TARGET)
 const name = path.basename(packageDir)
 const resolve = p => path.resolve(packageDir, p)
@@ -114,6 +116,7 @@ function createConfig(format, output, plugins = []) {
   // during a single build.
   hasTSChecked = true
 
+  // 入口文件，默认情况下携带编译器版本
   const entryFile = /runtime$/.test(format) ? `src/runtime.ts` : `src/index.ts`
 
   const external =

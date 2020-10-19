@@ -2233,6 +2233,7 @@ function baseCreateRenderer(
     >)
   }
 
+  // 返回的对象就是renderer
   return {
     render,
     hydrate,

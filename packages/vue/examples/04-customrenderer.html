@@ -1,0 +1,95 @@
+<script type="text/x-template" id="chart">
+  <bar-chart :data="chartData"></bar-chart>
+</script>
+
+<div id="app"></div>
+
+<script src="../dist/vue.global.js"></script>
+<script>
+  const { createApp, createRenderer } = Vue
+
+  const renderer = createRenderer({
+    createElement(tag, isSVG, is) {
+      return { tag }
+    },
+    insert(child, parent, anchor) {
+      // 保存父子关系
+      child.parent = parent
+      if (!parent.childs) {
+        parent.childs = []
+      } else {
+        parent.childs.push(child)
+      }
+
+      // 如果当前节点是画布，执行绘制逻辑
+      if (parent.nodeType === 1) {
+        console.log(child);
+        draw(child)
+      }
+    },
+    patchProp(el, key, prevValue, nextValue) {
+      el[key] = nextValue
+    }
+  })
+
+  let canvas, ctx;
+  const draw = (el, noClear) => {
+    console.log(el);
+    if (!noClear) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+    }
+    if (el.tag == 'bar-chart') {
+      const { data } = el;
+      const barWidth = canvas.width / 10,
+        gap = 20,
+        paddingLeft = (data.length * barWidth + (data.length - 1) * gap) / 2,
+        paddingBottom = 10;
+      // x轴
+      // 柱状图
+      data.forEach(({ title, count, color }, index) => {
+        const x = paddingLeft + index * (barWidth + gap)
+        const y = canvas.height - paddingBottom - count
+        ctx.fillStyle = color
+        ctx.fillRect(x, y, barWidth, count)
+        // text
+      });
+    }
+    // 递归绘制⼦节点
+    el.childs && el.childs.forEach(child => draw(child, true));
+  }
+  // 扩展一个mount方法，创建一个画布元素
+  function createCanvasApp(App) {
+    const app = renderer.createApp(App)
+    const mount = app.mount
+    app.config.isCustomElement = tag => tag === 'bar-chart'
+    app.mount = function (selector) {
+      // 创建一个画布
+      canvas = document.createElement('canvas')
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+      document.querySelector(selector).appendChild(canvas)
+
+      // 获取上下文
+      ctx = canvas.getContext('2d')
+
+      // 默认功能
+      mount(canvas)
+    }
+    return app
+  }
+
+createCanvasApp({
+    template: '#chart',
+    data() {
+      return {
+        chartData: [
+          { title: '青铜', count: 200, color: 'brown' },
+          { title: '砖石', count: 300, color: 'skyblue' },
+          { title: '星耀', count: 100, color: 'purple' },
+          { title: '王者', count: 50, color: 'gold' },
+        ]
+      }
+    }
+  }).mount('#app')
+  
+</script>
