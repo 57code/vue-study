@@ -551,11 +551,13 @@ export function applyOptions(
     }
   }
 
+  // 如果data不是混入形式
   if (!asMixin) {
     if (deferredData.length) {
       deferredData.forEach(dataFn => resolveData(instance, dataFn, publicThis))
     }
     if (dataOptions) {
+      // 数据响应式
       resolveData(instance, dataOptions, publicThis)
     }
     if (__DEV__) {
@@ -779,6 +781,7 @@ function resolveData(
         `Plain object usage is no longer supported.`
     )
   }
+  // 获取数据对象
   const data = dataFn.call(publicThis, publicThis)
   if (__DEV__ && isPromise(data)) {
     warn(
@@ -790,6 +793,7 @@ function resolveData(
   if (!isObject(data)) {
     __DEV__ && warn(`data() should return an object.`)
   } else if (instance.data === EMPTY_OBJ) {
+    // 对data 做响应式处理
     instance.data = reactive(data)
   } else {
     // existing data: this is a mixin or extends.

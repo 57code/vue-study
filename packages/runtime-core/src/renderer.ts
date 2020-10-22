@@ -505,6 +505,7 @@ function baseCreateRenderer(
             optimized
           )
         } else if (shapeFlag & ShapeFlags.COMPONENT) {
+          // 初始化走这个
           processComponent(
             n1,
             n2,
@@ -1206,6 +1207,7 @@ function baseCreateRenderer(
           optimized
         )
       } else {
+        // 初始化走挂载流程
         mountComponent(
           n2,
           container,
@@ -1230,6 +1232,7 @@ function baseCreateRenderer(
     isSVG,
     optimized
   ) => {
+    // 创建组件实例
     const instance: ComponentInternalInstance = (initialVNode.component = createComponentInstance(
       initialVNode,
       parentComponent,
@@ -1254,6 +1257,7 @@ function baseCreateRenderer(
     if (__DEV__) {
       startMeasure(instance, `init`)
     }
+    // 安装组件：选项处理
     setupComponent(instance)
     if (__DEV__) {
       endMeasure(instance, `init`)
@@ -1273,6 +1277,7 @@ function baseCreateRenderer(
       return
     }
 
+    // 建立渲染函数副作用：依赖收集
     setupRenderEffect(
       instance,
       initialVNode,
@@ -1334,6 +1339,7 @@ function baseCreateRenderer(
     optimized
   ) => {
     // create reactive effect for rendering
+    // effect可以建立一个依赖关系：传入effect的回调函数和响应式数据之间
     instance.update = effect(function componentEffect() {
       if (!instance.isMounted) {
         let vnodeHook: VNodeHook | null | undefined
@@ -1353,6 +1359,7 @@ function baseCreateRenderer(
         if (__DEV__) {
           startMeasure(instance, `render`)
         }
+        // subTree是当前组件vnode
         const subTree = (instance.subTree = renderComponentRoot(instance))
         if (__DEV__) {
           endMeasure(instance, `render`)
@@ -1376,6 +1383,7 @@ function baseCreateRenderer(
           if (__DEV__) {
             startMeasure(instance, `patch`)
           }
+          // 更新组件，初始化时prevVnode是null
           patch(
             null,
             subTree,
@@ -1457,6 +1465,7 @@ function baseCreateRenderer(
         if (__DEV__) {
           startMeasure(instance, `patch`)
         }
+        // 更新
         patch(
           prevTree,
           nextTree,
@@ -2199,6 +2208,7 @@ function baseCreateRenderer(
     }
   }
 
+  // 渲染传入vnode，到指定容器中
   const render: RootRenderFunction = (vnode, container) => {
     if (vnode == null) {
       if (container._vnode) {

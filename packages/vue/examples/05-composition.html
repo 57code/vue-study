@@ -1,0 +1,39 @@
+<div id="app">
+  <p @click="add">{{state.counter}}</p>
+  <p>{{state.doubleCounter}}</p>
+  
+</div>
+
+<script src="../dist/vue.global.js"></script>
+<script>
+  const { createApp, reactive, computed, onMounted } = Vue
+  createApp({
+    setup(props, {emit, slots, attrs}) {
+      // 对象的响应式
+      const state = reactive({
+        counter: 0,
+        doubleCounter: computed(() => state.counter * 2)
+      })
+
+      function add() {
+        state.counter++
+      }
+
+      // 生命周期钩子: onMounted, onBeforeMount
+      onMounted(() => {
+        console.log('mounted', state.counter);
+      })
+
+      // other data
+      // ....
+      // ....
+      
+      // 暴露给render
+      return {
+        state,
+        add
+      }
+    }
+  })
+  .mount('#app')
+</script>

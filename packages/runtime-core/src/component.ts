@@ -529,6 +529,7 @@ function setupStatefulComponent(
   instance: ComponentInternalInstance,
   isSSR: boolean
 ) {
+  // 组件配置
   const Component = instance.type as ComponentOptions
 
   if (__DEV__) {
@@ -593,6 +594,7 @@ function setupStatefulComponent(
       handleSetupResult(instance, setupResult, isSSR)
     }
   } else {
+    // 处理选项等事务
     finishComponentSetup(instance, isSSR)
   }
 }
@@ -663,6 +665,7 @@ function finishComponentSetup(
       if (__DEV__) {
         startMeasure(instance, `compile`)
       }
+      // 获取渲染函数
       Component.render = compile(Component.template, {
         isCustomElement: instance.appContext.config.isCustomElement,
         delimiters: Component.delimiters
@@ -686,6 +689,7 @@ function finishComponentSetup(
   }
 
   // support for 2.x options
+  // 支持选项API
   if (__FEATURE_OPTIONS_API__) {
     currentInstance = instance
     applyOptions(instance, Component)

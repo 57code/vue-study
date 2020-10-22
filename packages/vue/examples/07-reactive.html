@@ -1,0 +1,13 @@
+<div id="app">
+  {{foo}}
+ </div> 
+ <script src="../dist/vue.global.js"></script> <script>
+ const { createApp } = Vue
+ createApp({
+    data() {
+      return {
+        foo: 'foo'
+      }
+    },
+  }).mount('#app')
+ </script>
