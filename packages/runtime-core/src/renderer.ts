@@ -1340,6 +1340,7 @@ function baseCreateRenderer(
   ) => {
     // create reactive effect for rendering
     // effect可以建立一个依赖关系：传入effect的回调函数和响应式数据之间
+    // componentEffect <==> updateComponent
     instance.update = effect(function componentEffect() {
       if (!instance.isMounted) {
         let vnodeHook: VNodeHook | null | undefined

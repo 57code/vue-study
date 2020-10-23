@@ -11,6 +11,7 @@ __DEV__ && initDev()
 
 const compileCache: Record<string, RenderFunction> = Object.create(null)
 
+// 编译template为渲染函数
 function compileToFunction(
   template: string | HTMLElement,
   options?: CompilerOptions
@@ -42,6 +43,7 @@ function compileToFunction(
     template = el ? el.innerHTML : ``
   }
 
+  // 执行编译过程
   const { code } = compile(
     template,
     extend(
