@@ -6,6 +6,7 @@
   ],
   "scripts": {
     "dev": "node scripts/dev.js --sourcemap",
+    "template": "node scripts/dev.js template-explorer",
     "build": "node scripts/build.js",
     "size": "node scripts/build.js vue runtime-dom size-check -p -f global",
     "lint": "eslint --ext .ts packages/*/src/**",
