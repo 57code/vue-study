@@ -10,6 +10,9 @@
       <k-form-item label="密码" prop="password">
          <k-input type="password" v-model="model.password"></k-input>
       </k-form-item>
+      <k-form-item>
+         <button @click="onLogin">登录</button>
+      </k-form-item>
     </k-form>
   
   </div>
@@ -42,6 +45,17 @@
             {required: true, message: '用输入密码'}
           ],
         }
+      }
+    },
+    methods: {
+      onLogin() {
+        this.$refs.loginForm.validate(isValid => {
+          if (isValid) {
+            console.log('submit login');
+          } else {
+            alert('校验失败')
+          }
+        })
       }
     },
   }
