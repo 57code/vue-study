@@ -7,6 +7,11 @@
 </template>
 
 <script>
+import Communication from '@/components/communication';
+import FormExample from '@/components/form';
+import SlotExample from '@/components/slots';
+import TreeExample from '@/components/recursion';
+
 export default {
   name: 'HelloWorld',
   props: {
