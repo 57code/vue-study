@@ -23,7 +23,13 @@
             // template: '<div>template</div>',
             // template: '#app',
             // render(h){return h('div','render')},
-            data:{foo:'foo'}
+            data:{
+                foo:'foo',
+                bar: {}
+            },
+            mounted(){
+                this.bar = {}
+            }
         })
 
         // new Vue({
