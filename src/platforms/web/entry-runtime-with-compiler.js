@@ -14,6 +14,8 @@ const idToTemplate = cached(id => {
   return el && el.innerHTML
 })
 
+// 扩展$mount：解析初始化选项
+// new Vue().$mount(el)
 const mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
@@ -29,10 +31,13 @@ Vue.prototype.$mount = function (
     return this
   }
 
+  // 根实例选项
   const options = this.$options
   // resolve template/el and convert to render function
+  // 查看是否存在render
   if (!options.render) {
     let template = options.template
+    // 查看template，如果设置则解析它，否则使用el选项
     if (template) {
       if (typeof template === 'string') {
         if (template.charAt(0) === '#') {
@@ -56,12 +61,15 @@ Vue.prototype.$mount = function (
     } else if (el) {
       template = getOuterHTML(el)
     }
+
+    // 如果template存在，执行编译，获取渲染函数
     if (template) {
       /* istanbul ignore if */
       if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
         mark('compile')
       }
 
+      // 编译template
       const { render, staticRenderFns } = compileToFunctions(template, {
         outputSourceRange: process.env.NODE_ENV !== 'production',
         shouldDecodeNewlines,
@@ -69,6 +77,7 @@ Vue.prototype.$mount = function (
         delimiters: options.delimiters,
         comments: options.comments
       }, this)
+      // 重新设置到选项上面
       options.render = render
       options.staticRenderFns = staticRenderFns
 
@@ -79,6 +88,7 @@ Vue.prototype.$mount = function (
       }
     }
   }
+  // 默认工作：挂载
   return mount.call(this, el, hydrating)
 }
 

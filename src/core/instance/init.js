@@ -13,6 +13,7 @@ import { extend, mergeOptions, formatComponentName } from '../util/index'
 let uid = 0
 
 export function initMixin (Vue: Class<Component>) {
+  // 初始化方法
   Vue.prototype._init = function (options?: Object) {
     const vm: Component = this
     // a uid
@@ -29,6 +30,7 @@ export function initMixin (Vue: Class<Component>) {
     // a flag to avoid this being observed
     vm._isVue = true
     // merge options
+    // 1.合并选项: 默认选项和用户选项
     if (options && options._isComponent) {
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
@@ -48,14 +50,18 @@ export function initMixin (Vue: Class<Component>) {
       vm._renderProxy = vm
     }
     // expose real self
+    // 2.
     vm._self = vm
-    initLifecycle(vm)
-    initEvents(vm)
-    initRender(vm)
+    initLifecycle(vm) // $parent/$root/$refs/..
+    // <comp @click>
+    initEvents(vm) // event 
+    // <comp>xxxxxx</comp>
+    initRender(vm) // $slots/$scopSlots/$createElement()
     callHook(vm, 'beforeCreate')
-    initInjections(vm) // resolve injections before data/props
-    initState(vm)
-    initProvide(vm) // resolve provide after data/props
+    // provide/inject
+    initInjections(vm) // 注入祖辈传下来的数据
+    initState(vm) // 组件数据初始化，包括了props/methods/data/computed/watch
+    initProvide(vm) // 给后代传递数据
     callHook(vm, 'created')
 
     /* istanbul ignore if */
@@ -65,6 +71,7 @@ export function initMixin (Vue: Class<Component>) {
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
 
+    // 如果用户设置了el，则可以省略$mount
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }

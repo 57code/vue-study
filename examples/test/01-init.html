@@ -3,6 +3,8 @@
 
 <head>
     <title>Vue源码剖析</title>
+    <!-- 使用的vue是携带编译器的版本 -->
+    <!-- 平时cli创建项目，使用的vue.runtime.esm.js，不带编译器 -->
     <script src="../../dist/vue.js"></script>
 </head>
 
@@ -15,6 +17,7 @@
     <script>
         // render > template > el
         // 创建实例
+        // 省略了$mount()
         const app = new Vue({
             el: '#demo',
             // template: '<div>template</div>',
@@ -22,6 +25,13 @@
             // render(h){return h('div','render')},
             data:{foo:'foo'}
         })
+
+        // new Vue({
+        //     render(h) {
+        //         return h(App)
+        //     }
+        // }).$mount('#app')
+
         console.log(app.$options.render);
         
     </script>

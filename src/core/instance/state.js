@@ -336,9 +336,11 @@ export function stateMixin (Vue: Class<Component>) {
       warn(`$props is readonly.`, this)
     }
   }
+  // 定义只读属性$data,$props
   Object.defineProperty(Vue.prototype, '$data', dataDef)
   Object.defineProperty(Vue.prototype, '$props', propsDef)
 
+  // 状态修改相关方法$set / $delete
   Vue.prototype.$set = set
   Vue.prototype.$delete = del
 
