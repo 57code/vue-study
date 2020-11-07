@@ -3230,6 +3230,7 @@
     resolveConstructorOptions(Ctor);
 
     // transform component v-model data into props & events
+    // 处理组件双绑v-model属性
     if (isDef(data.model)) {
       transformModel(Ctor.options, data);
     }
@@ -3262,10 +3263,13 @@
     }
 
     // install component management hooks onto the placeholder node
+    // 安装组件钩子函数
     installComponentHooks(data);
 
     // return a placeholder vnode
     var name = Ctor.options.name || tag;
+    // comp
+    // vue-component-1-comp
     var vnode = new VNode(
       ("vue-component-" + (Ctor.cid) + (name ? ("-" + name) : '')),
       data, undefined, undefined, undefined, context,
@@ -3416,6 +3420,7 @@
     if (typeof tag === 'string') {
       var Ctor;
       ns = (context.$vnode && context.$vnode.ns) || config.getTagNamespace(tag);
+      // 保留标签 div p
       if (config.isReservedTag(tag)) {
         // platform built-in elements
         if ( isDef(data) && isDef(data.nativeOn)) {
@@ -5013,7 +5018,7 @@
       vm._self = vm;
       // 
       initLifecycle(vm);
-      initEvents(vm);
+      initEvents(vm); // 组件事件监听
       initRender(vm);
       callHook(vm, 'beforeCreate');
       // inject/props/methods/data
@@ -5236,6 +5241,7 @@
     /**
      * Create asset registration methods.
      */
+    // ['component','filter','directive']
     ASSET_TYPES.forEach(function (type) {
       Vue[type] = function (
         id,
@@ -5249,12 +5255,15 @@
             validateComponentName(id);
           }
           if (type === 'component' && isPlainObject(definition)) {
+            // 定义name
             definition.name = definition.name || id;
+            // Vue.extend({data:{}}) => Ctor => new Ctor()
             definition = this.options._base.extend(definition);
           }
           if (type === 'directive' && typeof definition === 'function') {
             definition = { bind: definition, update: definition };
           }
+          // 注册全局组件
           this.options[type + 's'][id] = definition;
           return definition
         }
@@ -5947,6 +5956,7 @@
         return
       }
 
+      // 原生元素
       var data = vnode.data;
       var children = vnode.children;
       var tag = vnode.tag;
@@ -5995,6 +6005,7 @@
       var i = vnode.data;
       if (isDef(i)) {
         var isReactivated = isDef(vnode.componentInstance) && i.keepAlive;
+        // 组件实例化及挂载
         if (isDef(i = i.hook) && isDef(i = i.init)) {
           i(vnode, false /* hydrating */);
         }
@@ -6003,7 +6014,9 @@
         // component also has set the placeholder vnode's elm.
         // in that case we can just return the element and be done.
         if (isDef(vnode.componentInstance)) {
+          // 属性相关
           initComponent(vnode, insertedVnodeQueue);
+          // dom插入
           insert(parentElm, vnode.elm, refElm);
           if (isTrue(isReactivated)) {
             reactivateComponent(vnode, insertedVnodeQueue, parentElm, refElm);
@@ -6020,6 +6033,7 @@
       }
       vnode.elm = vnode.componentInstance.$el;
       if (isPatchable(vnode)) {
+        // 属性相关操作
         invokeCreateHooks(vnode, insertedVnodeQueue);
         setScope(vnode);
       } else {

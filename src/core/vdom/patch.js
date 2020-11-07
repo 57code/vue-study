@@ -146,6 +146,7 @@ export function createPatchFunction (backend) {
       return
     }
 
+    // 原生元素
     const data = vnode.data
     const children = vnode.children
     const tag = vnode.tag
@@ -212,6 +213,7 @@ export function createPatchFunction (backend) {
     let i = vnode.data
     if (isDef(i)) {
       const isReactivated = isDef(vnode.componentInstance) && i.keepAlive
+      // 组件实例化及挂载
       if (isDef(i = i.hook) && isDef(i = i.init)) {
         i(vnode, false /* hydrating */)
       }
@@ -220,7 +222,9 @@ export function createPatchFunction (backend) {
       // component also has set the placeholder vnode's elm.
       // in that case we can just return the element and be done.
       if (isDef(vnode.componentInstance)) {
+        // 属性相关
         initComponent(vnode, insertedVnodeQueue)
+        // dom插入
         insert(parentElm, vnode.elm, refElm)
         if (isTrue(isReactivated)) {
           reactivateComponent(vnode, insertedVnodeQueue, parentElm, refElm)
@@ -237,6 +241,7 @@ export function createPatchFunction (backend) {
     }
     vnode.elm = vnode.componentInstance.$el
     if (isPatchable(vnode)) {
+      // 属性相关操作
       invokeCreateHooks(vnode, insertedVnodeQueue)
       setScope(vnode)
     } else {

@@ -53,7 +53,7 @@ export function initMixin (Vue: Class<Component>) {
     vm._self = vm
     // 
     initLifecycle(vm)
-    initEvents(vm)
+    initEvents(vm) // 组件事件监听
     initRender(vm)
     callHook(vm, 'beforeCreate')
     // inject/props/methods/data

@@ -7,6 +7,7 @@ export function initAssetRegisters (Vue: GlobalAPI) {
   /**
    * Create asset registration methods.
    */
+  // ['component','filter','directive']
   ASSET_TYPES.forEach(type => {
     Vue[type] = function (
       id: string,
@@ -20,12 +21,15 @@ export function initAssetRegisters (Vue: GlobalAPI) {
           validateComponentName(id)
         }
         if (type === 'component' && isPlainObject(definition)) {
+          // 定义name
           definition.name = definition.name || id
+          // Vue.extend({data:{}}) => Ctor => new Ctor()
           definition = this.options._base.extend(definition)
         }
         if (type === 'directive' && typeof definition === 'function') {
           definition = { bind: definition, update: definition }
         }
+        // 注册全局组件
         this.options[type + 's'][id] = definition
         return definition
       }
