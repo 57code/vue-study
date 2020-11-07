@@ -41,6 +41,7 @@ export class Observer {
 
   constructor (value: any) {
     this.value = value
+    // 额外创建了一个Dep
     this.dep = new Dep()
     this.vmCount = 0
     def(value, '__ob__', this)
@@ -111,6 +112,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
   if (!isObject(value) || value instanceof VNode) {
     return
   }
+
   let ob: Observer | void
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
@@ -153,6 +155,7 @@ export function defineReactive (
     val = obj[key]
   }
 
+  // 处理可能对象嵌套，递归
   let childOb = !shallow && observe(val)
   Object.defineProperty(obj, key, {
     enumerable: true,
@@ -160,6 +163,10 @@ export function defineReactive (
     get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
       if (Dep.target) {
+        // 创建Dep和Watcher之间关系映射
+        // watcher 1：n dep
+        // watcher n: 1 dep
+        // n:n
         dep.depend()
         if (childOb) {
           childOb.dep.depend()

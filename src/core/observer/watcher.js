@@ -90,6 +90,8 @@ export default class Watcher {
         )
       }
     }
+    // computed
+    // this.$watch / watch /computed
     this.value = this.lazy
       ? undefined
       : this.get()
@@ -128,9 +130,11 @@ export default class Watcher {
   addDep (dep: Dep) {
     const id = dep.id
     if (!this.newDepIds.has(id)) {
+      // watcher => dep
       this.newDepIds.add(id)
       this.newDeps.push(dep)
       if (!this.depIds.has(id)) {
+        // dep => watcher
         dep.addSub(this)
       }
     }

@@ -84,8 +84,10 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   }
 }
 
+// 异步方式添加任务
 export function nextTick (cb?: Function, ctx?: Object) {
   let _resolve
+  // 将回调放入回调数组
   callbacks.push(() => {
     if (cb) {
       try {
@@ -99,6 +101,7 @@ export function nextTick (cb?: Function, ctx?: Object) {
   })
   if (!pending) {
     pending = true
+    // 启动异步任务
     timerFunc()
   }
   // $flow-disable-line

@@ -29,6 +29,7 @@ const aliases = require('./alias')
 const resolve = p => {
   const base = p.split('/')[0]
   if (aliases[base]) {
+    // 拼接别名+包后缀
     return path.resolve(aliases[base], p.slice(base.length + 1))
   } else {
     return path.resolve(__dirname, '../', p)
