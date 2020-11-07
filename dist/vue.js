@@ -857,9 +857,11 @@
    * dynamically accessing methods on Array prototype
    */
 
+  // 获取数组原型
   var arrayProto = Array.prototype;
+  // 克隆一份
   var arrayMethods = Object.create(arrayProto);
-
+  // 7个mutation方法
   var methodsToPatch = [
     'push',
     'pop',
@@ -875,13 +877,19 @@
    */
   methodsToPatch.forEach(function (method) {
     // cache original method
+    // 1.保存原始方法
     var original = arrayProto[method];
     def(arrayMethods, method, function mutator () {
       var args = [], len = arguments.length;
       while ( len-- ) args[ len ] = arguments[ len ];
 
+      // 先执行原始方法
       var result = original.apply(this, args);
+
+      // 扩展功能：变更通知
+      // 获取ob实例
       var ob = this.__ob__;
+      // 判断当前是否是插入操作
       var inserted;
       switch (method) {
         case 'push':
@@ -892,8 +900,10 @@
           inserted = args.slice(2);
           break
       }
+      // 新加入的对象需要做响应式处理
       if (inserted) { ob.observeArray(inserted); }
       // notify change
+      // 通知更新
       ob.dep.notify();
       return result
     });
@@ -921,15 +931,21 @@
    */
   var Observer = function Observer (value) {
     this.value = value;
+    // 创建一个Dep实例：对象变更通知
+    // 对象或有动态属性增加/删除 $set()/$delete()
+    // 数组有新选项加入和删除
     this.dep = new Dep();
     this.vmCount = 0;
     def(value, '__ob__', this);
+    // 根据不同类型做不同操作
     if (Array.isArray(value)) {
+      // 如果存在原型对象，则直接覆盖
       if (hasProto) {
         protoAugment(value, arrayMethods);
       } else {
         copyAugment(value, arrayMethods, arrayKeys);
       }
+      // 递归操作
       this.observeArray(value);
     } else {
       this.walk(value);
@@ -944,6 +960,7 @@
   Observer.prototype.walk = function walk (obj) {
     var keys = Object.keys(obj);
     for (var i = 0; i < keys.length; i++) {
+      // 对每个key做拦截
       defineReactive(obj, keys[i]);
     }
   };
@@ -963,6 +980,8 @@
    * Augment a target Object or Array by intercepting
    * the prototype chain using __proto__
    */
+  // target是数组实例
+  // 直接覆盖它的实例
   function protoAugment (target, src) {
     /* eslint-disable no-proto */
     target.__proto__ = src;
@@ -990,7 +1009,9 @@
     if (!isObject(value) || value instanceof VNode) {
       return
     }
+    // 每一个对象值都会伴生一个Observer实例
     var ob;
+    // 已经做过响应式处理，直接返回ob实例
     if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
       ob = value.__ob__;
     } else if (
@@ -1000,6 +1021,7 @@
       Object.isExtensible(value) &&
       !value._isVue
     ) {
+      // 初始化创建一个新的
       ob = new Observer(value);
     }
     if (asRootData && ob) {
@@ -1018,6 +1040,7 @@
     customSetter,
     shallow
   ) {
+    // 小管家 key
     var dep = new Dep();
 
     var property = Object.getOwnPropertyDescriptor(obj, key);
@@ -1032,13 +1055,19 @@
       val = obj[key];
     }
 
+    // 递归遍历返回childOb
     var childOb = !shallow && observe(val);
     Object.defineProperty(obj, key, {
       enumerable: true,
       configurable: true,
       get: function reactiveGetter () {
         var value = getter ? getter.call(obj) : val;
+        // 依赖收集
         if (Dep.target) {
+          // 相互添加依赖关系
+          // watcher 1：n  dep
+          // user watcher: this.$watch()
+          // n:n
           dep.depend();
           if (childOb) {
             childOb.dep.depend();
@@ -1066,7 +1095,9 @@
         } else {
           val = newVal;
         }
+        // 新的对象需要处理
         childOb = !shallow && observe(newVal);
+        // 变更通知
         dep.notify();
       }
     });
@@ -1914,6 +1945,7 @@
     var copies = callbacks.slice(0);
     callbacks.length = 0;
     for (var i = 0; i < copies.length; i++) {
+      // 实际执行的是flushSchedulerQueue
       copies[i]();
     }
   }
@@ -1938,9 +1970,11 @@
   // completely stops working after triggering a few times... so, if native
   // Promise is available, we will use it:
   /* istanbul ignore next, $flow-disable-line */
+  // 首选方式Promise
   if (typeof Promise !== 'undefined' && isNative(Promise)) {
     var p = Promise.resolve();
     timerFunc = function () {
+      // 向微任务队列中加入flushCallbacks
       p.then(flushCallbacks);
       // In problematic UIWebViews, Promise.then doesn't completely break, but
       // it can get stuck in a weird state where callbacks are pushed into the
@@ -1983,9 +2017,12 @@
     };
   }
 
+  // Vue.nextTick：异步方式将传入回调函数加入回调队列，等待同步任务结束之后批量执行
   function nextTick (cb, ctx) {
     var _resolve;
+    // 存入callbacks数组
     callbacks.push(function () {
+      // 错误处理
       if (cb) {
         try {
           cb.call(ctx);
@@ -1998,6 +2035,7 @@
     });
     if (!pending) {
       pending = true;
+      // 启动异步任务
       timerFunc();
     }
     // $flow-disable-line
@@ -3489,6 +3527,8 @@
     // so that we get proper render context inside it.
     // args order: tag, data, children, normalizationType, alwaysNormalize
     // internal version is used by render functions compiled from templates
+    // render(h)
+    // 声明h函数，也就是下面的这两个函数
     vm._c = function (a, b, c, d) { return createElement(vm, a, b, c, d, false); };
     // normalization is always applied for the public version, used in
     // user-written render functions.
@@ -3758,6 +3798,7 @@
     vm._events = Object.create(null);
     vm._hasHookEvent = false;
     // init parent attached events
+    // 初始化parent附加的事件
     var listeners = vm.$options._parentListeners;
     if (listeners) {
       updateComponentListeners(vm, listeners);
@@ -4057,6 +4098,9 @@
         measure(("vue " + name + " patch"), startTag, endTag);
       };
     } else {
+      // 组件更新函数：
+      // 1.render() => vnode
+      // 2.vnode => update() => vnode=> dom
       updateComponent = function () {
         vm._update(vm._render(), hydrating);
       };
@@ -4302,6 +4346,7 @@
       }
       id = watcher.id;
       has[id] = null;
+      // run方法是真正更新方法
       watcher.run();
       // in dev build, check and stop circular updates.
       if ( has[id] != null) {
@@ -4373,9 +4418,11 @@
    */
   function queueWatcher (watcher) {
     var id = watcher.id;
+    // 判断是否已经入队
     if (has[id] == null) {
       has[id] = true;
       if (!flushing) {
+        // 入队
         queue.push(watcher);
       } else {
         // if already flushing, splice the watcher based on its id
@@ -4387,6 +4434,7 @@
         queue.splice(i + 1, 0, watcher);
       }
       // queue the flush
+      // 队列刷新
       if (!waiting) {
         waiting = true;
 
@@ -4394,6 +4442,9 @@
           flushSchedulerQueue();
           return
         }
+        // 异步方式刷新队列
+        // nextTick如何工作的？
+        // flushSchedulerQueue如何刷新？
         nextTick(flushSchedulerQueue);
       }
     }
@@ -4495,8 +4546,10 @@
   Watcher.prototype.addDep = function addDep (dep) {
     var id = dep.id;
     if (!this.newDepIds.has(id)) {
+      // 保存相关dep
       this.newDepIds.add(id);
       this.newDeps.push(dep);
+      // dep保存watcher
       if (!this.depIds.has(id)) {
         dep.addSub(this);
       }
@@ -4530,11 +4583,14 @@
    */
   Watcher.prototype.update = function update () {
     /* istanbul ignore else */
+    // computed
     if (this.lazy) {
       this.dirty = true;
     } else if (this.sync) {
+      // 通知执行更新
       this.run();
     } else {
+      // watcher入队
       queueWatcher(this);
     }
   };
@@ -4630,8 +4686,11 @@
   function initState (vm) {
     vm._watchers = [];
     var opts = vm.$options;
+    // 1.处理props
     if (opts.props) { initProps(vm, opts.props); }
+    // 2.处理methods
     if (opts.methods) { initMethods(vm, opts.methods); }
+    // 3.数据响应式data
     if (opts.data) {
       initData(vm);
     } else {
@@ -4705,6 +4764,7 @@
       );
     }
     // proxy data on instance
+    // 避免命名冲突
     var keys = Object.keys(data);
     var props = vm.$options.props;
     var methods = vm.$options.methods;
@@ -4726,10 +4786,12 @@
           vm
         );
       } else if (!isReserved(key)) {
+        // 代理
         proxy(vm, "_data", key);
       }
     }
     // observe data
+    // 遍历data做响应式
     observe(data, true /* asRootData */);
   }
 
@@ -4918,9 +4980,11 @@
         warn("$props is readonly.", this);
       };
     }
+    // 定义只读属性$data,$props
     Object.defineProperty(Vue.prototype, '$data', dataDef);
     Object.defineProperty(Vue.prototype, '$props', propsDef);
 
+    // 状态修改相关方法$set / $delete
     Vue.prototype.$set = set;
     Vue.prototype.$delete = del;
 
@@ -4954,6 +5018,7 @@
   var uid$2 = 0;
 
   function initMixin (Vue) {
+    // 初始化方法
     Vue.prototype._init = function (options) {
       var vm = this;
       // a uid
@@ -4970,6 +5035,7 @@
       // a flag to avoid this being observed
       vm._isVue = true;
       // merge options
+      // 1.合并选项: 默认选项和用户选项
       if (options && options._isComponent) {
         // optimize internal component instantiation
         // since dynamic options merging is pretty slow, and none of the
@@ -4987,14 +5053,18 @@
         initProxy(vm);
       }
       // expose real self
+      // 2.
       vm._self = vm;
-      initLifecycle(vm);
-      initEvents(vm);
-      initRender(vm);
+      initLifecycle(vm); // $parent/$root/$refs/..
+      // <comp @click>
+      initEvents(vm); // event 
+      // <comp>xxxxxx</comp>
+      initRender(vm); // $slots/$scopSlots/$createElement()
       callHook(vm, 'beforeCreate');
-      initInjections(vm); // resolve injections before data/props
-      initState(vm);
-      initProvide(vm); // resolve provide after data/props
+      // provide/inject
+      initInjections(vm); // 注入祖辈传下来的数据
+      initState(vm); // 组件数据初始化，包括了props/methods/data/computed/watch
+      initProvide(vm); // 给后代传递数据
       callHook(vm, 'created');
 
       /* istanbul ignore if */
@@ -5004,6 +5074,7 @@
         measure(("vue " + (vm._name) + " init"), startTag, endTag);
       }
 
+      // 如果用户设置了el，则可以省略$mount
       if (vm.$options.el) {
         vm.$mount(vm.$options.el);
       }
@@ -5066,20 +5137,23 @@
     return modified
   }
 
+  // Vue构造函数
   function Vue (options) {
     if (
       !(this instanceof Vue)
     ) {
       warn('Vue is a constructor and should be called with the `new` keyword');
     }
+    // 初始化： _init（）在哪？
     this._init(options);
   }
 
-  initMixin(Vue);
-  stateMixin(Vue);
-  eventsMixin(Vue);
-  lifecycleMixin(Vue);
-  renderMixin(Vue);
+  // mixin做什么的？声明vue实例属性和方法
+  initMixin(Vue); // _init()
+  stateMixin(Vue); // $attrs/$listeners/$set / $delete/$watch
+  eventsMixin(Vue); // $on()/$emit()/$once()/$off()
+  lifecycleMixin(Vue); // _update()/$forceUpdate()/$destroy()
+  renderMixin(Vue); // $nextTick()/_render()
 
   /*  */
 
@@ -5422,6 +5496,7 @@
     initAssetRegisters(Vue);
   }
 
+  // 初始化全局api：Vue.use/component/filter/...
   initGlobalAPI(Vue);
 
   Object.defineProperty(Vue.prototype, '$isServer', {
@@ -5840,6 +5915,7 @@
     return map
   }
 
+  // 接收平台特殊操作，返回平台patch
   function createPatchFunction (backend) {
     var i, j;
     var cbs = {};
@@ -5847,6 +5923,7 @@
     var modules = backend.modules;
     var nodeOps = backend.nodeOps;
 
+    // 属性相关操作
     for (i = 0; i < hooks.length; ++i) {
       cbs[hooks[i]] = [];
       for (j = 0; j < modules.length; ++j) {
@@ -6254,6 +6331,7 @@
       }
     }
 
+    // 节点更新
     function patchVnode (
       oldVnode,
       vnode,
@@ -6295,33 +6373,44 @@
         return
       }
 
+      // 调用钩子函数
       var i;
       var data = vnode.data;
       if (isDef(data) && isDef(i = data.hook) && isDef(i = i.prepatch)) {
         i(oldVnode, vnode);
       }
 
+      // 获取两节点孩子
       var oldCh = oldVnode.children;
       var ch = vnode.children;
+
+      // 属性更新
       if (isDef(data) && isPatchable(vnode)) {
         for (i = 0; i < cbs.update.length; ++i) { cbs.update[i](oldVnode, vnode); }
         if (isDef(i = data.hook) && isDef(i = i.update)) { i(oldVnode, vnode); }
       }
+
+      // text children
       if (isUndef(vnode.text)) {
+        // 都有孩子
         if (isDef(oldCh) && isDef(ch)) {
           if (oldCh !== ch) { updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly); }
         } else if (isDef(ch)) {
+          // 新节点有孩子，创建
           {
             checkDuplicateKeys(ch);
           }
           if (isDef(oldVnode.text)) { nodeOps.setTextContent(elm, ''); }
           addVnodes(elm, null, ch, 0, ch.length - 1, insertedVnodeQueue);
         } else if (isDef(oldCh)) {
+          // 删除
           removeVnodes(oldCh, 0, oldCh.length - 1);
         } else if (isDef(oldVnode.text)) {
+          // 清空文本
           nodeOps.setTextContent(elm, '');
         }
       } else if (oldVnode.text !== vnode.text) {
+        // 文本更新
         nodeOps.setTextContent(elm, vnode.text);
       }
       if (isDef(data)) {
@@ -6455,7 +6544,9 @@
       }
     }
 
+    // 最终返回patch
     return function patch (oldVnode, vnode, hydrating, removeOnly) {
+      // 删除
       if (isUndef(vnode)) {
         if (isDef(oldVnode)) { invokeDestroyHook(oldVnode); }
         return
@@ -6464,6 +6555,7 @@
       var isInitialPatch = false;
       var insertedVnodeQueue = [];
 
+      // 新增
       if (isUndef(oldVnode)) {
         // empty mount (likely as component), create new root element
         isInitialPatch = true;
@@ -6472,8 +6564,10 @@
         var isRealElement = isDef(oldVnode.nodeType);
         if (!isRealElement && sameVnode(oldVnode, vnode)) {
           // patch existing root node
+          // 更新逻辑
           patchVnode(oldVnode, vnode, insertedVnodeQueue, null, null, removeOnly);
         } else {
+          // 初始化逻辑
           if (isRealElement) {
             // mounting to a real element
             // check if this is server-rendered content and if we can perform
@@ -9034,9 +9128,11 @@
   extend(Vue.options.components, platformComponents);
 
   // install platform patch function
+  // 安装平台特有的patch函数
   Vue.prototype.__patch__ = inBrowser ? patch : noop;
 
   // public mount method
+  // 实现mount方法：vdom =》 dom 添加到页面上dom树上
   Vue.prototype.$mount = function (
     el,
     hydrating
@@ -11881,6 +11977,8 @@
     return el && el.innerHTML
   });
 
+  // 扩展$mount：解析初始化选项
+  // new Vue().$mount(el)
   var mount = Vue.prototype.$mount;
   Vue.prototype.$mount = function (
     el,
@@ -11896,10 +11994,13 @@
       return this
     }
 
+    // 根实例选项
     var options = this.$options;
     // resolve template/el and convert to render function
+    // 查看是否存在render
     if (!options.render) {
       var template = options.template;
+      // 查看template，如果设置则解析它，否则使用el选项
       if (template) {
         if (typeof template === 'string') {
           if (template.charAt(0) === '#') {
@@ -11923,12 +12024,15 @@
       } else if (el) {
         template = getOuterHTML(el);
       }
+
+      // 如果template存在，执行编译，获取渲染函数
       if (template) {
         /* istanbul ignore if */
         if ( config.performance && mark) {
           mark('compile');
         }
 
+        // 编译template
         var ref = compileToFunctions(template, {
           outputSourceRange: "development" !== 'production',
           shouldDecodeNewlines: shouldDecodeNewlines,
@@ -11938,6 +12042,7 @@
         }, this);
         var render = ref.render;
         var staticRenderFns = ref.staticRenderFns;
+        // 重新设置到选项上面
         options.render = render;
         options.staticRenderFns = staticRenderFns;
 
@@ -11948,6 +12053,7 @@
         }
       }
     }
+    // 默认工作：挂载
     return mount.call(this, el, hydrating)
   };
 

@@ -186,6 +186,9 @@ export function mountComponent (
       measure(`vue ${name} patch`, startTag, endTag)
     }
   } else {
+    // 组件更新函数：
+    // 1.render() => vnode
+    // 2.vnode => update() => vnode=> dom
     updateComponent = () => {
       vm._update(vm._render(), hydrating)
     }

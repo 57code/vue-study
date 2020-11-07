@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head></head>
+
+<body>
+  <div id="app"></div>
+  <!--安装并引⼊snabbdom-->
+  <script src="https://cdn.bootcdn.net/ajax/libs/snabbdom/0.7.4/snabbdom.min.js">
+  </script>
+  <script>
+    // 之前编写的响应式函数
+    function defineReactive(obj, key, val) {
+      Object.defineProperty(obj, key, {
+        get() {
+          return val
+        },
+        set(newVal) {
+          val = newVal
+          // 通知更新
+          update()
+        }
+      })
+    }
+    // 导⼊patch的⼯⼚init，h是产⽣vnode的⼯⼚
+    const { init, h } = snabbdom
+    // 获取patch函数
+    const patch = init([])
+    // 上次vnode，由patch()返回
+    let vnode;
+    // 更新函数，将数据操作转换为dom操作，返回新vnode
+    function update() {
+      if (!vnode) {
+        // 初始化，没有上次vnode，传⼊宿主元素和vnode
+        vnode = patch(app, render())
+      }
+      else {
+        // 更新，传⼊新旧vnode对⽐并做更新
+        vnode = patch(vnode, render())
+      }
+    }
+    // 渲染函数，返回vnode描述dom结构
+    function render() {
+      return h('div', obj.foo)
+    }
+    // 数据
+    const obj = {}
+    // 定义响应式
+    defineReactive(obj, 'foo', '')
+    // 赋⼀个⽇期作为初始值
+    obj.foo = new Date().toLocaleTimeString()
+    // 定时改变数据，更新函数会重新执⾏
+    setInterval(() => {
+      obj.foo = new Date().toLocaleTimeString()
+    }, 1000);
+  </script>
+</body>
+
+</html>

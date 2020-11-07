@@ -15,6 +15,7 @@ function flushCallbacks () {
   const copies = callbacks.slice(0)
   callbacks.length = 0
   for (let i = 0; i < copies.length; i++) {
+    // 实际执行的是flushSchedulerQueue
     copies[i]()
   }
 }
@@ -39,9 +40,11 @@ let timerFunc
 // completely stops working after triggering a few times... so, if native
 // Promise is available, we will use it:
 /* istanbul ignore next, $flow-disable-line */
+// 首选方式Promise
 if (typeof Promise !== 'undefined' && isNative(Promise)) {
   const p = Promise.resolve()
   timerFunc = () => {
+    // 向微任务队列中加入flushCallbacks
     p.then(flushCallbacks)
     // In problematic UIWebViews, Promise.then doesn't completely break, but
     // it can get stuck in a weird state where callbacks are pushed into the
@@ -84,9 +87,12 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   }
 }
 
+// Vue.nextTick：异步方式将传入回调函数加入回调队列，等待同步任务结束之后批量执行
 export function nextTick (cb?: Function, ctx?: Object) {
   let _resolve
+  // 存入callbacks数组
   callbacks.push(() => {
+    // 错误处理
     if (cb) {
       try {
         cb.call(ctx)
@@ -99,6 +105,7 @@ export function nextTick (cb?: Function, ctx?: Object) {
   })
   if (!pending) {
     pending = true
+    // 启动异步任务
     timerFunc()
   }
   // $flow-disable-line
