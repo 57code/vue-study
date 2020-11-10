@@ -12,13 +12,21 @@
         <comp></comp>
     </div>
     <script>
+        // vue-component-1-comp
+        // $mount() => mountComponent() => watcher => updateComponent
+        // render() => update()
         Vue.component('comp', {
             template: '<div>I am comp</div>'
         })
         // 创建实例
         const app = new Vue({
-            el: '#demo'
+            el: '#demo',
         });
+        console.log(app.$options.render);
+
+        // comp => vnode => dom
+        // _c('comp')
+        // _c === h === $createElement
     </script>
 </body>
 

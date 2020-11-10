@@ -64,6 +64,8 @@ export function initGlobalAPI (Vue: GlobalAPI) {
 
   initUse(Vue)
   initMixin(Vue)
+  // Vue.extend()
   initExtend(Vue)
+  
   initAssetRegisters(Vue)
 }

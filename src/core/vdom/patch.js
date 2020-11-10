@@ -125,6 +125,7 @@ export function createPatchFunction (backend) {
 
   let creatingElmInVPre = 0
 
+  // 创建dom树
   function createElm (
     vnode,
     insertedVnodeQueue,
@@ -144,10 +145,13 @@ export function createPatchFunction (backend) {
     }
 
     vnode.isRootInsert = !nested // for transition enter check
+
+    // 创建组件dom
     if (createComponent(vnode, insertedVnodeQueue, parentElm, refElm)) {
       return
     }
 
+    // 原生节点创建
     const data = vnode.data
     const children = vnode.children
     const tag = vnode.tag
@@ -191,6 +195,12 @@ export function createPatchFunction (backend) {
           insert(parentElm, vnode.elm, refElm)
         }
       } else {
+        // 向下递归
+        // parent created
+        //   child created
+        //   child mounted
+        // parent mounted
+        // 创建自上而下，挂载自下而上
         createChildren(vnode, children, insertedVnodeQueue)
         if (isDef(data)) {
           invokeCreateHooks(vnode, insertedVnodeQueue)
@@ -214,7 +224,9 @@ export function createPatchFunction (backend) {
     let i = vnode.data
     if (isDef(i)) {
       const isReactivated = isDef(vnode.componentInstance) && i.keepAlive
+      // 获取前面安装的hook
       if (isDef(i = i.hook) && isDef(i = i.init)) {
+        // 组件实例化和挂载
         i(vnode, false /* hydrating */)
       }
       // after calling the init hook, if the vnode is a child component
@@ -222,7 +234,9 @@ export function createPatchFunction (backend) {
       // component also has set the placeholder vnode's elm.
       // in that case we can just return the element and be done.
       if (isDef(vnode.componentInstance)) {
+        // 样式、属性、事件相关初始化
         initComponent(vnode, insertedVnodeQueue)
+        // dom插入操作
         insert(parentElm, vnode.elm, refElm)
         if (isTrue(isReactivated)) {
           reactivateComponent(vnode, insertedVnodeQueue, parentElm, refElm)
@@ -782,6 +796,7 @@ export function createPatchFunction (backend) {
         const parentElm = nodeOps.parentNode(oldElm)
 
         // create new node
+        // vnode => dom
         createElm(
           vnode,
           insertedVnodeQueue,
