@@ -1,0 +1,33 @@
+<div id="app">
+  <h1>{{title}}</h1>
+  <comp></comp>
+</div>
+
+<script src="../dist/vue.global.js"></script>
+<script>
+  // new Vue
+  // vue3: createApp
+  // 捋清楚初始化过程
+  // setup生效方式
+  const { createApp } = Vue
+  // Vue.component
+  
+  
+  // 实例化方式：
+  // 1.摇树优化
+  // 2.更容易理解，全局配置会有隔离效果
+  const app = createApp({
+    data() {
+      return {
+        title: 'vue3初始化'
+      }
+    },
+    components: {}
+  })
+  // app.config.globalProperties.$axios = axios
+  app.component('comp', {
+    template: '<div>comp</div>'
+  })
+
+  app.mount('#app')
+</script>

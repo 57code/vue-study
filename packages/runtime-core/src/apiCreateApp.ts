@@ -111,10 +111,12 @@ export type CreateAppFunction<HostElement> = (
 
 let uid = 0
 
+// 获取createApp方法
 export function createAppAPI<HostElement>(
   render: RootRenderFunction,
   hydrate?: RootHydrateFunction
 ): CreateAppFunction<HostElement> {
+  // 这里是返回结果
   return function createApp(rootComponent, rootProps = null) {
     if (rootProps != null && !isObject(rootProps)) {
       __DEV__ && warn(`root props passed to app.mount() must be an object.`)
@@ -126,6 +128,7 @@ export function createAppAPI<HostElement>(
 
     let isMounted = false
 
+    // app实例定义
     const app: App = (context.app = {
       _uid: uid++,
       _component: rootComponent as ConcreteComponent,
@@ -210,8 +213,10 @@ export function createAppAPI<HostElement>(
         return app
       },
 
+      // 挂载方法
       mount(rootContainer: HostElement, isHydrate?: boolean): any {
         if (!isMounted) {
+          // 初始化vnode
           const vnode = createVNode(
             rootComponent as ConcreteComponent,
             rootProps
@@ -230,6 +235,7 @@ export function createAppAPI<HostElement>(
           if (isHydrate && hydrate) {
             hydrate(vnode as VNode<Node, Element>, rootContainer as any)
           } else {
+            // 初始化执行render方法，这里的render和组件的render不一回事
             render(vnode, rootContainer)
           }
           isMounted = true

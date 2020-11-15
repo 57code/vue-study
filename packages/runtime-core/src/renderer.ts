@@ -443,9 +443,10 @@ function baseCreateRenderer(
 
   // Note: functions inside this closure should use `const xxx = () => {}`
   // style in order to prevent being inlined by minifiers.
+  // 我们熟悉的patch更新函数
   const patch: PatchFn = (
-    n1,
-    n2,
+    n1, // old Vnode
+    n2, // new vnode
     container,
     anchor = null,
     parentComponent = null,
@@ -466,6 +467,7 @@ function baseCreateRenderer(
     }
 
     const { type, ref, shapeFlag } = n2
+    // 获取标签类型
     switch (type) {
       case Text:
         processText(n1, n2, container, anchor)
@@ -505,6 +507,7 @@ function baseCreateRenderer(
             optimized
           )
         } else if (shapeFlag & ShapeFlags.COMPONENT) {
+          // 初始化时传入的是根组件配置
           processComponent(
             n1,
             n2,
@@ -1206,6 +1209,7 @@ function baseCreateRenderer(
           optimized
         )
       } else {
+        // 初始化走挂载
         mountComponent(
           n2,
           container,
@@ -1230,6 +1234,7 @@ function baseCreateRenderer(
     isSVG,
     optimized
   ) => {
+    // 1.创建组件实例
     const instance: ComponentInternalInstance = (initialVNode.component = createComponentInstance(
       initialVNode,
       parentComponent,
@@ -1254,6 +1259,8 @@ function baseCreateRenderer(
     if (__DEV__) {
       startMeasure(instance, `init`)
     }
+    // 2.安装组件：执行setup以及options所有选项处理
+    // 等同于以前的初始化_init()
     setupComponent(instance)
     if (__DEV__) {
       endMeasure(instance, `init`)
@@ -1273,6 +1280,7 @@ function baseCreateRenderer(
       return
     }
 
+    // 3.安装渲染函数副作用
     setupRenderEffect(
       instance,
       initialVNode,
@@ -1334,8 +1342,10 @@ function baseCreateRenderer(
     optimized
   ) => {
     // create reactive effect for rendering
+    // effect称为副作用函数
     instance.update = effect(function componentEffect() {
       if (!instance.isMounted) {
+        // 初始化走这个
         let vnodeHook: VNodeHook | null | undefined
         const { el, props } = initialVNode
         const { bm, m, parent } = instance
@@ -1353,6 +1363,7 @@ function baseCreateRenderer(
         if (__DEV__) {
           startMeasure(instance, `render`)
         }
+        // 初始渲染，得到vnode
         const subTree = (instance.subTree = renderComponentRoot(instance))
         if (__DEV__) {
           endMeasure(instance, `render`)
@@ -1376,6 +1387,7 @@ function baseCreateRenderer(
           if (__DEV__) {
             startMeasure(instance, `patch`)
           }
+          // 初始化patch
           patch(
             null,
             subTree,
@@ -2199,12 +2211,14 @@ function baseCreateRenderer(
     }
   }
 
+  // 初始化时将传入vnode转换为dom，追加到container上
   const render: RootRenderFunction = (vnode, container) => {
     if (vnode == null) {
       if (container._vnode) {
         unmount(container._vnode, null, null, true)
       }
     } else {
+      // 初始化patch，首个参数是null
       patch(container._vnode || null, vnode, container)
     }
     flushPostFlushCbs()
@@ -2233,8 +2247,9 @@ function baseCreateRenderer(
     >)
   }
 
+  // 这里返回的对象就是渲染器：render/createApp
   return {
-    render,
+    render, // 初始化渲染
     hydrate,
     createApp: createAppAPI(render, hydrate)
   }

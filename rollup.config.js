@@ -9,6 +9,7 @@ if (!process.env.TARGET) {
 
 const masterVersion = require('./package.json').version
 const packagesDir = path.resolve(__dirname, 'packages')
+// 输出目标，默认vue
 const packageDir = path.resolve(packagesDir, process.env.TARGET)
 const name = path.basename(packageDir)
 const resolve = p => path.resolve(packageDir, p)
@@ -114,6 +115,7 @@ function createConfig(format, output, plugins = []) {
   // during a single build.
   hasTSChecked = true
 
+  // 入口
   const entryFile = /runtime$/.test(format) ? `src/runtime.ts` : `src/index.ts`
 
   const external =

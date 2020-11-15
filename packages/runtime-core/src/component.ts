@@ -518,6 +518,7 @@ export function setupComponent(
   initProps(instance, props, isStateful, isSSR)
   initSlots(instance, children)
 
+  // 初始化传入根组件，会执行setupStatefulComponent
   const setupResult = isStateful
     ? setupStatefulComponent(instance, isSSR)
     : undefined
@@ -552,11 +553,13 @@ function setupStatefulComponent(
   instance.accessCache = {}
   // 1. create public instance / render proxy
   // also mark it raw so it's never observed
+  // 1.创建代理，这个代理是渲染函数的上下文，这里的ctx是大家熟悉的this
   instance.proxy = new Proxy(instance.ctx, PublicInstanceProxyHandlers)
   if (__DEV__) {
     exposePropsOnRenderContext(instance)
   }
   // 2. call setup()
+  // 2.setup在这里被执行
   const { setup } = Component
   if (setup) {
     const setupContext = (instance.setupContext =
@@ -564,6 +567,7 @@ function setupStatefulComponent(
 
     currentInstance = instance
     pauseTracking()
+    // 调用setup函数  setup(props, context)
     const setupResult = callWithErrorHandling(
       setup,
       instance,
@@ -628,6 +632,7 @@ export function handleSetupResult(
       }`
     )
   }
+  // 结束组件安装
   finishComponentSetup(instance, isSSR)
 }
 
@@ -686,6 +691,7 @@ function finishComponentSetup(
   }
 
   // support for 2.x options
+  // 处理用户配置
   if (__FEATURE_OPTIONS_API__) {
     currentInstance = instance
     applyOptions(instance, Component)

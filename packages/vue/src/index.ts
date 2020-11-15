@@ -11,6 +11,7 @@ __DEV__ && initDev()
 
 const compileCache: Record<string, RenderFunction> = Object.create(null)
 
+// 编译函数
 function compileToFunction(
   template: string | HTMLElement,
   options?: CompilerOptions
