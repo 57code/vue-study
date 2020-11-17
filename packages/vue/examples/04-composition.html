@@ -1,0 +1,48 @@
+<div id="app">
+  <h1>composition api</h1>
+  <p @click="add">{{counter}}</p>
+  <p>{{doubleCounter}}</p>
+</div>
+
+<script src="../dist/vue.global.js"></script>
+<script>
+  const { createApp, reactive, computed, ref, toRefs } = Vue
+
+  // 1.抽离独立响应式api
+  // 2.维护性、可读性，逻辑集中管理
+  // 3.复用性，替换mixin，来源不明、命名冲突
+  createApp({
+    data() {
+      return {
+        state: {
+          counter: 0
+        }
+      }
+    },
+    setup() {
+      const state = reactive({
+        counter: 0,
+        doubleCounter: computed(() => state.counter * 2)
+      })
+      // const counterRef = ref(0)
+      // const doubleCounter = computed(() => counter.value * 2)
+      const add = () => {
+        state.counter++
+        // counter.value++
+      }
+      
+
+      // state2
+
+
+
+      // state3
+
+
+      // 上下文
+      return {
+        ...toRefs(state), add
+      } 
+    }
+  }).mount('#app')
+</script>

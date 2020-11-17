@@ -560,6 +560,7 @@ function setupStatefulComponent(
   }
   // 2. call setup()
   // 2.setup在这里被执行
+  // 优先执行setup
   const { setup } = Component
   if (setup) {
     const setupContext = (instance.setupContext =
