@@ -43,6 +43,7 @@ function compileToFunction(
     template = el ? el.innerHTML : ``
   }
 
+  // 对传入模板执行编译，获取render函数
   const { code } = compile(
     template,
     extend(
@@ -73,6 +74,7 @@ function compileToFunction(
   // with keys that cannot be mangled, and can be quite heavy size-wise.
   // In the global build we know `Vue` is available globally so we can avoid
   // the wildcard object.
+  // 通过new Function(code)获取渲染函数
   const render = (__GLOBAL__
     ? new Function(code)()
     : new Function('Vue', code)(runtimeDom)) as RenderFunction

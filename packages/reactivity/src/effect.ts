@@ -176,6 +176,7 @@ export function trigger(
     return
   }
 
+  // effects就是符合要求的批量执行的副作用函数
   const effects = new Set<ReactiveEffect>()
   const add = (effectsToAdd: Set<ReactiveEffect> | undefined) => {
     if (effectsToAdd) {
@@ -232,6 +233,7 @@ export function trigger(
     }
   }
 
+  // 副作用函数执行函数
   const run = (effect: ReactiveEffect) => {
     if (__DEV__ && effect.options.onTrigger) {
       effect.options.onTrigger({
@@ -244,6 +246,7 @@ export function trigger(
         oldTarget
       })
     }
+    // 如果effect设置了选项计划任务
     if (effect.options.scheduler) {
       effect.options.scheduler(effect)
     } else {

@@ -53,6 +53,7 @@ export function nextTick(fn?: () => void): Promise<void> {
   return fn ? p.then(fn) : p
 }
 
+// 任务入队操作
 export function queueJob(job: SchedulerJob) {
   // the dedupe search uses the startIndex argument of Array.includes()
   // by default the search index includes the current job that is being run
@@ -69,13 +70,16 @@ export function queueJob(job: SchedulerJob) {
     job !== currentPreFlushParentJob
   ) {
     queue.push(job)
+    // 立刻刷新队列
     queueFlush()
   }
 }
 
 function queueFlush() {
+  // 如果没有在等待，或没有在刷新过程中
   if (!isFlushing && !isFlushPending) {
     isFlushPending = true
+    // 异步方式让flushJobs进入微任务队列
     currentFlushPromise = resolvedPromise.then(flushJobs)
   }
 }
@@ -203,10 +207,13 @@ function flushJobs(seen?: CountMap) {
   //    its update can be skipped.
   // Jobs can never be null before flush starts, since they are only invalidated
   // during execution of another flushed job.
+  // 队列排序
   queue.sort((a, b) => getId(a!) - getId(b!))
 
   try {
+    // 遍历队列
     for (flushIndex = 0; flushIndex < queue.length; flushIndex++) {
+      // 类似之前watcher
       const job = queue[flushIndex]
       if (job) {
         if (__DEV__) {

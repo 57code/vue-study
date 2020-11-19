@@ -1,0 +1,15 @@
+<div id="app">
+  <h2>aaaa</h2>
+  <p>{{foo}}</p>
+</div>
+<script src="../dist/vue.global.js"></script>
+<script>
+  const { createApp, reactive } = Vue
+  const app = createApp({
+    data() {
+      return {
+        foo: 'foo'
+      }
+    }
+  }).mount('#app')
+</script>

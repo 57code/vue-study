@@ -41,6 +41,7 @@ export function compile(
   template: string,
   options: CompilerOptions = {}
 ): CodegenResult {
+  // 实际调用的是compiler-core
   return baseCompile(
     template,
     extend({}, parserOptions, options, {
