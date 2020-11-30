@@ -8,7 +8,9 @@ class VueRouter {
     // 1.处理选项
     this.$options = options;
 
-    this.current = "/";
+    // 2.需要响应式的current
+    const initial = window.location.hash.slice(1) || '/'
+    Vue.util.defineReactive(this, 'current', initial)
 
     // 2.监控url变化
     window.addEventListener("hashchange", this.onHashChange.bind(this));
