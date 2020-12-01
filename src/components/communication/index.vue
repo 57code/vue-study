@@ -23,9 +23,9 @@
     },
     mounted () {
       // $children获取子组件数组，不包括普通元素，不保证模板中顺序
-      console.log(this.$children);
+      // console.log(this.$children);
       // $refs用于引用命名的元素或组件，可包含普通元素
-      console.log(this.$refs.child2);
+      // console.log(this.$refs.child2);
       
     },
   }

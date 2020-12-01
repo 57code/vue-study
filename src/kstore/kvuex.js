@@ -18,10 +18,13 @@ class Store {
     this.commit = this.commit.bind(this)
     this.dispatch = this.dispatch.bind(this)
 
+    // 暴露api
+    this.getters = {}
+    
   }
 
   get state() {
-    console.log(this._vm);
+    // console.log(this._vm);
     return this._vm._data.$$state
   }
 
