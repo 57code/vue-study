@@ -1,0 +1,31 @@
+<div id="app"></div>
+
+<script>
+  function defineReactive(obj, key, val) {
+    Object.defineProperty(obj, key, {
+      get() {
+        console.log("get", key);
+        return val;
+      },
+      set(v) {
+        if (v !== val) {
+          console.log("set", key);
+          val = v;
+          update()
+        }
+      },
+    });
+  }
+
+  const obj = {}
+  defineReactive(obj, 'foo', '')
+  obj.foo = new Date().toLocaleTimeString()
+
+  function update() {
+    app.innerText = obj.foo
+  }
+
+  setInterval(() => {
+    obj.foo = new Date().toLocaleTimeString()
+  }, 1000)
+</script>
