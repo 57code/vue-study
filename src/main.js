@@ -12,6 +12,8 @@ Vue.config.productionTip = false
 // 事件总线
 Vue.prototype.$bus = new Vue()
 
+console.log(this);
+
 // this.$router.push()
 // Vue.prototype.$router = router
 new Vue({
