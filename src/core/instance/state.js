@@ -129,6 +129,7 @@ function initData (vm: Component) {
   const props = vm.$options.props
   const methods = vm.$options.methods
   let i = keys.length
+  // 不能重名
   while (i--) {
     const key = keys[i]
     if (process.env.NODE_ENV !== 'production') {
@@ -150,6 +151,7 @@ function initData (vm: Component) {
     }
   }
   // observe data
+  // 递归遍历data，做响应式处理
   observe(data, true /* asRootData */)
 }
 

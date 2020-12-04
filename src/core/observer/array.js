@@ -24,9 +24,15 @@ const methodsToPatch = [
 methodsToPatch.forEach(function (method) {
   // cache original method
   const original = arrayProto[method]
+  // 定义新的方法
   def(arrayMethods, method, function mutator (...args) {
+    // 原始行为
     const result = original.apply(this, args)
+
+    // 变更通知
+    // __ob__就是Observer实例
     const ob = this.__ob__
+    // 如果是插入操作
     let inserted
     switch (method) {
       case 'push':
@@ -39,6 +45,7 @@ methodsToPatch.forEach(function (method) {
     }
     if (inserted) ob.observeArray(inserted)
     // notify change
+    // 变更通知：大管家做这件事
     ob.dep.notify()
     return result
   })

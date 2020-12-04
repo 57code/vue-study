@@ -41,9 +41,14 @@ export class Observer {
 
   constructor (value: any) {
     this.value = value
+
+    // 为什么这里需要dep？
+    // 动态属性或者元素新增或删除Vue.set()/delete()
     this.dep = new Dep()
     this.vmCount = 0
     def(value, '__ob__', this)
+
+    // 根据不同类型；做不同处理
     if (Array.isArray(value)) {
       if (hasProto) {
         protoAugment(value, arrayMethods)
@@ -52,6 +57,7 @@ export class Observer {
       }
       this.observeArray(value)
     } else {
+      // object
       this.walk(value)
     }
   }
@@ -86,6 +92,7 @@ export class Observer {
  */
 function protoAugment (target, src: Object) {
   /* eslint-disable no-proto */
+  // 覆盖当前数组实例的原型
   target.__proto__ = src
   /* eslint-enable no-proto */
 }
@@ -111,7 +118,9 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
   if (!isObject(value) || value instanceof VNode) {
     return
   }
+
   let ob: Observer | void
+  // 如果做过了，就不再做响应式处理
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
   } else if (
@@ -121,6 +130,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
     Object.isExtensible(value) &&
     !value._isVue
   ) {
+    // 首次需要创建
     ob = new Observer(value)
   }
   if (asRootData && ob) {
@@ -139,6 +149,7 @@ export function defineReactive (
   customSetter?: ?Function,
   shallow?: boolean
 ) {
+  // 每个key对应一个dep
   const dep = new Dep()
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
@@ -153,12 +164,14 @@ export function defineReactive (
     val = obj[key]
   }
 
+  // 递归
   let childOb = !shallow && observe(val)
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
+      // dep n:n  watcher
       if (Dep.target) {
         dep.depend()
         if (childOb) {

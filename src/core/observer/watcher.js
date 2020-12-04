@@ -126,6 +126,7 @@ export default class Watcher {
    * Add a dependency to this directive.
    */
   addDep (dep: Dep) {
+    // dep和watcher相互添加引用关系
     const id = dep.id
     if (!this.newDepIds.has(id)) {
       this.newDepIds.add(id)
