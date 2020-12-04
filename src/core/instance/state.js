@@ -48,7 +48,9 @@ export function proxy (target: Object, sourceKey: string, key: string) {
 export function initState (vm: Component) {
   vm._watchers = []
   const opts = vm.$options
+  // props最先做初始化，优先级最高
   if (opts.props) initProps(vm, opts.props)
+  // methods第二个初始化
   if (opts.methods) initMethods(vm, opts.methods)
   if (opts.data) {
     initData(vm)

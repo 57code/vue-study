@@ -5,6 +5,7 @@ import { eventsMixin } from './events'
 import { lifecycleMixin } from './lifecycle'
 import { warn } from '../util/index'
 
+// Vue构造函数
 function Vue (options) {
   if (process.env.NODE_ENV !== 'production' &&
     !(this instanceof Vue)
@@ -14,10 +15,11 @@ function Vue (options) {
   this._init(options)
 }
 
-initMixin(Vue)
-stateMixin(Vue)
-eventsMixin(Vue)
-lifecycleMixin(Vue)
-renderMixin(Vue)
+initMixin(Vue) // _init() 大部分是实例属性
+// 下面几个方法声明组件实例方法
+stateMixin(Vue) // $set/...
+eventsMixin(Vue) // $on/$emit/...
+lifecycleMixin(Vue) // _update()
+renderMixin(Vue) // _render()/nextTick
 
 export default Vue
