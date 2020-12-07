@@ -76,6 +76,8 @@ export default class Watcher {
       ? expOrFn.toString()
       : ''
     // parse expression for getter
+    // new Watcher(vm, updateComponent)
+    // user
     if (typeof expOrFn === 'function') {
       this.getter = expOrFn
     } else {
@@ -164,11 +166,13 @@ export default class Watcher {
    */
   update () {
     /* istanbul ignore else */
+    // computed
     if (this.lazy) {
       this.dirty = true
     } else if (this.sync) {
       this.run()
     } else {
+      // watcher入队
       queueWatcher(this)
     }
   }
@@ -180,6 +184,7 @@ export default class Watcher {
   run () {
     if (this.active) {
       const value = this.get()
+      // user watcher
       if (
         value !== this.value ||
         // Deep watchers and watchers on Object/Arrays should fire even

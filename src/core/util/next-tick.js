@@ -15,6 +15,7 @@ function flushCallbacks () {
   const copies = callbacks.slice(0)
   callbacks.length = 0
   for (let i = 0; i < copies.length; i++) {
+    // 大概率先执行flushSchedulerQueue
     copies[i]()
   }
 }
@@ -40,8 +41,10 @@ let timerFunc
 // Promise is available, we will use it:
 /* istanbul ignore next, $flow-disable-line */
 if (typeof Promise !== 'undefined' && isNative(Promise)) {
+  // 获取Promise实例
   const p = Promise.resolve()
   timerFunc = () => {
+    // 微任务的方式将flushCallbacks放入队列
     p.then(flushCallbacks)
     // In problematic UIWebViews, Promise.then doesn't completely break, but
     // it can get stuck in a weird state where callbacks are pushed into the
@@ -84,8 +87,11 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   }
 }
 
+// this.$nextTick(() => { dom.innerHTML })
 export function nextTick (cb?: Function, ctx?: Object) {
   let _resolve
+  // 将封装的回调函数放入callbacks
+  // 对传入cb做一次封装：解决报错信息
   callbacks.push(() => {
     if (cb) {
       try {
@@ -99,6 +105,7 @@ export function nextTick (cb?: Function, ctx?: Object) {
   })
   if (!pending) {
     pending = true
+    // 启动异步任务
     timerFunc()
   }
   // $flow-disable-line
