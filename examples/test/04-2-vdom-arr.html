@@ -17,10 +17,42 @@
         // 创建实例
         const app = new Vue({
             el: '#demo',
-            data: { arr: [1,2,3] },
+            data: { arr: ['a','b','c','d'] },
             mounted() {
                 setTimeout(() => {
-                    this.arr.push(4)
+                    this.arr.splice(2, 0, 'e')
+                    // [a, b, c, d]
+                    // [a, b, e, c, d]
+
+                    // key
+                    // [b, c, d]
+                    // [b, e, c, d]
+
+                    // [c, d]
+                    // [e, c, d]
+
+                    // [c]
+                    // [e, c]
+
+                    // []
+                    // [e]
+
+                    // 创建e，插入
+
+                    // 无key
+                    // [b, c, d]
+                    // [b, e, c, d]
+
+                    // [c, d]
+                    // [e, c, d]
+
+                    // [d]
+                    // [c, d]
+
+                    // []
+                    // [d]
+
+                    // 创建e，插入
                 }, 1000);
             }
         });

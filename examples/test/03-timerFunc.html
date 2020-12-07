@@ -33,9 +33,9 @@
 
                 // [flushCallbacks,cb1]
                      // callbacks [cb2]
-                Promise.resolve().then(() => {
-                    console.log('promise p1.innerHTML:' + p1.innerHTML)
-                })
+                // Promise.resolve().then(() => {
+                //     console.log('promise p1.innerHTML:' + p1.innerHTML)
+                // })
                 
                 this.$nextTick(() => {
                     // 这里才是最新的值
