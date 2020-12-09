@@ -124,6 +124,7 @@ export function createPatchFunction (backend) {
 
   let creatingElmInVPre = 0
 
+  // 创建dom树
   function createElm (
     vnode,
     insertedVnodeQueue,
@@ -143,10 +144,12 @@ export function createPatchFunction (backend) {
     }
 
     vnode.isRootInsert = !nested // for transition enter check
+    // 首先检验是否是一个自定义组件，如果是，后面的代码就不再执行
     if (createComponent(vnode, insertedVnodeQueue, parentElm, refElm)) {
       return
     }
 
+    // 后面创建原生保留元素
     const data = vnode.data
     const children = vnode.children
     const tag = vnode.tag
@@ -165,6 +168,7 @@ export function createPatchFunction (backend) {
         }
       }
 
+      // 元素创建
       vnode.elm = vnode.ns
         ? nodeOps.createElementNS(vnode.ns, tag)
         : nodeOps.createElement(tag, vnode)
@@ -190,6 +194,7 @@ export function createPatchFunction (backend) {
           insert(parentElm, vnode.elm, refElm)
         }
       } else {
+        // 递归创建子元素
         createChildren(vnode, children, insertedVnodeQueue)
         if (isDef(data)) {
           invokeCreateHooks(vnode, insertedVnodeQueue)
@@ -209,11 +214,15 @@ export function createPatchFunction (backend) {
     }
   }
 
+  // 自定义组件vnode =》 dom
   function createComponent (vnode, insertedVnodeQueue, parentElm, refElm) {
     let i = vnode.data
     if (isDef(i)) {
       const isReactivated = isDef(vnode.componentInstance) && i.keepAlive
+
+      // 查找自定义组件初始化钩子
       if (isDef(i = i.hook) && isDef(i = i.init)) {
+        // 执行初始化钩子
         i(vnode, false /* hydrating */)
       }
       // after calling the init hook, if the vnode is a child component

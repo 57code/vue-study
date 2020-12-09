@@ -34,7 +34,9 @@ import {
 
 // inline hooks to be invoked on component VNodes during patch
 const componentVNodeHooks = {
+  // vnode => component instance
   init (vnode: VNodeWithData, hydrating: boolean): ?boolean {
+    // keep-alive的组件会缓存
     if (
       vnode.componentInstance &&
       !vnode.componentInstance._isDestroyed &&
@@ -44,10 +46,12 @@ const componentVNodeHooks = {
       const mountedNode: any = vnode // work around flow
       componentVNodeHooks.prepatch(mountedNode, mountedNode)
     } else {
+      // 初始化流程：获得自定义组件实例
       const child = vnode.componentInstance = createComponentInstanceForVnode(
         vnode,
         activeInstance
       )
+      // 执行挂载
       child.$mount(hydrating ? vnode.elm : undefined, hydrating)
     }
   },
@@ -96,6 +100,7 @@ const componentVNodeHooks = {
   }
 }
 
+// 组件系统管理钩子所有key
 const hooksToMerge = Object.keys(componentVNodeHooks)
 
 export function createComponent (
@@ -126,6 +131,7 @@ export function createComponent (
   }
 
   // async component
+  // 异步组件
   let asyncFactory
   if (isUndef(Ctor.cid)) {
     asyncFactory = Ctor
@@ -144,6 +150,7 @@ export function createComponent (
     }
   }
 
+  // 处理组件数据
   data = data || {}
 
   // resolve constructor options in case global mixins are applied after
@@ -151,6 +158,7 @@ export function createComponent (
   resolveConstructorOptions(Ctor)
 
   // transform component v-model data into props & events
+  // 双绑v-model选项处理
   if (isDef(data.model)) {
     transformModel(Ctor.options, data)
   }
@@ -165,6 +173,7 @@ export function createComponent (
 
   // extract listeners, since these needs to be treated as
   // child component listeners instead of DOM listeners
+  // 事件处理
   const listeners = data.on
   // replace with listeners with .native modifier
   // so it gets processed during parent component patch.
@@ -183,9 +192,12 @@ export function createComponent (
   }
 
   // install component management hooks onto the placeholder node
+  // 安装组件管理钩子
   installComponentHooks(data)
 
   // return a placeholder vnode
+  // 自定义组件vnode实例
+  // vue-component-1-comp
   const name = Ctor.options.name || tag
   const vnode = new VNode(
     `vue-component-${Ctor.cid}${name ? `-${name}` : ''}`,
@@ -223,6 +235,7 @@ export function createComponentInstanceForVnode (
   return new vnode.componentOptions.Ctor(options)
 }
 
+// 组件也有管理钩子：系统+用户
 function installComponentHooks (data: VNodeData) {
   const hooks = data.hook || (data.hook = {})
   for (let i = 0; i < hooksToMerge.length; i++) {
