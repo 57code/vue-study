@@ -10,6 +10,8 @@
 </template>
 
 <script>
+  import Schema from 'async-validator'
+
   export default {
     inject: ['form'],
     props: {
@@ -33,8 +35,19 @@
     },
     methods: {
       validate() {
-        //do
-        console.log('validate');
+        // value, rule
+        const value = this.form.model[this.prop]
+        const rules = this.form.rules[this.prop]
+
+        // 2.validator
+        const validator = new Schema({[this.prop]: rules})
+        return validator.validate({[this.prop]: value}, errors => {
+          if (errors) {
+            this.error = errors[0].message
+          } else {
+            this.error = ''
+          }
+        })
       }
     },
   }
