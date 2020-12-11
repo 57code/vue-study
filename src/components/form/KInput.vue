@@ -18,11 +18,13 @@
         default: 'text'
       }
     },
+    // mixins: ['emmiter'],
     methods: {
       onInput(e) {
         this.$emit('input', e.target.value)
 
         // 校验事件
+        // this.dispatch('KFormItem', 'validate')
         this.$parent.$emit('validate')
       }
     },

@@ -26,6 +26,10 @@ import ElementTest from "@/components/form/ElementTest.vue";
 import KInput from "@/components/form/KInput.vue";
 import KFormItem from "@/components/form/KFormItem.vue";
 import KForm from "@/components/form/KForm.vue";
+
+import { create } from "@/utils/create";
+import Notice from "@/components/Notice.vue";
+
 export default {
   components: {
     ElementTest,
@@ -47,14 +51,20 @@ export default {
   },
   methods: {
     onLogin() {
-      this.$refs.loginForm.validate(isValid => {
-        if (isValid) {
-          console.log('submit login');
-        } else {
-          alert('校验失败，请重试！')
-        }
-      })
-    }
+      this.$refs.loginForm.validate((isValid) => {
+        const notice = create(Notice, {
+          title: "社会你杨哥喊你来搬砖",
+          message: isValid ? "请求登录!" : "校验失败!",
+          duration: 1000,
+        })
+        notice.show()
+        // if (isValid) {
+        //   console.log("submit login");
+        // } else {
+        //   alert("校验失败，请重试！");
+        // }
+      });
+    },
   },
 };
 </script>
