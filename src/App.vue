@@ -1,8 +1,15 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/">
+      <svg-icon icon-class="wx"></svg-icon>
+      <!-- <svg>
+        <use xlink:href="#icon-wx"></use>
+      </svg> -->
+      Home</router-link> |
+      <router-link to="/about">
+      <svg-icon icon-class="qq"></svg-icon>
+      About</router-link>
     </div>
     <p @click="$store.commit('add')">{{$store.state.counter}}</p>
     <p @click="$store.dispatch('add')">async: {{$store.state.counter}}</p>
@@ -10,7 +17,12 @@
     <router-view/>
   </div>
 </template>
-
+<script>
+// import '@/icons/svg/wx.svg'
+export default {
+  
+}
+</script>
 <style>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
