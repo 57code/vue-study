@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">
+    <div>{{count}}</div>
+    <comp></comp>
+  </div>
+  <script src="../dist/vue.global.js"></script>
+  <script>
+    // new Vue
+    // vue3: createApp
+    // webpack: import {createApp} from 'vue'
+    const { createApp } = Vue
+    
+    // treeshaking不能生效
+    // Vue.use(MyPlugin)
+    
+    createApp({
+      data() {
+        return {
+          count: 0
+        }
+      },
+      // setup() {
+      //   const count2 = ref(0)
+      //   return {count2}
+      // }
+    })
+    // .use(router)
+    // .use(store)
+    .component('comp', {
+      template: '<div>comp</div>'
+    })
+    .mount('#app')
+
+  </script>
+</body>
+
+</html>

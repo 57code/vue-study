@@ -444,8 +444,8 @@ function baseCreateRenderer(
   // Note: functions inside this closure should use `const xxx = () => {}`
   // style in order to prevent being inlined by minifiers.
   const patch: PatchFn = (
-    n1,
-    n2,
+    n1, // 老节点
+    n2, // 新节点
     container,
     anchor = null,
     parentComponent = null,
@@ -465,6 +465,7 @@ function baseCreateRenderer(
       n2.dynamicChildren = null
     }
 
+    // 从新节点中获取类型
     const { type, ref, shapeFlag } = n2
     switch (type) {
       case Text:
@@ -505,6 +506,7 @@ function baseCreateRenderer(
             optimized
           )
         } else if (shapeFlag & ShapeFlags.COMPONENT) {
+          // 初始化走这里
           processComponent(
             n1,
             n2,
@@ -1206,6 +1208,7 @@ function baseCreateRenderer(
           optimized
         )
       } else {
+        // 挂载组件方法
         mountComponent(
           n2,
           container,
@@ -1230,6 +1233,7 @@ function baseCreateRenderer(
     isSVG,
     optimized
   ) => {
+    // 1.创建组件实例
     const instance: ComponentInternalInstance = (initialVNode.component = createComponentInstance(
       initialVNode,
       parentComponent,
@@ -1254,6 +1258,7 @@ function baseCreateRenderer(
     if (__DEV__) {
       startMeasure(instance, `init`)
     }
+    // 2.安装组件：处理组件初始化，类似于以前的_init(), 处理setup选项，同时还会处理options选项
     setupComponent(instance)
     if (__DEV__) {
       endMeasure(instance, `init`)
@@ -1273,6 +1278,7 @@ function baseCreateRenderer(
       return
     }
 
+    // 安装渲染函数副作用
     setupRenderEffect(
       instance,
       initialVNode,
@@ -1334,6 +1340,9 @@ function baseCreateRenderer(
     optimized
   ) => {
     // create reactive effect for rendering
+    // 类似react useEffect()
+    // 如果组件依赖的响应式数据发生变化，组件的副作用会重新执行
+    // 在这里这个副作用就是更新函数
     instance.update = effect(function componentEffect() {
       if (!instance.isMounted) {
         let vnodeHook: VNodeHook | null | undefined
@@ -1353,6 +1362,7 @@ function baseCreateRenderer(
         if (__DEV__) {
           startMeasure(instance, `render`)
         }
+        // 1.先重新渲染，获得最新vnode
         const subTree = (instance.subTree = renderComponentRoot(instance))
         if (__DEV__) {
           endMeasure(instance, `render`)
@@ -1376,6 +1386,8 @@ function baseCreateRenderer(
           if (__DEV__) {
             startMeasure(instance, `patch`)
           }
+          // 2.把前面得到的vnode，patch为dom
+          // 初始化时参数1是null
           patch(
             null,
             subTree,
@@ -2205,6 +2217,8 @@ function baseCreateRenderer(
         unmount(container._vnode, null, null, true)
       }
     } else {
+      // container._vnode不存在，走初始化init
+      // 否则走更新流程
       patch(container._vnode || null, vnode, container)
     }
     flushPostFlushCbs()
@@ -2233,9 +2247,11 @@ function baseCreateRenderer(
     >)
   }
 
+  // 返回的就是渲染器
   return {
-    render,
-    hydrate,
+    render, // 不是我们以前说的render，此函数render(vdom, container)
+    hydrate, // 注水，应用于服务端渲染，ssr
+    // 创建Vue实例
     createApp: createAppAPI(render, hydrate)
   }
 }

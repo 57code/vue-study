@@ -126,6 +126,7 @@ export function createAppAPI<HostElement>(
 
     let isMounted = false
 
+    // app就是应用程序实例
     const app: App = (context.app = {
       _uid: uid++,
       _component: rootComponent as ConcreteComponent,
@@ -212,6 +213,7 @@ export function createAppAPI<HostElement>(
 
       mount(rootContainer: HostElement, isHydrate?: boolean): any {
         if (!isMounted) {
+          // 创建初始的vnode
           const vnode = createVNode(
             rootComponent as ConcreteComponent,
             rootProps
@@ -230,6 +232,7 @@ export function createAppAPI<HostElement>(
           if (isHydrate && hydrate) {
             hydrate(vnode as VNode<Node, Element>, rootContainer as any)
           } else {
+            // 渲染vnode到根容器中
             render(vnode, rootContainer)
           }
           isMounted = true
