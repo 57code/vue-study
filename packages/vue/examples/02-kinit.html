@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app"></div>
+  <!-- <script src="../dist/vue.global.js"></script> -->
+  <script>
+    // new Vue
+    // vue3: createApp
+    // webpack: import {createApp} from 'vue'
+    // const { createApp } = Vue
+    
+    // treeshaking不能生效
+    // Vue.use(MyPlugin)
+    // 4.实现createAppAPI
+    const createAppAPI = (render) => {
+      return function createApp(rootComponent) {
+        const app = {
+          mount(rootContainer) {
+            // 1.获取初始vnode
+            const vnode = {
+              tag: rootComponent
+            }
+            // 2.渲染到container
+            render(vnode, rootContainer)
+          }
+        }
+
+        return app
+      }
+    }
+    
+    // 3.声明createRenderer
+    const createRenderer = ({querySelector, createElement, insert}) => {
+      // render函数实现
+      const render = (vnode, container) => {
+        patch(container._vnode || null, vnode, querySelector(container))
+        container._vnode = vnode
+      }
+      const patch = (n1, n2, container) => {
+        const rootComponent = n2.tag
+        const ctx = { ...rootComponent.data() }
+        const vnode = rootComponent.render.call(ctx)
+
+        // vnode转dom
+        const child = createElement(vnode.tag)
+        
+        if (typeof vnode.children === 'string') {
+          child.textContent = vnode.children
+        } else {
+          // children
+        }
+
+        // 追加
+        insert(child, container)
+      }
+      
+      // 返回的对象就是renderer
+      return {
+        render,
+        createApp: createAppAPI(render)
+      }
+    }
+    
+    // 2.创建renderer实例, 传入参数是节点操作
+    const renderer = createRenderer({
+      querySelector(sel) {
+        return document.querySelector(sel)
+      }, 
+      createElement(tag) {
+        return document.createElement(tag)
+      }, 
+      insert(child, parent) {
+        parent.appendChild(child)
+      }
+    })
+    
+    // 1.声明Vue。createApp
+    const Vue = {
+      createApp(options) {
+        return renderer.createApp(options)
+      }
+    }
+    Vue.createApp({
+      data() {
+        return {
+          count: 0,
+          foo: 'foo'
+        }
+      },
+      render() {
+        return {
+          tag: 'h2',
+          children: this.foo
+        }
+      }
+    })
+    .mount('#app')
+
+  </script>
+</body>
+
+</html>
