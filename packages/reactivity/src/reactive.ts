@@ -164,6 +164,7 @@ function createReactiveObject(
   if (targetType === TargetType.INVALID) {
     return target
   }
+  // 将传入对象代理
   const proxy = new Proxy(
     target,
     targetType === TargetType.COLLECTION ? collectionHandlers : baseHandlers

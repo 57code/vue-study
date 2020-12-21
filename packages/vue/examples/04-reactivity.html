@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">
+    <h1>composition api</h1>
+    <p @click="add">{{counter}}</p>
+    <p>{{doubleCounter}}</p>
+    <p ref="ddd">{{foo}}</p>
+    <p>{{bar}}</p>
+  </div>
+
+  <script src="../dist/vue.global.js"></script>
+  <script>
+    const { createApp, ref, reactive, toRefs, computed, watch, onMounted } = Vue
+
+    createApp({
+      data() {
+        return {
+          abc: 'abc from data',
+        }
+      },
+      mounted () {
+        console.log('mounted from options');;
+      },
+      setup(props, {emit, slots, attrs}) {
+        console.log(props.bla);
+        // 优点：
+        // 维护性、可读性、复用性
+        // 解决mixins扩展组件的缺点
+        // 消除this，拥抱ts
+        // 1.单值响应式ref
+        const { counter, add } = useCounter()
+        // 计算属性返回的是只读的Ref
+        const doubleCounter = computed(() => counter.value * 2)
+       
+        watch(counter, (newVal, oldVal) => {
+          console.log('counter发生变化', counter.value);
+        })
+        watchEffect(function() {
+          console.log(counter.value);
+        })
+
+        // beforeCreate/created在setup中移除了
+        onMounted(() => {
+          console.log('mounted', counter.value);
+        })
+        
+        // 2.响应式对象reactive
+        const foobar = reactive({
+          foo: 'foo',
+          bar: 'bar'
+        })
+        // logic foobar
+
+        // computed
+
+
+        // watch
+
+        // lifecycle
+        
+        const ddd = ref(null)
+        onMounted(() => {
+          // dom
+          ddd.value
+        })
+        return { counter, add, ...toRefs(foobar), doubleCounter, ddd }
+      }
+    }).mount('#app')
+
+    function useCounter() {
+      const counter = ref(0)
+      // 需要访问其value属性才能拿到真实值
+      function add() {
+        counter.value++
+      }
+      return { counter, add }
+    }
+  </script>
+</body>
+
+</html>

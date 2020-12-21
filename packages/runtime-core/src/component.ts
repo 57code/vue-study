@@ -507,6 +507,7 @@ export function validateComponentName(name: string, config: AppConfig) {
 
 export let isInSSRComponentSetup = false
 
+// 组件初始化
 export function setupComponent(
   instance: ComponentInternalInstance,
   isSSR = false
@@ -552,6 +553,7 @@ function setupStatefulComponent(
   instance.accessCache = {}
   // 1. create public instance / render proxy
   // also mark it raw so it's never observed
+  // setup值和data中的值谁的优先级高？
   instance.proxy = new Proxy(instance.ctx, PublicInstanceProxyHandlers)
   if (__DEV__) {
     exposePropsOnRenderContext(instance)
@@ -559,11 +561,13 @@ function setupStatefulComponent(
   // 2. call setup()
   const { setup } = Component
   if (setup) {
+    // setup上下文对象
     const setupContext = (instance.setupContext =
       setup.length > 1 ? createSetupContext(instance) : null)
 
     currentInstance = instance
     pauseTracking()
+    // 执行setup函数
     const setupResult = callWithErrorHandling(
       setup,
       instance,
@@ -590,6 +594,7 @@ function setupStatefulComponent(
         )
       }
     } else {
+      // 处理setup结果
       handleSetupResult(instance, setupResult, isSSR)
     }
   } else {
@@ -628,6 +633,7 @@ export function handleSetupResult(
       }`
     )
   }
+  // 解析用户传递所有options选项，支持vue2 api
   finishComponentSetup(instance, isSSR)
 }
 
@@ -688,6 +694,7 @@ function finishComponentSetup(
   // support for 2.x options
   if (__FEATURE_OPTIONS_API__) {
     currentInstance = instance
+    // 处理选项方法在这里
     applyOptions(instance, Component)
     currentInstance = null
   }
