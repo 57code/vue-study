@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <h1 id="h1">{{title}}</h1>
+    <p id="p1">{{desc}}</p>
+  </div>
+
+  <script src="05-reactive.js"></script>
+  <script>
+    const data = reactive({
+      title: '这是一个标题',
+      desc: '如果这些数据发生变化，那么界面也会更新'
+    })
+    effect(() => {
+      h1.innerText = data.title
+      p1.innerText = data.desc
+    })
+
+    setTimeout(() => {
+      data.title = '这是一个新的标题'
+    }, 1000);
+  </script>
+</body>
+</html>
