@@ -232,6 +232,7 @@ export function trigger(
     }
   }
 
+  // 副作用执行函数
   const run = (effect: ReactiveEffect) => {
     if (__DEV__ && effect.options.onTrigger) {
       effect.options.onTrigger({
@@ -244,6 +245,7 @@ export function trigger(
         oldTarget
       })
     }
+    // 如果用户设置scheduler选项，按照它的工作方式执行副作用函数
     if (effect.options.scheduler) {
       effect.options.scheduler(effect)
     } else {

@@ -1,0 +1,25 @@
+<div id="app">{{ key }}</div>
+<script src="../dist/vue.global.js"></script>
+<script>
+  const { createApp, nextTick } = Vue
+  createApp({
+    data() {
+      return {
+        key: '异步更新'
+      }
+    },
+    mounted() {
+      setTimeout(() => {
+        this.key = '异步更新1'
+
+        app.innerHTML  // 异步更新
+        console.log(this.$nextTick);
+        nextTick(() => {
+          console.log(app.innerHTML); // 异步更新1
+        })
+      }, 1000);
+
+
+    }
+  }).mount('#app')
+</script>

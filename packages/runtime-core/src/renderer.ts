@@ -1691,6 +1691,7 @@ function baseCreateRenderer(
     let e1 = c1.length - 1 // prev ending index
     let e2 = l2 - 1 // next ending index
 
+    // 掐头
     // 1. sync from start
     // (a b) c
     // (a b) d e
@@ -1716,6 +1717,7 @@ function baseCreateRenderer(
       i++
     }
 
+    // 去尾
     // 2. sync from end
     // a (b c)
     // d e (b c)
@@ -1742,6 +1744,7 @@ function baseCreateRenderer(
       e2--
     }
 
+    // 新增
     // 3. common sequence + mount
     // (a b)
     // (a b) c
@@ -1770,6 +1773,7 @@ function baseCreateRenderer(
       }
     }
 
+    // 批量删除
     // 4. common sequence + unmount
     // (a b) c
     // (a b)
@@ -1784,6 +1788,7 @@ function baseCreateRenderer(
       }
     }
 
+    // 位置序列
     // 5. unknown sequence
     // [i ... e1 + 1]: a b [c d e] f g
     // [i ... e2 + 1]: a b [e d c h] f g

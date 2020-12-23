@@ -76,6 +76,7 @@ export function queueJob(job: SchedulerJob) {
 function queueFlush() {
   if (!isFlushing && !isFlushPending) {
     isFlushPending = true
+    // 用Promise起一个微任务，异步执行flushJobs
     currentFlushPromise = resolvedPromise.then(flushJobs)
   }
 }
