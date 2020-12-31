@@ -1,8 +1,7 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
+import VueRouter from './kvue-router'
 import Home from '../views/Home.vue'
 
-// VueRouter需要实现一个install方法
 Vue.use(VueRouter)
 
 const routes = [

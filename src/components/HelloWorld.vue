@@ -2,7 +2,7 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <!-- 组件通信 -->
-    <Communication></Communication>
+    <!-- <Communication></Communication> -->
     <!-- 表单 -->
     <!-- <FormExample></FormExample> -->
     <!-- 插槽 -->
