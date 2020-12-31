@@ -22,6 +22,12 @@ class Store {
     // 上下文绑定
     this.commit = this.commit.bind(this)
     this.dispatch = this.dispatch.bind(this)
+
+    // getters
+    // 1.动态设置getters属性
+    // 2.响应式
+    // 附加：能否利用上vue computed
+    this.getters = {}
   }
 
   // 给用户暴露接口
