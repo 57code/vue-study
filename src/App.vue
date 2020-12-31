@@ -4,6 +4,11 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div>
+
+    <!-- 全局状态 -->
+    <p @click="$store.commit('add')">{{$store.state.count}}</p>
+    <p @click="$store.dispatch('add')">{{$store.state.count}}</p>
+    
     <router-view/>
   </div>
 </template>
