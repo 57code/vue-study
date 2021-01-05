@@ -2,9 +2,14 @@ function defineReactive(obj, key, val) {
   // 递归
   observe(val);
 
+  // Dep在这创建
+  const dep = new Dep()
+  
   Object.defineProperty(obj, key, {
     get() {
       console.log("get", key);
+      // 依赖收集
+      Dep.target && dep.addDep(Dep.target)
       return val;
     },
     set(v) {
@@ -13,6 +18,8 @@ function defineReactive(obj, key, val) {
         // 传入新值v可能还是对象
         observe(v);
         val = v;
+
+        dep.notify()
       }
     },
   });
@@ -122,11 +129,27 @@ class Compile {
     return attr.startsWith("k-");
   }
 
+  // 更新函数，
+  update(node, exp, dir) {
+    // init
+    const fn = this[dir + 'Updater']
+    fn && fn(node, this.$vm[exp])
+
+    // update: 创建Watcher
+    new Watcher(this.$vm, exp, function(val) {
+      fn && fn(node, val)
+    })
+  }
+  
   // 编译文本，将{{ooxx}}
   compileText(node) {
-    node.textContent = this.$vm[RegExp.$1];
+    this.update(node, RegExp.$1, 'text')
   }
 
+  textUpdater(node, val) {
+    node.textContent = val
+  }
+  
   // 处理元素所有动态属性
   compileElement(node) {
     Array.from(node.attributes).forEach((attr) => {
@@ -145,11 +168,48 @@ class Compile {
 
   // k-text处理函数
   text(node, exp) {
-    node.textContent = this.$vm[exp]
+    this.update(node, exp, 'text')
   }
 
   // k-html
   html(node, exp) {
-    node.innerHTML = this.$vm[exp]
+    this.update(node, exp, 'html')    
+  }
+
+  htmlUpdater(node, val) {
+    node.innerHTML = val
+  }
+}
+
+// 小秘书：做dom更新
+class Watcher {
+  constructor(vm, key, updateFn) {
+    this.vm = vm
+    this.key = key
+    this.updateFn = updateFn
+
+    // 读取一下key的值，触发其get，从而收集依赖
+    Dep.target = this
+    this.vm[this.key]
+    Dep.target = null
+  }
+
+  update() {
+    this.updateFn.call(this.vm, this.vm[this.key])
+  }
+}
+
+// 依赖：和响应式对象的每个key一一对应
+class Dep {
+  constructor() {
+    this.deps = []
+  }
+
+  addDep(dep) {
+    this.deps.push(dep)
+  }
+
+  notify() {
+    this.deps.forEach(dep => dep.update())
   }
 }
