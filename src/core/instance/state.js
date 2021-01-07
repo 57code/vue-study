@@ -48,9 +48,13 @@ export function proxy (target: Object, sourceKey: string, key: string) {
 export function initState (vm: Component) {
   vm._watchers = []
   const opts = vm.$options
+  // 1.props
   if (opts.props) initProps(vm, opts.props)
+  // 2.methods
   if (opts.methods) initMethods(vm, opts.methods)
+  // 3.data
   if (opts.data) {
+    // 如果设置data走这里
     initData(vm)
   } else {
     observe(vm._data = {}, true /* asRootData */)
@@ -123,6 +127,7 @@ function initData (vm: Component) {
     )
   }
   // proxy data on instance
+  // 校验，避免命名冲突
   const keys = Object.keys(data)
   const props = vm.$options.props
   const methods = vm.$options.methods
@@ -148,6 +153,7 @@ function initData (vm: Component) {
     }
   }
   // observe data
+  // 递归响应式处理
   observe(data, true /* asRootData */)
 }
 

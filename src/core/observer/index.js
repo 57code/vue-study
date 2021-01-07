@@ -40,18 +40,26 @@ export class Observer {
   vmCount: number; // number of vms that have this object as root $data
 
   constructor (value: any) {
+    // 1.区分obj还是array
     this.value = value
+    // 2.创建一个dep实例：对象也需要dep，对象如果动态增减属性,dep用来做变更通知
+    // Vue.set(obj, 'foo', 'foo')
     this.dep = new Dep()
     this.vmCount = 0
+    // 指定ob实例
     def(value, '__ob__', this)
     if (Array.isArray(value)) {
+      // 数组有原型
       if (hasProto) {
+        // 替换数组实例的原型
         protoAugment(value, arrayMethods)
       } else {
+        // ie
         copyAugment(value, arrayMethods, arrayKeys)
       }
       this.observeArray(value)
     } else {
+      // obj
       this.walk(value)
     }
   }
@@ -96,6 +104,7 @@ function protoAugment (target, src: Object) {
  */
 /* istanbul ignore next */
 function copyAugment (target: Object, src: Object, keys: Array<string>) {
+  // 直接覆盖方法
   for (let i = 0, l = keys.length; i < l; i++) {
     const key = keys[i]
     def(target, key, src[key])
@@ -111,8 +120,10 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
   if (!isObject(value) || value instanceof VNode) {
     return
   }
+  // 1.获取ob实例 __ob__
   let ob: Observer | void
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
+    // 如果有，直接用
     ob = value.__ob__
   } else if (
     shouldObserve &&
@@ -121,6 +132,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
     Object.isExtensible(value) &&
     !value._isVue
   ) {
+    // 初始化创建一次
     ob = new Observer(value)
   }
   if (asRootData && ob) {
@@ -139,6 +151,7 @@ export function defineReactive (
   customSetter?: ?Function,
   shallow?: boolean
 ) {
+  // 每个key对应一个dep
   const dep = new Dep()
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
@@ -153,6 +166,7 @@ export function defineReactive (
     val = obj[key]
   }
 
+  // 
   let childOb = !shallow && observe(val)
   Object.defineProperty(obj, key, {
     enumerable: true,
@@ -160,8 +174,13 @@ export function defineReactive (
     get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
       if (Dep.target) {
+        // 依赖收集：vue2中一个组件一个Watcher
+        // dep n:1  watcher
+        // 如果用户手动创建watcher，比如 使用watch选项或者this.$watch(key,cb)
+        // dep 1:n  watcher
         dep.depend()
         if (childOb) {
+          // 子ob也要做依赖收集
           childOb.dep.depend()
           if (Array.isArray(value)) {
             dependArray(value)

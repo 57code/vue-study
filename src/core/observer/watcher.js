@@ -127,10 +127,13 @@ export default class Watcher {
    */
   addDep (dep: Dep) {
     const id = dep.id
+    // 相互添加引用
     if (!this.newDepIds.has(id)) {
+      // watcher添加dep
       this.newDepIds.add(id)
       this.newDeps.push(dep)
       if (!this.depIds.has(id)) {
+        // dep添加watcher
         dep.addSub(this)
       }
     }

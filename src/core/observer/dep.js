@@ -30,6 +30,7 @@ export default class Dep {
 
   depend () {
     if (Dep.target) {
+      // watcher.addDep()
       Dep.target.addDep(this)
     }
   }
