@@ -14,11 +14,13 @@ const idToTemplate = cached(id => {
   return el && el.innerHTML
 })
 
+// 扩展$mount: 解析模板
 const mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
-  el?: string | Element,
+  el?: string | Element, // 宿主元素
   hydrating?: boolean
 ): Component {
+  // 真实dom
   el = el && query(el)
 
   /* istanbul ignore if */
@@ -31,8 +33,11 @@ Vue.prototype.$mount = function (
 
   const options = this.$options
   // resolve template/el and convert to render function
+  // 先看有没有render
   if (!options.render) {
+    // 再看template
     let template = options.template
+    // 解析template
     if (template) {
       if (typeof template === 'string') {
         if (template.charAt(0) === '#') {
@@ -45,7 +50,7 @@ Vue.prototype.$mount = function (
             )
           }
         }
-      } else if (template.nodeType) {
+      } else if (template.nodeType) { // dom
         template = template.innerHTML
       } else {
         if (process.env.NODE_ENV !== 'production') {
@@ -54,8 +59,11 @@ Vue.prototype.$mount = function (
         return this
       }
     } else if (el) {
+      // 最后查看el选项
       template = getOuterHTML(el)
     }
+
+    // 如何处理模板？ 编译它，最终目标是render
     if (template) {
       /* istanbul ignore if */
       if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
@@ -69,6 +77,7 @@ Vue.prototype.$mount = function (
         delimiters: options.delimiters,
         comments: options.comments
       }, this)
+      // 重新复制给选项
       options.render = render
       options.staticRenderFns = staticRenderFns
 
