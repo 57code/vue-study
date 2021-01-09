@@ -17,13 +17,52 @@
         // 创建实例
         const app = new Vue({
             el: '#demo',
-            data: { arr: [1,2,3] },
+            data: { arr: ['a','b','c','d'] },
             mounted() {
                 setTimeout(() => {
-                    this.arr.push(4)
+                    this.arr.splice(1, 0, 'e')
                 }, 1000);
             }
         });
+        // [a,b,c,d]
+        // [a,e,b,c,d]
+
+        // 加key
+        // [b,c,d]
+        // [e,b,c,d]
+
+        // [b,c]
+        // [e,b,c]
+
+        // [b]
+        // [e,b]
+
+        // []
+        // [e]
+
+        // 创建e，插入e   
+        
+        // 不加key
+        // [a,b,c,d]
+        // [a,e,b,c,d]
+
+        // 额外更新1
+        // [b,c,d]
+        // [e,b,c,d]
+
+        // 额外更新2
+        // [c,d]
+        // [b,c,d]
+
+        // 额外更新3
+        // [d]
+        // [c,d]
+
+        // 额外更新4
+        // []
+        // [d]
+
+        // 创建d，插入d
     </script>
 </body>
 
