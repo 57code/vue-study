@@ -76,6 +76,7 @@ export default class Watcher {
       ? expOrFn.toString()
       : ''
     // parse expression for getter
+    // 初始化 的时候参数2如果是一个函数，则直接赋值给getter
     if (typeof expOrFn === 'function') {
       this.getter = expOrFn
     } else {
@@ -166,11 +167,13 @@ export default class Watcher {
    */
   update () {
     /* istanbul ignore else */
+    // computed
     if (this.lazy) {
       this.dirty = true
     } else if (this.sync) {
       this.run()
     } else {
+      // 通常走这里，watcher入队
       queueWatcher(this)
     }
   }
@@ -181,6 +184,7 @@ export default class Watcher {
    */
   run () {
     if (this.active) {
+      // 如果是组件级别watcher，只走下面get
       const value = this.get()
       if (
         value !== this.value ||

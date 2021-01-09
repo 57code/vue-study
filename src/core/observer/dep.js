@@ -44,6 +44,7 @@ export default class Dep {
       // order
       subs.sort((a, b) => a.id - b.id)
     }
+    // 遍历相关watcher
     for (let i = 0, l = subs.length; i < l; i++) {
       subs[i].update()
     }

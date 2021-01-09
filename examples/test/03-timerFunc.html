@@ -17,6 +17,10 @@
             el: '#demo',
             data: { foo: 'ready~~' },
             mounted() {
+
+                // queue [cb1,flushScheduleQueue]
+                
+                
                 this.foo = Math.random()
                 console.log('1:' + this.foo);
                 this.foo = Math.random()
@@ -26,10 +30,17 @@
                 // 异步行为，此时内容没变
                 console.log('p1.innerHTML:' + p1.innerHTML)
 
+                // 微任务队列 [flushCallbacks, cb1]
+                // callbacks: [flushSchedulerQueue, cb2]
+                Promise.resolve().then(() => {
+                    console.log('promise:' + p1.innerHTML)
+                })
+
                 this.$nextTick(() => {
                     // 这里才是最新的值
                     console.log('p1.innerHTML:' + p1.innerHTML)
                 })
+                
             }
         });
     </script>
