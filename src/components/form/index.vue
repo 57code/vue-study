@@ -20,12 +20,14 @@ import KInput from "@/components/form/KInput.vue";
 import KFormItem from "@/components/form/KFormItem.vue";
 import KForm from "@/components/form/KForm.vue";
 
+// 没有实现插件，需要导入弹窗和create
+
 export default {
   components: {
     ElementTest,
     KInput,
     KFormItem,
-    KForm
+    KForm,
   },
   data() {
     return {
@@ -40,14 +42,18 @@ export default {
   methods: {
     onLogin() {
       // 全局校验
-      this.$refs.loginForm.validate(isValid => {
-        if (isValid) {
-          console.log('submit login');
-        } else {
-          alert('校验失败')
-        }
-      })
-    }
+      this.$refs.loginForm.validate((isValid) => {
+        this.$notice({
+          title: "abc",
+          message: isValid ? "过" : "不过",
+        });
+        // if (isValid) {
+        //   console.log("submit login");
+        // } else {
+        //   alert("校验失败");
+        // }
+      });
+    },
   },
 };
 </script>

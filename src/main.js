@@ -5,6 +5,9 @@ import './plugins/element.js'
 import router from './krouter'
 import store from './kstore'
 // import store from './store'
+import Notice from '@/plugins/notice'
+
+Vue.use(Notice)
 
 Vue.config.productionTip = false
 // 事件总线
