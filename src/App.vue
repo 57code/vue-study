@@ -6,9 +6,9 @@
     </div>
 
     <!-- 全局状态 -->
-    <p @click="$store.commit('add')">{{$store.state.count}}</p>
+    <!-- <p @click="$store.commit('add')">{{$store.state.count}}</p>
     <p @click="$store.dispatch('add')">{{$store.state.count}}</p>
-    <p>{{$store.getters.doubleCounter}}</p>
+    <p>{{$store.getters.doubleCounter}}</p> -->
     
     <router-view/>
   </div>
