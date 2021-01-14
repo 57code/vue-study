@@ -21,6 +21,11 @@
     methods: {
       onInput(e) {
         this.$emit('input', e.target.value)
+
+        // 触发校验
+        // 源码中实现了一个this.dispatch('k-form-item', 'validate')
+        this.$parent.$emit('validate')
+
       }
     },
   }
