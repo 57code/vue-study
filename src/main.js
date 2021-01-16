@@ -6,6 +6,7 @@ import router from './krouter'
 import store from './kstore'
 // import store from './store'
 import Notice from '@/plugins/notice'
+import '@/icons'
 
 Vue.use(Notice)
 

@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import Communication from '@/components/communication';
+import Communication from 'comps/communication';
 import FormExample from '@/components/form';
 import SlotExample from '@/components/slots';
 import TreeExample from '@/components/recursion';
