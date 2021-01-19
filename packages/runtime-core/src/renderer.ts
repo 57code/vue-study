@@ -444,8 +444,8 @@ function baseCreateRenderer(
   // Note: functions inside this closure should use `const xxx = () => {}`
   // style in order to prevent being inlined by minifiers.
   const patch: PatchFn = (
-    n1,
-    n2,
+    n1, // 老虚拟dom
+    n2, // 新虚拟dom
     container,
     anchor = null,
     parentComponent = null,
@@ -465,6 +465,7 @@ function baseCreateRenderer(
       n2.dynamicChildren = null
     }
 
+    // 获取新节点类型
     const { type, ref, shapeFlag } = n2
     switch (type) {
       case Text:
@@ -505,6 +506,7 @@ function baseCreateRenderer(
             optimized
           )
         } else if (shapeFlag & ShapeFlags.COMPONENT) {
+          // 初始化走这里
           processComponent(
             n1,
             n2,
@@ -1206,6 +1208,7 @@ function baseCreateRenderer(
           optimized
         )
       } else {
+        // 初始化
         mountComponent(
           n2,
           container,
@@ -1230,6 +1233,7 @@ function baseCreateRenderer(
     isSVG,
     optimized
   ) => {
+    // 1.创建组件实例
     const instance: ComponentInternalInstance = (initialVNode.component = createComponentInstance(
       initialVNode,
       parentComponent,
@@ -1254,6 +1258,7 @@ function baseCreateRenderer(
     if (__DEV__) {
       startMeasure(instance, `init`)
     }
+    // 2.组件安装：类似于vue2中的_init()
     setupComponent(instance)
     if (__DEV__) {
       endMeasure(instance, `init`)
@@ -1273,6 +1278,7 @@ function baseCreateRenderer(
       return
     }
 
+    // 3.安装渲染函数副作用
     setupRenderEffect(
       instance,
       initialVNode,
@@ -1353,6 +1359,7 @@ function baseCreateRenderer(
         if (__DEV__) {
           startMeasure(instance, `render`)
         }
+        // 1.首先获取当根组件vnode
         const subTree = (instance.subTree = renderComponentRoot(instance))
         if (__DEV__) {
           endMeasure(instance, `render`)
@@ -1376,6 +1383,7 @@ function baseCreateRenderer(
           if (__DEV__) {
             startMeasure(instance, `patch`)
           }
+          // 初始化patch
           patch(
             null,
             subTree,
@@ -2205,6 +2213,9 @@ function baseCreateRenderer(
         unmount(container._vnode, null, null, true)
       }
     } else {
+      // 初始化走这里，这里就类似vue2
+      // 参数1不存在则走初始化流程
+      // 参数1存在则更新流程
       patch(container._vnode || null, vnode, container)
     }
     flushPostFlushCbs()
@@ -2233,9 +2244,10 @@ function baseCreateRenderer(
     >)
   }
 
+  // 此处返回的对象就是渲染器
   return {
-    render,
-    hydrate,
+    render, // 渲染方法，render(vnode, container)
+    hydrate,// 注水，用于服务端渲染
     createApp: createAppAPI(render, hydrate)
   }
 }

@@ -1,0 +1,34 @@
+<div id="app">
+  <p>{{counter}}</p>
+  <comp></comp>
+</div>
+
+<script src="../dist/vue.global.js"></script>
+<script>
+  const {createApp} = Vue
+  // new Vue => createApp()
+  // $mount => mount
+  // 为何要调整为实例方法
+  // 1.避免实例之间污染
+  // 2.摇树优化
+  // 3.语义上更好理解
+  const app = createApp({
+    data() {
+      return {
+        counter: 2
+      }
+    },
+    setup() {
+      const counter = ref(1)
+      return {counter}
+    }
+  })
+  // .use(router) // Vue.use(Router)
+  // .use(store)
+  // .use(element3)
+  // 声明全局组件
+  .component('comp', {
+    template: '<div>comp</div>'
+  })
+  .mount('#app')
+</script>

@@ -30,6 +30,7 @@ let renderer: Renderer<Element> | HydrationRenderer
 let enabledHydration = false
 
 function ensureRenderer() {
+  // 单例模式
   return renderer || (renderer = createRenderer<Node, Element>(rendererOptions))
 }
 
@@ -50,7 +51,10 @@ export const hydrate = ((...args) => {
   ensureHydrationRenderer().hydrate(...args)
 }) as RootHydrateFunction
 
+// 这就是咱们使用的createApp
 export const createApp = ((...args) => {
+  // 首先获取一个渲染器
+  // 实际上createApp方法是有渲染器提供的
   const app = ensureRenderer().createApp(...args)
 
   if (__DEV__) {

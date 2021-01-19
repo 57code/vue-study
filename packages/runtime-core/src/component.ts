@@ -529,6 +529,7 @@ function setupStatefulComponent(
   instance: ComponentInternalInstance,
   isSSR: boolean
 ) {
+  // 根组件配置对象
   const Component = instance.type as ComponentOptions
 
   if (__DEV__) {
@@ -552,11 +553,13 @@ function setupStatefulComponent(
   instance.accessCache = {}
   // 1. create public instance / render proxy
   // also mark it raw so it's never observed
+  // 渲染函数上下文
   instance.proxy = new Proxy(instance.ctx, PublicInstanceProxyHandlers)
   if (__DEV__) {
     exposePropsOnRenderContext(instance)
   }
   // 2. call setup()
+  // 处理setup选项
   const { setup } = Component
   if (setup) {
     const setupContext = (instance.setupContext =
@@ -593,6 +596,7 @@ function setupStatefulComponent(
       handleSetupResult(instance, setupResult, isSSR)
     }
   } else {
+    // 没有设置setup走这里
     finishComponentSetup(instance, isSSR)
   }
 }
@@ -686,6 +690,7 @@ function finishComponentSetup(
   }
 
   // support for 2.x options
+  // 处理其他用户选项
   if (__FEATURE_OPTIONS_API__) {
     currentInstance = instance
     applyOptions(instance, Component)
