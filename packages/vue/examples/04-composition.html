@@ -1,0 +1,74 @@
+<div id="app">
+  <p @click="add">{{ counter }}</p>
+  <p>{{doubleCounter}}</p>
+  <p>{{anotherCounter}}</p>
+</div>
+
+<script src="../dist/vue.global.js"></script>
+<script>
+  const { createApp, reactive, computed, ref, toRefs, onMounted, watch, watchEffect } = Vue
+
+  // counter相关业务逻辑
+  function useCounter() {
+    const state = reactive({
+      counter: 0,
+      doubleCounter: computed(() => state.counter * 2)
+    })
+
+    // 2.methods
+    const add = () => {
+      state.counter++
+    }
+
+    onMounted(() => {
+      // 挂载是执行
+      console.log('useCounter 内部的mounted');
+    })
+
+
+
+    return { ...toRefs(state), add }
+  }
+
+  createApp({
+    setup(props, {attrs, emit, slots}) {
+
+      // getCurrentInstance()
+      
+      // 1.reactive
+      const { counter, doubleCounter, add } = useCounter()
+
+      // 3.单值响应式对象Ref
+      const anotherCounter = ref(0)
+      // 修改Ref需要使用value
+      // anotherCounter.value++
+      // ...
+
+      // 4.生命周期
+      onMounted(() => {
+        // 挂载是执行
+        console.log('mounted1');
+      })
+
+      onMounted(() => {
+        // 挂载是执行
+        console.log('mounted2');
+        emit('blabla')
+      })
+
+      // 其他业务逻辑
+      // 。。。
+
+      // 侦听器
+      // watch(() => state.doubleCounter, (curr, prev) => {
+      //   console.log('doubleCounter发生了变化');
+      // })
+      // watchEffect(() => {
+      //   console.log('doubleCounter发生了变化', state.doubleCounter);
+      // })
+
+      // 渲染函数暴露一个上下文
+      return { anotherCounter, counter, doubleCounter, add }
+    }
+  }).mount('#app')
+</script>
