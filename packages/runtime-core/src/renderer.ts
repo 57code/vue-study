@@ -494,6 +494,7 @@ function baseCreateRenderer(
         )
         break
       default:
+        
         if (shapeFlag & ShapeFlags.ELEMENT) {
           processElement(
             n1,
@@ -505,6 +506,7 @@ function baseCreateRenderer(
             isSVG,
             optimized
           )
+          // 2/4  10/100  110
         } else if (shapeFlag & ShapeFlags.COMPONENT) {
           // 初始化走这里
           processComponent(
@@ -1114,6 +1116,8 @@ function baseCreateRenderer(
     const fragmentStartAnchor = (n2.el = n1 ? n1.el : hostCreateText(''))!
     const fragmentEndAnchor = (n2.anchor = n1 ? n1.anchor : hostCreateText(''))!
 
+    // 首先获取需要更新的目标patchFlag
+    // dynamicChildren精确的表明要更新的子元素
     let { patchFlag, dynamicChildren } = n2
     if (patchFlag > 0) {
       optimized = true
@@ -1126,6 +1130,7 @@ function baseCreateRenderer(
       dynamicChildren = null
     }
 
+    // 初始化
     if (n1 == null) {
       hostInsert(fragmentStartAnchor, container, anchor)
       hostInsert(fragmentEndAnchor, container, anchor)
@@ -1672,6 +1677,8 @@ function baseCreateRenderer(
   }
 
   // can be all-keyed or mixed
+  // 类似vue2中的updateChildren
+  // 最长递增子序列
   const patchKeyedChildren = (
     c1: VNode[],
     c2: VNodeArrayChildren,
@@ -1690,6 +1697,7 @@ function baseCreateRenderer(
     // 1. sync from start
     // (a b) c
     // (a b) d e
+    // 1.掐头
     while (i <= e1 && i <= e2) {
       const n1 = c1[i]
       const n2 = (c2[i] = optimized
@@ -1715,6 +1723,7 @@ function baseCreateRenderer(
     // 2. sync from end
     // a (b c)
     // d e (b c)
+    // 2.去尾
     while (i <= e1 && i <= e2) {
       const n1 = c1[e1]
       const n2 = (c2[e2] = optimized
@@ -1745,6 +1754,7 @@ function baseCreateRenderer(
     // (a b)
     // c (a b)
     // i = 0, e1 = -1, e2 = 0
+    // 3.创建
     if (i > e1) {
       if (i <= e2) {
         const nextPos = e2 + 1
@@ -1773,6 +1783,7 @@ function baseCreateRenderer(
     // a (b c)
     // (b c)
     // i = 0, e1 = 0, e2 = -1
+    // 4.删除
     else if (i > e2) {
       while (i <= e1) {
         unmount(c1[i], parentComponent, parentSuspense, true)
@@ -1784,6 +1795,7 @@ function baseCreateRenderer(
     // [i ... e1 + 1]: a b [c d e] f g
     // [i ... e2 + 1]: a b [e d c h] f g
     // i = 2, e1 = 4, e2 = 5
+    // 5.通用查找
     else {
       const s1 = i // prev starting index
       const s2 = i // next starting index
