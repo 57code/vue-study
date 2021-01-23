@@ -1,0 +1,23 @@
+<div id="app">
+  <h1 id="hh"></h1>
+</div>
+
+<script src="./06-reactive.js"></script>
+<script>
+  const data = reactive({
+    title: 'vue3 响应式'
+  })
+
+  effect(() => {
+    // 组件更新函数
+    hh.innerHTML = data.title
+
+    // VUE3
+    vnode = render()
+    patch(oldvnode, vnode)
+  })
+
+  setTimeout(() => {
+    data.title = '这是变化之后的标题'
+  }, 2000);
+</script>
