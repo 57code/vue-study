@@ -8,7 +8,7 @@ class KVueRouter {
     // 1.保存当前hash到current
     // current必须是响应式的数据
     Vue.util.defineReactive(this, 'current', '/')
-    
+
     // 2.监听hash变化
     window.addEventListener("hashchange", () => {
       // 获取#后面的部分
