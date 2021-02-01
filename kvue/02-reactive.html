@@ -1,0 +1,39 @@
+<div id="app"></div>
+
+<script>
+  // 属性拦截：defineProperty()
+  // Vue.util.
+  function defineReactive(obj, key, val) {
+    // 属性拦截
+    // 利用闭包：
+    // 1.局部作用域
+    // 2.通过函数暴露出去
+    Object.defineProperty(obj, key, {
+      get() {
+        console.log('get', key);
+        return val
+      },
+      set(newVal) {
+        console.log('set', key);
+        if (newVal !== val) {
+          val = newVal
+          update()
+        }
+      },
+    })
+  }
+  const obj = {}
+  defineReactive(obj, 'foo', 'fooo')
+  obj.foo = 'foooooo'
+  
+  // 通过编译器生成这个update
+  function update() {
+    app.innerText = obj.foo
+    // ...
+  }
+
+  setInterval(() => {
+    obj.foo = new Date().toLocaleTimeString()
+  }, 1000)
+
+</script>
