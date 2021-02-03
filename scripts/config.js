@@ -27,7 +27,8 @@ const weexFactoryPlugin = {
 
 const aliases = require('./alias')
 const resolve = p => {
-  const base = p.split('/')[0]
+  // web/entry-runtime-with-compiler.js
+  const base = p.split('/')[0] // web
   if (aliases[base]) {
     return path.resolve(aliases[base], p.slice(base.length + 1))
   } else {
@@ -35,6 +36,8 @@ const resolve = p => {
   }
 }
 
+// 各种创建配置
+// cjs  commonjs  nodejs
 const builds = {
   // Runtime only (CommonJS). Used by bundlers e.g. Webpack & Browserify
   'web-runtime-cjs-dev': {
@@ -120,6 +123,7 @@ const builds = {
     banner
   },
   // Runtime+compiler development build (Browser)
+  // 运行时＋编译器
   'web-full-dev': {
     entry: resolve('web/entry-runtime-with-compiler.js'),
     dest: resolve('dist/vue.js'),

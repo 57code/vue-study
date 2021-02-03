@@ -3,6 +3,7 @@
 
 <head>
     <title>Vue源码剖析</title>
+    <!-- 完整带编译器版本vue -->
     <script src="../../dist/vue.js"></script>
 </head>
 
@@ -13,7 +14,9 @@
         
     </div>
     <script>
-        // render > template > el
+        // 没有$mount? 什么时候可以省略？
+        // 优先级 render > template > el
+
         // 创建实例
         const app = new Vue({
             el: '#demo',

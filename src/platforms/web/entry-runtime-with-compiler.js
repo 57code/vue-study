@@ -14,11 +14,13 @@ const idToTemplate = cached(id => {
   return el && el.innerHTML
 })
 
+// 扩展$mount()
 const mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
+  // 查找宿主元素
   el = el && query(el)
 
   /* istanbul ignore if */
@@ -29,12 +31,15 @@ Vue.prototype.$mount = function (
     return this
   }
 
+  // 获取根组件选项
   const options = this.$options
   // resolve template/el and convert to render function
+  // 只有render不存在才有必要查看template或el选项
   if (!options.render) {
     let template = options.template
     if (template) {
       if (typeof template === 'string') {
+        // 选择器
         if (template.charAt(0) === '#') {
           template = idToTemplate(template)
           /* istanbul ignore if */
@@ -54,6 +59,7 @@ Vue.prototype.$mount = function (
         return this
       }
     } else if (el) {
+      // 最后查看el选项，将el的outerhtml作为模板
       template = getOuterHTML(el)
     }
     if (template) {
@@ -79,6 +85,7 @@ Vue.prototype.$mount = function (
       }
     }
   }
+  // 执行默认挂载行为
   return mount.call(this, el, hydrating)
 }
 

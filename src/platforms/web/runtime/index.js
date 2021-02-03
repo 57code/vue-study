@@ -31,14 +31,19 @@ extend(Vue.options.directives, platformDirectives)
 extend(Vue.options.components, platformComponents)
 
 // install platform patch function
+// 1.安装平台补丁函数（更新函数）
 Vue.prototype.__patch__ = inBrowser ? patch : noop
 
 // public mount method
+// 2.声明$mount方法
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
   el = el && inBrowser ? query(el) : undefined
+  // 直接调用挂载
+  // 将当前组件实例 =》 vdom =》 dom
+  // 并追加到el上
   return mountComponent(this, el, hydrating)
 }
 
