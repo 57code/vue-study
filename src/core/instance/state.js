@@ -45,6 +45,7 @@ export function proxy (target: Object, sourceKey: string, key: string) {
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
 
+// 组件数据初始化
 export function initState (vm: Component) {
   vm._watchers = []
   const opts = vm.$options
@@ -110,6 +111,7 @@ function initProps (vm: Component, propsOptions: Object) {
 }
 
 function initData (vm: Component) {
+  // 用户设置data选项
   let data = vm.$options.data
   data = vm._data = typeof data === 'function'
     ? getData(data, vm)
@@ -123,6 +125,7 @@ function initData (vm: Component) {
     )
   }
   // proxy data on instance
+  // 校验
   const keys = Object.keys(data)
   const props = vm.$options.props
   const methods = vm.$options.methods
@@ -148,6 +151,7 @@ function initData (vm: Component) {
     }
   }
   // observe data
+  // 响应式处理
   observe(data, true /* asRootData */)
 }
 

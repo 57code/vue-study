@@ -10,17 +10,28 @@
     <div id="demo">
         <h1>数据响应化</h1>
         <p>{{obj.foo}}</p>
+        <p>{{obj.bar}}</p>
     </div>
     <script>
         // 创建实例
-        // 会有几个Observer？Dep？Watcher？
-        //            2      2    1
+        // 会有几个
+        // Observer？Dep？Watcher？
+        //     2      4     1
+        // 一个对象一个Ob
+        // 一个key一个dep + Ob内部的
         const app = new Vue({
             el: '#demo',
-            data: { obj: { foo: 'foo' } },
+            data: { 
+                obj: { 
+                    foo: 'foo' 
+                } 
+            },
             mounted() {
+                // 属性dep，负责更新已存在属性变化
+                this.obj.foo = 'fooooo'
                 setTimeout(() => {
-                    this.obj.foo = 'fooooo'
+                    // ob中的dep负责动态新增、删除属性通知更新
+                    this.$set(this.obj, 'bar', 'bar')
                 }, 1000);
             }
         });

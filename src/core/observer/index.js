@@ -34,6 +34,9 @@ export function toggleObserving (value: boolean) {
  * object's property keys into getter/setters that
  * collect dependencies and dispatch updates.
  */
+// 作用：
+// 1.区分传入对象类型，做不同响应式处理
+// 2.对象动态新增或者删除属性
 export class Observer {
   value: any;
   dep: Dep;
@@ -41,10 +44,16 @@ export class Observer {
 
   constructor (value: any) {
     this.value = value
+    // 内部还创建了一个Dep实例，负责变更通知
+    // dep.notify()  => watcher.update()  => componentUpdate
+    // render() => _update() => patch()
     this.dep = new Dep()
     this.vmCount = 0
+
+    // 响应式对象上面附加__ob__, 指向当前Ob
     def(value, '__ob__', this)
     if (Array.isArray(value)) {
+      // 如果存在原型，则直接覆盖
       if (hasProto) {
         protoAugment(value, arrayMethods)
       } else {
@@ -52,6 +61,7 @@ export class Observer {
       }
       this.observeArray(value)
     } else {
+      // 对象响应式
       this.walk(value)
     }
   }
@@ -111,7 +121,9 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
   if (!isObject(value) || value instanceof VNode) {
     return
   }
+  // 获取一个Ob实例
   let ob: Observer | void
+  // 响应式对象已经拥有了ob，直接返回
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
   } else if (
@@ -121,6 +133,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
     Object.isExtensible(value) &&
     !value._isVue
   ) {
+    // 初始化时需要创建
     ob = new Observer(value)
   }
   if (asRootData && ob) {
@@ -139,6 +152,7 @@ export function defineReactive (
   customSetter?: ?Function,
   shallow?: boolean
 ) {
+  // 每个key对应一个dep
   const dep = new Dep()
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
@@ -153,15 +167,21 @@ export function defineReactive (
     val = obj[key]
   }
 
+  // 递归处理
   let childOb = !shallow && observe(val)
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter () {
+      // 获取key对应的值
       const value = getter ? getter.call(obj) : val
-      if (Dep.target) {
+      // 依赖收集
+      if (Dep.target) { // Watcher 1
+        // dep和watcher相互创建引用关系
+        // dep n :  n watcher
         dep.depend()
         if (childOb) {
+          // 子对象的ob内部的dep也要和watcher关联
           childOb.dep.depend()
           if (Array.isArray(value)) {
             dependArray(value)
