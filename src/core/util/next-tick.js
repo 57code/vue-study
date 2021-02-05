@@ -84,8 +84,11 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   }
 }
 
+// 将传入cb函数放入callbacks数组
 export function nextTick (cb?: Function, ctx?: Object) {
   let _resolve
+  // 封装的高阶函数就是为了捕获可能出现错误
+  // 并且执行cb
   callbacks.push(() => {
     if (cb) {
       try {
@@ -97,8 +100,11 @@ export function nextTick (cb?: Function, ctx?: Object) {
       _resolve(ctx)
     }
   })
+
+  // 如果处于空闲状态
   if (!pending) {
     pending = true
+    // 启动异步执行
     timerFunc()
   }
   // $flow-disable-line

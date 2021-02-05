@@ -42,6 +42,7 @@ export default class Watcher {
   getter: Function;
   value: any;
 
+  // new Watcher(this, componentUpdate)
   constructor (
     vm: Component,
     expOrFn: string | Function,
@@ -166,11 +167,12 @@ export default class Watcher {
    */
   update () {
     /* istanbul ignore else */
-    if (this.lazy) {
+    if (this.lazy) { // computed
       this.dirty = true
-    } else if (this.sync) {
+    } else if (this.sync) { // 同步执行 
       this.run()
     } else {
+      // 正常情况走这里
       queueWatcher(this)
     }
   }
