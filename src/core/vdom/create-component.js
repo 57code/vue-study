@@ -35,6 +35,7 @@ import {
 // inline hooks to be invoked on component VNodes during patch
 const componentVNodeHooks = {
   init (vnode: VNodeWithData, hydrating: boolean): ?boolean {
+    // 组件实例已存在，一般是keepalive
     if (
       vnode.componentInstance &&
       !vnode.componentInstance._isDestroyed &&
@@ -44,10 +45,12 @@ const componentVNodeHooks = {
       const mountedNode: any = vnode // work around flow
       componentVNodeHooks.prepatch(mountedNode, mountedNode)
     } else {
+      // 新实例创建过程
       const child = vnode.componentInstance = createComponentInstanceForVnode(
         vnode,
         activeInstance
       )
+      // 子组件挂载
       child.$mount(hydrating ? vnode.elm : undefined, hydrating)
     }
   },
@@ -98,6 +101,7 @@ const componentVNodeHooks = {
 
 const hooksToMerge = Object.keys(componentVNodeHooks)
 
+// 创建组件虚拟dom
 export function createComponent (
   Ctor: Class<Component> | Function | Object | void,
   data: ?VNodeData,
@@ -144,6 +148,7 @@ export function createComponent (
     }
   }
 
+  // 处理组件各种属性、事件
   data = data || {}
 
   // resolve constructor options in case global mixins are applied after
@@ -151,6 +156,7 @@ export function createComponent (
   resolveConstructorOptions(Ctor)
 
   // transform component v-model data into props & events
+  // 双绑的额外处理
   if (isDef(data.model)) {
     transformModel(Ctor.options, data)
   }
@@ -183,9 +189,12 @@ export function createComponent (
   }
 
   // install component management hooks onto the placeholder node
+  // 安装组件管理钩子
   installComponentHooks(data)
 
   // return a placeholder vnode
+  // 给组件七个名字
+  // vue-component-1-comp
   const name = Ctor.options.name || tag
   const vnode = new VNode(
     `vue-component-${Ctor.cid}${name ? `-${name}` : ''}`,
@@ -223,6 +232,7 @@ export function createComponentInstanceForVnode (
   return new vnode.componentOptions.Ctor(options)
 }
 
+// 用户可以传递管理钩子
 function installComponentHooks (data: VNodeData) {
   const hooks = data.hook || (data.hook = {})
   for (let i = 0; i < hooksToMerge.length; i++) {

@@ -4,6 +4,7 @@ import config from '../config'
 import { initUse } from './use'
 import { initMixin } from './mixin'
 import { initExtend } from './extend'
+// component/directive/filter
 import { initAssetRegisters } from './assets'
 import { set, del } from '../observer/index'
 import { ASSET_TYPES } from 'shared/constants'
