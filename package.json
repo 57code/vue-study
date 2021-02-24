@@ -43,9 +43,6 @@
     "release:note": "node scripts/gen-release-note.js",
     "commit": "git-cz"
   },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
   "lint-staged": {
     "*.js": [
       "eslint --fix",
