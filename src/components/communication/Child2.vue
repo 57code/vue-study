@@ -1,12 +1,20 @@
 <template>
   <div>
     <h3>child2</h3>
+    <!-- 非属性特性$attrs -->
+    <p>{{$attrs.msg}}</p>
+    <!-- 属性透传 -->
+    <grandson v-bind="$attrs" v-on="$listeners"></grandson>
     <button @click="sendToChild1">给child1发送消息</button>
   </div>
 </template>
 
 <script>
+  import Grandson from '@/components/communication/Grandson.vue';
   export default {
+    components: {
+      Grandson,
+    },
     methods: {
       sendToChild1() {
         // 利用事件总线发送事件

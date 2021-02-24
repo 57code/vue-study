@@ -4,7 +4,8 @@
     <!-- props, 自定义事件 -->
     <Child1 msg="some msg from parent" @some-event="onSomeEvent"></Child1>
     <!-- 事件总线 -->
-    <Child2 ref="child2"></Child2>
+    <!-- child2没有生命msg，成为非属性特性 -->
+    <Child2 ref="child2" msg="some msg from parent" @some-event="onSomeEvent"></Child2>
   </div>
 </template>
 
@@ -13,6 +14,12 @@
   import Child2 from '@/components/communication/Child2.vue'
   
   export default {
+    provide() {
+      return {
+        foo: '来自爷爷的馈赠',
+        // grandpa: this
+      }
+    },
     components: {
       Child1, Child2
     },
