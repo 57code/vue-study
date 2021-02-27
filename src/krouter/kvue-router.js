@@ -12,7 +12,7 @@ class VueRouter {
     // defineReactive给一个对象定义响应式属性
     // 这样所有引用了current属性的组件，当current变化时，它们都会重新render
     Vue.util.defineReactive(this, 'current', "/")
-
+    
     // 2.监控hash改变
     window.addEventListener("hashchange", () => {
       console.log(window.location.hash);
