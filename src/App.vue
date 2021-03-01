@@ -1,22 +1,37 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/">
+        <svg-icon icon-class="yx"></svg-icon>
+        Home
+      </router-link>
+      |
+      <router-link to="/about">
+        <svg-icon icon-class="bp"></svg-icon>
+        About</router-link
+      >
     </div>
 
     <!-- store -->
-    <p @click="$store.commit('add')">{{$store.state.counter}}</p>
-    <p @click="$store.dispatch('add')">async: {{$store.state.counter}}</p>
-    <p>{{$store.getters.doubleCounter}}</p>
+    <p @click="$store.commit('add')">{{ $store.state.counter }}</p>
+    <p @click="$store.dispatch('add')">async: {{ $store.state.counter }}</p>
+    <p>{{ $store.getters.doubleCounter }}</p>
 
-    <router-view/>
+    <router-view />
   </div>
 </template>
+<script>
+console.log('------client------');
+console.log(process.env.foo);
+console.log(process.env.VUE_APP_BAR);
 
+export default {
+  
+}
+</script>
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

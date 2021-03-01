@@ -25,6 +25,4 @@ export default new Vuex.Store({
       return state.counter * 2;
     }
   }
-  modules: {
-  }
 })
