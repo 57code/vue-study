@@ -3,9 +3,14 @@ function defineReactive(obj, key, val) {
   // 递归处理
   observe(val)
   
+  // 创建对应的Dep
+  const dep = new Dep()
+  
   Object.defineProperty(obj, key, {
     get() {
       console.log('get', key);
+      // 添加依赖
+      Dep.target && dep.addDep(Dep.target)
       return val
     },
     set(newVal) {
@@ -14,6 +19,8 @@ function defineReactive(obj, key, val) {
         // 处理newVal也是对象的情况
         observe(newVal)
         val = newVal
+
+        dep.notify()
       }
     },
   })
@@ -96,7 +103,9 @@ class Compile {
     el.childNodes.forEach(node => {
       // 1.如果是元素，判断其属性
       if (node.nodeType === 1) {
-        console.log('元素节点', node.nodeName);
+        // console.log('元素节点', node.nodeName);
+        this.compileElement(node)
+        
         // 递归
         if (node.childNodes.length > 0) {
           this.compile(node)
@@ -104,7 +113,7 @@ class Compile {
       } 
       if (this.isInter(node)) {
         // 2.如果是文本，判断是不是插值绑定{{}}
-        console.log('插值绑定');
+        this.compileText(node)
       }
       
     })
@@ -112,5 +121,92 @@ class Compile {
 
   isInter(node) {
     return node.nodeType === 3 && /\{\{(.*)\}\}/.test(node.textContent)
+  }
+
+  // 提取一个update方法，此方法为哪些动态的依赖初始化并且创建Watcher实例
+  update(node, exp, dir) {
+    // 1.init
+    const fn = this[dir+'Updater']
+    fn && fn(node, this.$vm[exp])
+
+    // 2.创建Watcher实例
+    new Watcher(this.$vm, exp, function(val) {
+      fn && fn(node, val)
+    })
+  }
+  
+  // {{ooxx}}
+  compileText(node) {
+    console.log(RegExp.$1);
+    this.update(node, RegExp.$1, 'text')
+  }
+
+  textUpdater(node, val) {
+    node.textContent = val
+  }
+
+  compileElement(node) {
+    // 获取所有特性
+    let nodeAttrs = node.attributes
+    Array.from(nodeAttrs).forEach(attr => {
+      console.log(attr);
+      // k-text="counter"
+      const attrName = attr.name // k-text
+      const exp = attr.value     // counter
+      if (this.isDir(attrName)) {
+        const dir = attrName.substring(2)
+        this[dir] && this[dir](node, exp)
+      }
+    })
+  }
+
+  isDir(attr) {
+    return attr.startsWith('k-')
+  }
+
+  // k-text
+  text(node, exp) {
+    this.update(node, exp, 'text')
+  }
+
+  // k-html
+  html(node, exp) {
+    this.update(node, exp, 'html')
+  }
+
+  htmlUpdater(node, val) {
+    node.innerHTML = val
+  }
+}
+
+// Watcher: 负责视图中依赖的更新
+class Watcher {
+  constructor(vm, key, updater) {
+    this.vm = vm
+    this.key = key
+    this.updater = updater
+
+    // 尝试读取key，触发依赖收集
+    Dep.target = this
+    this.vm[this.key]
+    Dep.target = null
+  }
+
+  // 会被Dep调用
+  update() {
+    this.updater.call(this.vm, this.vm[this.key])
+  }
+}
+
+// Dep: 和data中的每个key一一对应，响应式处理的时候，没遍历一个属性，就创建一个Dep实例
+class Dep {
+  constructor() {
+    this.deps = []
+  }
+  addDep(watcher) {
+    this.deps.push(watcher)
+  }
+  notify() {
+    this.deps.forEach(watcher => watcher.update())
   }
 }
