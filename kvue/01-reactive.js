@@ -1,70 +1,59 @@
-// 属性拦截：defineProperty()
-// Vue.util.
+// Object.defineProperty()
 function defineReactive(obj, key, val) {
-  // 递归判断
-  observe(val);
-
-  // 属性拦截
-  // 利用闭包：
-  // 1.局部作用域
-  // 2.通过函数暴露出去
+  // 递归处理
+  observe(val)
+  
   Object.defineProperty(obj, key, {
     get() {
-      console.log("get", key);
-      return val;
+      console.log('get', key);
+      return val
     },
     set(newVal) {
-      console.log("set", key);
       if (newVal !== val) {
-        // 新设置的值有可能是对象
-        observe(newVal);
-        val = newVal;
-        // update()
+        console.log('set', key);
+        // 处理newVal也是对象的情况
+        observe(newVal)
+        val = newVal
       }
     },
-  });
+  })
 }
 
-// 遍历需要响应式处理的对象
+// 遍历obj的每个key，执行响应式定义
 function observe(obj) {
-  if (typeof obj !== "object") {
-    return obj;
+  // 判断传入obj是否是对象
+  if (typeof obj !== 'object' || obj == null) {
+    return 
   }
-  // 遍历
-  Object.keys(obj).forEach((key) => {
-    defineReactive(obj, key, obj[key]);
-  });
+  
+  Object.keys(obj).forEach(key => {
+    defineReactive(obj, key, obj[key])
+  })
 }
 
-// 如果用户有动态属性需要添加，需要使用set
+// Vue.set(obj, key, val)
+// 动态增加属性
 function set(obj, key, val) {
   defineReactive(obj, key, val)
-
-  // ...
 }
 
-// new Vue({data:{}})
 const obj = {
-  foo: "foo",
-  bar: "bar",
-  a: {
-    n: 1,
-  },
-};
-observe(obj);
-
-
+  foo: 'foo',
+  bar: 'bar',
+  baz: {
+    a: 1
+  }
+}
+observe(obj)
 
 // obj.foo
-// obj.foo = 'foooooo'
-// obj.a.n = 10
-// obj.a = { n: 10 };
-// obj.a.n
+// obj.bar
+// obj.baz.a
+// obj.baz = {
+//   a: 10
+// }
+// obj.baz.a
+// obj.dong = 'dong'
+set(obj, 'dong', 'dong')
+obj.dong
 
-// obj.bla = 'blabla' // no ok
-set(obj, 'bla', 'blabla')
-obj.bla
-
-
-// Array
-// 需要覆盖扩展7个变更方法：push/pop/shift/unshift/...
