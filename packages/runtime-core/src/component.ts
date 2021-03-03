@@ -518,6 +518,7 @@ export function setupComponent(
   initProps(instance, props, isStateful, isSSR)
   initSlots(instance, children)
 
+  // 组件
   const setupResult = isStateful
     ? setupStatefulComponent(instance, isSSR)
     : undefined
@@ -552,11 +553,13 @@ function setupStatefulComponent(
   instance.accessCache = {}
   // 1. create public instance / render proxy
   // also mark it raw so it's never observed
+  // proxy是一个响应式对象
   instance.proxy = new Proxy(instance.ctx, PublicInstanceProxyHandlers)
   if (__DEV__) {
     exposePropsOnRenderContext(instance)
   }
   // 2. call setup()
+  // 处理用户配置的setup选项
   const { setup } = Component
   if (setup) {
     const setupContext = (instance.setupContext =
@@ -564,6 +567,9 @@ function setupStatefulComponent(
 
     currentInstance = instance
     pauseTracking()
+    // 执行setup
+    // setup(props, setupContext)
+    // {slots, attrs, emit}
     const setupResult = callWithErrorHandling(
       setup,
       instance,
@@ -593,6 +599,7 @@ function setupStatefulComponent(
       handleSetupResult(instance, setupResult, isSSR)
     }
   } else {
+    // 传统选项方式走这里
     finishComponentSetup(instance, isSSR)
   }
 }
@@ -646,6 +653,7 @@ export function registerRuntimeCompiler(_compile: any) {
   compile = _compile
 }
 
+// 处理除了setup之外的其他选项
 function finishComponentSetup(
   instance: ComponentInternalInstance,
   isSSR: boolean
@@ -686,6 +694,7 @@ function finishComponentSetup(
   }
 
   // support for 2.x options
+  // 支持2.0选项api
   if (__FEATURE_OPTIONS_API__) {
     currentInstance = instance
     applyOptions(instance, Component)

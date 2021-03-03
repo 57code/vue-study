@@ -115,6 +115,8 @@ export function createAppAPI<HostElement>(
   render: RootRenderFunction,
   hydrate?: RootHydrateFunction
 ): CreateAppFunction<HostElement> {
+  // 真正应用程序实例工厂函数
+  // rootComponent：就是用户传入根组件配置
   return function createApp(rootComponent, rootProps = null) {
     if (rootProps != null && !isObject(rootProps)) {
       __DEV__ && warn(`root props passed to app.mount() must be an object.`)
@@ -126,6 +128,7 @@ export function createAppAPI<HostElement>(
 
     let isMounted = false
 
+    // 应用程序实例
     const app: App = (context.app = {
       _uid: uid++,
       _component: rootComponent as ConcreteComponent,
@@ -210,8 +213,10 @@ export function createAppAPI<HostElement>(
         return app
       },
 
+      // 挂载方法
       mount(rootContainer: HostElement, isHydrate?: boolean): any {
         if (!isMounted) {
+          // 根组件虚拟dom
           const vnode = createVNode(
             rootComponent as ConcreteComponent,
             rootProps
@@ -230,6 +235,8 @@ export function createAppAPI<HostElement>(
           if (isHydrate && hydrate) {
             hydrate(vnode as VNode<Node, Element>, rootContainer as any)
           } else {
+            // spa默认使用render
+            // 渲染vnode为dom并追加到rootContainer
             render(vnode, rootContainer)
           }
           isMounted = true

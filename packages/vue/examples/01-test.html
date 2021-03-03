@@ -1,0 +1,22 @@
+<div id="app">
+  <h1>{{title}}</h1>
+  <comp></comp>
+</div>
+<script src="../dist/vue.global.js"></script>
+<script>
+  const { createApp } = Vue
+  // vue实例创建变成工厂函数形式
+  // App实例就是一个普通对象
+
+  const app = createApp({
+    data() {
+      return {
+        title: 'vue3初始化'
+      }
+    },
+  })
+  .component('comp', {
+    template: '<div>comp</div>'
+  })
+  .mount('#app')
+</script>
