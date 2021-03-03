@@ -1,0 +1,83 @@
+<div id="app"></div>
+
+<script src="../dist/vue.global.js"></script>
+<script>
+  const { createRenderer } = Vue
+  // 创建⼀个渲染器，给它提供节点和属性操作
+  const nodeOps = {
+    createElement: (tag, isSVG, is) => {
+      // 创建元素时由于没有需要创建的dom元素，只需返回当前元素数据对象
+      return { tag }
+    },
+    // 更新属性
+    patchProp(el, key, prevValue, nextValue) {
+      el[key] = nextValue;
+    },
+    insert: (child, parent, anchor) => {
+      // 只有canvas有nodeType，这⾥就是开始绘制内容到canvas
+      if (parent.nodeType === 1) {
+        draw(child)
+      }
+    },
+  }
+
+  const draw = (el, noClear) => {
+    if (!noClear) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+    }
+    if (el.tag == 'bar-chart') {
+      const { data } = el;
+      const barWidth = canvas.width / 10,
+        gap = 20,
+        paddingLeft = (data.length * barWidth + (data.length - 1) * gap) / 2,
+        paddingBottom = 10;
+      // x轴
+      // 柱状图
+      data.forEach(({ title, count, color }, index) => {
+        const x = paddingLeft + index * (barWidth + gap)
+        const y = canvas.height - paddingBottom - count
+        ctx.fillStyle = color
+        ctx.fillRect(x, y, barWidth, count)
+        // text
+      });
+    }
+    // 递归绘制⼦节点
+    el.childs && el.childs.forEach(child => draw(child, true));
+  }
+  
+  const renderer = createRenderer(nodeOps);
+
+  // 保存画布和其上下⽂
+  let ctx;
+  let canvas;
+
+  // 扩展mount，⾸先创建⼀个画布元素
+  function createCanvasApp(App) {
+    const app = renderer.createApp(App);
+    // 扩展mount方法，让她可以额外的追加画布进去
+    const mount = app.mount
+    app.mount = function (selector) {
+      canvas = document.createElement('canvas');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      document.querySelector(selector).appendChild(canvas);
+      ctx = canvas.getContext('2d');
+      mount(canvas);
+    }
+    return app
+  }
+  // 创建app实例
+  createCanvasApp({
+    template: '<bar-chart :data="chartData"></bar-chart>',
+    data() {
+      return {
+        chartData: [
+          { title: "⻘铜", count: 200, color: "brown" },
+          { title: "砖⽯", count: 300, color: "skyblue" },
+          { title: "星耀", count: 100, color: "purple" },
+          { title: "王者", count: 50, color: "gold" }
+        ]
+      }
+    },
+  }).mount('#app')
+</script>
