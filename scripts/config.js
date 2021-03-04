@@ -26,6 +26,7 @@ const weexFactoryPlugin = {
 }
 
 const aliases = require('./alias')
+// 可以根据别名找到完整路径
 const resolve = p => {
   const base = p.split('/')[0]
   if (aliases[base]) {
@@ -35,6 +36,7 @@ const resolve = p => {
   }
 }
 
+// 各种版本vue的配置
 const builds = {
   // Runtime only (CommonJS). Used by bundlers e.g. Webpack & Browserify
   'web-runtime-cjs-dev': {
@@ -120,6 +122,7 @@ const builds = {
     banner
   },
   // Runtime+compiler development build (Browser)
+  // 我们的范例中使用的是这个配置
   'web-full-dev': {
     entry: resolve('web/entry-runtime-with-compiler.js'),
     dest: resolve('dist/vue.js'),

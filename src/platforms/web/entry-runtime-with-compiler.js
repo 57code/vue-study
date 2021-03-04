@@ -14,25 +14,23 @@ const idToTemplate = cached(id => {
   return el && el.innerHTML
 })
 
+// 扩展$mount
 const mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
+  // 获取宿主元素
   el = el && query(el)
 
   /* istanbul ignore if */
-  if (el === document.body || el === document.documentElement) {
-    process.env.NODE_ENV !== 'production' && warn(
-      `Do not mount Vue to <html> or <body> - mount to normal elements instead.`
-    )
-    return this
-  }
 
   const options = this.$options
   // resolve template/el and convert to render function
+  // render不存在才获取template
   if (!options.render) {
     let template = options.template
+    // template存在则使用它
     if (template) {
       if (typeof template === 'string') {
         if (template.charAt(0) === '#') {
@@ -54,8 +52,11 @@ Vue.prototype.$mount = function (
         return this
       }
     } else if (el) {
+      // 如果不存在，则通过el获取template
       template = getOuterHTML(el)
     }
+    
+    // template选项需要编译为render函数的
     if (template) {
       /* istanbul ignore if */
       if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
@@ -79,6 +80,7 @@ Vue.prototype.$mount = function (
       }
     }
   }
+  // 默认的挂载行为
   return mount.call(this, el, hydrating)
 }
 
