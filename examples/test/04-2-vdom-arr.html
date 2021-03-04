@@ -17,10 +17,13 @@
         // 创建实例
         const app = new Vue({
             el: '#demo',
-            data: { arr: [1,2,3] },
+            data: { 
+                arr: [1,2,3] 
+            },
             mounted() {
                 setTimeout(() => {
                     this.arr.push(4)
+                    
                 }, 1000);
             }
         });

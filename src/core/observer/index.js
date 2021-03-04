@@ -45,13 +45,17 @@ export class Observer {
     this.vmCount = 0
     def(value, '__ob__', this)
     if (Array.isArray(value)) {
+      // 数组响应式
       if (hasProto) {
+        // 覆盖数组原型为arrayMethods
         protoAugment(value, arrayMethods)
       } else {
+        // ie
         copyAugment(value, arrayMethods, arrayKeys)
       }
       this.observeArray(value)
     } else {
+      // 对象响应式
       this.walk(value)
     }
   }
@@ -64,6 +68,7 @@ export class Observer {
   walk (obj: Object) {
     const keys = Object.keys(obj)
     for (let i = 0; i < keys.length; i++) {
+      // 单个属性的响应式定义
       defineReactive(obj, keys[i])
     }
   }
@@ -98,6 +103,7 @@ function protoAugment (target, src: Object) {
 function copyAugment (target: Object, src: Object, keys: Array<string>) {
   for (let i = 0, l = keys.length; i < l; i++) {
     const key = keys[i]
+    // 粗暴的直接定义7个方法
     def(target, key, src[key])
   }
 }
@@ -111,8 +117,13 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
   if (!isObject(value) || value instanceof VNode) {
     return
   }
+  // 观察者：
+  // 1.判断传入对象类型是Array还是Object
+  // 2.一部分通知更新作用
+  // 判断对象是响应式的，看他有没有__ob__
   let ob: Observer | void
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
+    // 已做过响应式，直接返回实例
     ob = value.__ob__
   } else if (
     shouldObserve &&
@@ -139,6 +150,9 @@ export function defineReactive (
   customSetter?: ?Function,
   shallow?: boolean
 ) {
+  // 每个key对应一个dep
+  // 管理watcher
+  // 通知更新
   const dep = new Dep()
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
@@ -153,12 +167,17 @@ export function defineReactive (
     val = obj[key]
   }
 
+  // 递归处理
   let childOb = !shallow && observe(val)
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
+      // 依赖收集
+      // dep和它相关watcher之间建立关系
+      // 生成的子ob实例内部的dep也要和当前watcher建立关系
+      // dep n : n  watcher
       if (Dep.target) {
         dep.depend()
         if (childOb) {

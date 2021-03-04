@@ -68,6 +68,7 @@ export function initMixin (Vue: Class<Component>) {
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
 
+    // 如果设置了el选项，则自动挂载
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }

@@ -14,13 +14,23 @@
     <script>
         // 创建实例
         // 会有几个Observer？Dep？Watcher？
-        //            2      2    1
+                // 2       4       1
+        // 为什么要创建这么多Observer？ 内部为啥需要一个Dep
+        // 默认情况只有一个渲染watcher，一个组件一个
+        // 如果用户执行$watch(),则会产生额外的Watcher实例，成为UserWatcher
+        // 设置watch选项或者computed选项也会生成
         const app = new Vue({
             el: '#demo',
-            data: { obj: { foo: 'foo' } },
+            data: { 
+                obj: { 
+                    foo: 'foo' 
+                } 
+            },
             mounted() {
                 setTimeout(() => {
                     this.obj.foo = 'fooooo'
+
+                    this.$set(this.obj, 'bar', 'barrrrr')
                 }, 1000);
             }
         });
