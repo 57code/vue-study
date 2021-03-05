@@ -1,0 +1,47 @@
+<div id="app">
+  <h1>响应式</h1>
+  <p @click="add">{{counter}}</p>
+  <p>{{doubleCounter}}</p>
+</div>
+
+<script src="../dist/vue.global.js"></script>
+<script>
+  const { createApp, reactive, computed, onMounted, toRefs } = Vue
+
+  function useCounter() {
+    const state = reactive({
+      counter: 0,
+      // 计算属性
+      doubleCounter: computed(() => state.counter * 2)
+    })
+
+    function add() {
+      state.counter++
+    }
+
+    // 生命周期
+    onMounted(() => {
+      console.log('组件挂载，此时counter：', state.counter);
+    })    
+
+    return { state, add }
+  }
+
+  createApp({
+    setup() {
+      // 返回代理之后响应式对象
+      // 增加可维护性，避免反复横跳
+      // 抽取可复用的函数
+      // 消灭this
+      const { state, add } = useCounter()
+
+
+      // 业务功能点
+      // dosomething
+      
+
+      // 返回渲染函数中的上下文
+      return { ...toRefs(state), add }
+    }
+  }).mount('#app') 
+</script>
