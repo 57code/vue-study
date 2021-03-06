@@ -31,9 +31,9 @@
 
                 // microtasks: [flushCallbacks, cb1]
                 // callbacks: [cb2]
-                Promise.resolve().then(() => {
-                    console.log('promise:' + p1.innerHTML)
-                })
+                // Promise.resolve().then(() => {
+                //     console.log('promise:' + p1.innerHTML)
+                // })
                 
                 // callbacks: [cb1, flushSchedulerQueue]
                 this.$nextTick(() => {

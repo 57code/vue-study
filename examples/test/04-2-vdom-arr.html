@@ -18,15 +18,24 @@
         const app = new Vue({
             el: '#demo',
             data: { 
-                arr: [1,2,3] 
+                arr: ['a','b','c','d'] 
             },
             mounted() {
                 setTimeout(() => {
-                    this.arr.push(4)
+                    this.arr.splice(2, 0, 'e')
                     
                 }, 1000);
             }
         });
+        // 不设置key
+        // ['c','d'] 
+        // ['e','c','d'] 
+        // 额外两次更新和一个创建追加
+
+        // 设置key
+        // [] 
+        // ['e']
+        // 一个创建插入
     </script>
 </body>
 
