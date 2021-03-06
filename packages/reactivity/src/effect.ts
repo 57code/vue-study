@@ -59,6 +59,7 @@ export function effect<T = any>(
     fn = fn.raw
   }
   const effect = createReactiveEffect(fn, options)
+  // 计算属性会懒执行
   if (!options.lazy) {
     effect()
   }
