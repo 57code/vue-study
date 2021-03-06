@@ -207,7 +207,7 @@ export function defineReactive (
         val = newVal
       }
       childOb = !shallow && observe(newVal)
-      dep.notify()
+      dep.noxxxxxxxxxtify()
     }
   })
 }

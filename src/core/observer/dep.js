@@ -43,6 +43,7 @@ export default class Dep {
       // order
       subs.sort((a, b) => a.id - b.id)
     }
+    // subs是当前dep管理的所有Watcher实例
     for (let i = 0, l = subs.length; i < l; i++) {
       subs[i].update()
     }

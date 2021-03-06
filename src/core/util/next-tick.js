@@ -14,6 +14,7 @@ function flushCallbacks () {
   pending = false
   const copies = callbacks.slice(0)
   callbacks.length = 0
+  // 执行callbacks中的所有函数
   for (let i = 0; i < copies.length; i++) {
     copies[i]()
   }
@@ -39,6 +40,7 @@ let timerFunc
 // completely stops working after triggering a few times... so, if native
 // Promise is available, we will use it:
 /* istanbul ignore next, $flow-disable-line */
+// 首选异步策略Promise方式，微任务的方式
 if (typeof Promise !== 'undefined' && isNative(Promise)) {
   const p = Promise.resolve()
   timerFunc = () => {
@@ -84,8 +86,10 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   }
 }
 
+// 异步执行传入回调
 export function nextTick (cb?: Function, ctx?: Object) {
   let _resolve
+  // 有一个回调函数数组callbacks，将cb包装之后存入callbacks
   callbacks.push(() => {
     if (cb) {
       try {
@@ -99,6 +103,7 @@ export function nextTick (cb?: Function, ctx?: Object) {
   })
   if (!pending) {
     pending = true
+    // 启动异步任务
     timerFunc()
   }
   // $flow-disable-line
