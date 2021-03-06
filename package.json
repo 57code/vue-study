@@ -43,15 +43,6 @@
     "release:note": "node scripts/gen-release-note.js",
     "commit": "git-cz"
   },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "git add"
-    ]
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/vuejs/vue.git"
