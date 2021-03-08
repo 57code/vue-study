@@ -45,10 +45,10 @@ export const enum PatchFlags {
   HYDRATE_EVENTS = 1 << 5,
 
   // Indicates a fragment whose children order doesn't change.
-  STABLE_FRAGMENT = 1 << 6,
+  STABLE_FRAGMENT = 1 << 6, // 1000000 
 
   // Indicates a fragment with keyed or partially keyed children
-  KEYED_FRAGMENT = 1 << 7,
+  KEYED_FRAGMENT = 1 << 7, // 10000000  128
 
   // Indicates a fragment with unkeyed children.
   UNKEYED_FRAGMENT = 1 << 8,

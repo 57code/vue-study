@@ -666,11 +666,14 @@ function finishComponentSetup(
       instance.render = Component.render as InternalRenderFunction
     }
   } else if (!instance.render) {
+    // 当前组件实例没有渲染函数，则编译模板得到它
     // could be set from setup()
     if (compile && Component.template && !Component.render) {
       if (__DEV__) {
         startMeasure(instance, `compile`)
       }
+      // template是vue/index.ts 设置的
+      // 转换template =》 render
       Component.render = compile(Component.template, {
         isCustomElement: instance.appContext.config.isCustomElement,
         delimiters: Component.delimiters

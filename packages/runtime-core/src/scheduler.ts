@@ -68,6 +68,8 @@ export function queueJob(job: SchedulerJob) {
       )) &&
     job !== currentPreFlushParentJob
   ) {
+    // 组件更新函数入队
+    // 类似vue2中watcher入队操作
     queue.push(job)
     queueFlush()
   }
@@ -206,6 +208,7 @@ function flushJobs(seen?: CountMap) {
   queue.sort((a, b) => getId(a!) - getId(b!))
 
   try {
+    // 循环执行所有组件更新函数
     for (flushIndex = 0; flushIndex < queue.length; flushIndex++) {
       const job = queue[flushIndex]
       if (job) {

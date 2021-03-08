@@ -1342,6 +1342,7 @@ function baseCreateRenderer(
     optimized
   ) => {
     // create reactive effect for rendering
+    // 添加副作用函数
     instance.update = effect(function componentEffect() {
       if (!instance.isMounted) {
         let vnodeHook: VNodeHook | null | undefined
@@ -1451,6 +1452,7 @@ function baseCreateRenderer(
         if (__DEV__) {
           startMeasure(instance, `render`)
         }
+        // 计算最新vnode
         const nextTree = renderComponentRoot(instance)
         if (__DEV__) {
           endMeasure(instance, `render`)
@@ -1673,6 +1675,7 @@ function baseCreateRenderer(
   }
 
   // can be all-keyed or mixed
+  // updateChildren
   const patchKeyedChildren = (
     c1: VNode[],
     c2: VNodeArrayChildren,
@@ -1691,6 +1694,7 @@ function baseCreateRenderer(
     // 1. sync from start
     // (a b) c
     // (a b) d e
+    // 掐头
     while (i <= e1 && i <= e2) {
       const n1 = c1[i]
       const n2 = (c2[i] = optimized
@@ -1716,6 +1720,7 @@ function baseCreateRenderer(
     // 2. sync from end
     // a (b c)
     // d e (b c)
+    // 去尾
     while (i <= e1 && i <= e2) {
       const n1 = c1[e1]
       const n2 = (c2[e2] = optimized
@@ -1746,6 +1751,7 @@ function baseCreateRenderer(
     // (a b)
     // c (a b)
     // i = 0, e1 = -1, e2 = 0
+    // 创建
     if (i > e1) {
       if (i <= e2) {
         const nextPos = e2 + 1
@@ -1774,6 +1780,7 @@ function baseCreateRenderer(
     // a (b c)
     // (b c)
     // i = 0, e1 = 0, e2 = -1
+    // 删除
     else if (i > e2) {
       while (i <= e1) {
         unmount(c1[i], parentComponent, parentSuspense, true)
@@ -1785,6 +1792,7 @@ function baseCreateRenderer(
     // [i ... e1 + 1]: a b [c d e] f g
     // [i ... e2 + 1]: a b [e d c h] f g
     // i = 2, e1 = 4, e2 = 5
+    // 就是以前的查找操作
     else {
       const s1 = i // prev starting index
       const s2 = i // next starting index

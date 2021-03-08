@@ -1,0 +1,19 @@
+<div id="app">
+  <div v-for="item in arr" :key="item">{{item}}</div>
+</div>
+<script src="../dist/vue.global.js"></script>
+<script>
+  const { createApp, h } = Vue
+  createApp({
+    data() {
+      return {
+        arr: ['a', 'b', 'c', 'd']
+      }
+    },
+    mounted() {
+      setTimeout(() => {
+        this.arr.splice(1, 0, 'e')
+      }, 1000);
+    },
+  }).mount('#app')
+</script>

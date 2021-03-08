@@ -245,6 +245,7 @@ export function trigger(
         oldTarget
       })
     }
+    // 如果用户指定了scheduler选项，则按照这个运行副作用函数
     if (effect.options.scheduler) {
       effect.options.scheduler(effect)
     } else {
