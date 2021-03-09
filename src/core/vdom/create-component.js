@@ -31,19 +31,24 @@ import {
   isRecyclableComponent,
   renderRecyclableComponentTemplate
 } from 'weex/runtime/recycle-list/render-component-template'
+import Vue from '../instance'
 
 // inline hooks to be invoked on component VNodes during patch
+// 系统默认组件管理钩子
 const componentVNodeHooks = {
+  // 组件初始化
   init (vnode: VNodeWithData, hydrating: boolean): ?boolean {
     if (
       vnode.componentInstance &&
       !vnode.componentInstance._isDestroyed &&
       vnode.data.keepAlive
     ) {
+      // 缓存的情况下，组件实例不需要创建
       // kept-alive components, treat as a patch
       const mountedNode: any = vnode // work around flow
       componentVNodeHooks.prepatch(mountedNode, mountedNode)
     } else {
+      // 正常情况，组件需要实例化
       const child = vnode.componentInstance = createComponentInstanceForVnode(
         vnode,
         activeInstance
@@ -144,6 +149,7 @@ export function createComponent (
     }
   }
 
+  // 处理组件数据
   data = data || {}
 
   // resolve constructor options in case global mixins are applied after
@@ -152,6 +158,7 @@ export function createComponent (
 
   // transform component v-model data into props & events
   if (isDef(data.model)) {
+    // 处理组件model选项，给自定义组件实现v-model是不是可以定义绑定属性名和事件名
     transformModel(Ctor.options, data)
   }
 
@@ -183,9 +190,12 @@ export function createComponent (
   }
 
   // install component management hooks onto the placeholder node
+  // 安装组件管理钩子
+  // {..., hook:{init,...}}
   installComponentHooks(data)
 
   // return a placeholder vnode
+  // vue-component-1-comp
   const name = Ctor.options.name || tag
   const vnode = new VNode(
     `vue-component-${Ctor.cid}${name ? `-${name}` : ''}`,
@@ -223,6 +233,8 @@ export function createComponentInstanceForVnode (
   return new vnode.componentOptions.Ctor(options)
 }
 
+// 组件有管理钩子，比如init，主要做组件实例化
+// 用户可以写特别逻辑代码在改钩子函数
 function installComponentHooks (data: VNodeData) {
   const hooks = data.hook || (data.hook = {})
   for (let i = 0; i < hooksToMerge.length; i++) {

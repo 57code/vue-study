@@ -44,6 +44,7 @@ export function createElement (
   return _createElement(context, tag, data, children, normalizationType)
 }
 
+// 接收组件/元素配置，返回vnode
 export function _createElement (
   context: Component,
   tag?: string | Class<Component> | Function | Object,
@@ -92,10 +93,13 @@ export function _createElement (
   } else if (normalizationType === SIMPLE_NORMALIZE) {
     children = simpleNormalizeChildren(children)
   }
+
+  // 根据用户传入tag名字或类型做不同处理
   let vnode, ns
   if (typeof tag === 'string') {
     let Ctor
     ns = (context.$vnode && context.$vnode.ns) || config.getTagNamespace(tag)
+    // 保留tag名，例如div，p
     if (config.isReservedTag(tag)) {
       // platform built-in elements
       if (process.env.NODE_ENV !== 'production' && isDef(data) && isDef(data.nativeOn)) {
@@ -104,12 +108,16 @@ export function _createElement (
           context
         )
       }
+      // 直接创建对应vnode
       vnode = new VNode(
         config.parsePlatformTagName(tag), data, children,
         undefined, undefined, context
       )
-    } else if ((!data || !data.pre) && isDef(Ctor = resolveAsset(context.$options, 'components', tag))) {
+    } else if ((!data || !data.pre) && 
+    // 根据组件名称获取其构造函数
+    isDef(Ctor = resolveAsset(context.$options, 'components', tag))) {
       // component
+      // 创建组件vnode
       vnode = createComponent(Ctor, data, context, children, tag)
     } else {
       // unknown or unlisted namespaced elements
