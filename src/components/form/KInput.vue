@@ -1,6 +1,7 @@
 <template>
   <div>
-    <!-- 自定义组件双绑：:value @input -->
+    <!-- 1.双绑: :value, @input
+    2.校验通知 -->
     <input :type="type" :value="value" @input="onInput"
       v-bind="$attrs">
   </div>
@@ -12,7 +13,7 @@
     props: {
       value: {
         type: String,
-        default: ''
+        required: true
       },
       type: {
         type: String,
@@ -22,10 +23,9 @@
     methods: {
       onInput(e) {
         this.$emit('input', e.target.value)
-        
-        // this.dispatch(‘kformitem’), 向上查找，找到指定组件，让该组件派发事件
-        this.$parent.$emit('validate')
 
+        // 通知校验
+        this.$parent.$emit('validate')
       }
     },
   }

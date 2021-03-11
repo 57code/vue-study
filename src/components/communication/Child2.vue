@@ -4,6 +4,7 @@
     <!-- 非属性特性$attrs -->
     <p>{{$attrs.msg}}</p>
     <!-- 属性透传 -->
+    <!-- A -》 B -》 C -->
     <grandson v-bind="$attrs" v-on="$listeners"></grandson>
     <button @click="sendToChild1">给child1发送消息</button>
   </div>
