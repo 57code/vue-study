@@ -9,6 +9,9 @@ import router from './router'
 import create from '@/utils/create'
 import Notice from '@/components/Notice.vue'
 
+// icons
+import '@/icons'
+
 Vue.config.productionTip = false
 // 事件总线
 Vue.prototype.$bus = new Vue()

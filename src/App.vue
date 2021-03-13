@@ -1,8 +1,12 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/">
+        <svg-icon icon-class="kz"></svg-icon>
+        Home</router-link> |
+      <router-link to="/about">
+        <svg-icon icon-class="kh"></svg-icon>
+        About</router-link>
     </div>
 
     <!-- <p @click="$store.commit('add')">{{ $store.state.counter }}</p>
@@ -13,7 +17,12 @@
     <router-view />
   </div>
 </template>
-
+<script>
+console.log(process.env.VUE_APP_DONG);
+export default {
+  
+}
+</script>
 <style>
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
