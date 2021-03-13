@@ -34,7 +34,7 @@
         // 校验规则
         const rule = this.form.rules[this.prop] 
         const validator = new Validator({[this.prop]: rule})
-        validator.validate({[this.prop]: val}, errors => {
+        return validator.validate({[this.prop]: val}, errors => {
           if (errors) {
             this.error = errors[0].message
           } else {

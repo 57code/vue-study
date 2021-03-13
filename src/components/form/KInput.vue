@@ -25,6 +25,7 @@
         this.$emit('input', e.target.value)
 
         // 通知校验
+        // this.dispatch('k-form-item', 'validate')
         this.$parent.$emit('validate')
       }
     },
