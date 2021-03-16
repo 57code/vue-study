@@ -402,6 +402,7 @@ export function createHydrationRenderer(
   return baseCreateRenderer(options, createHydrationFunctions)
 }
 
+// 重载
 // overload 1: no hydration
 function baseCreateRenderer<
   HostNode = RendererNode,
@@ -444,8 +445,8 @@ function baseCreateRenderer(
   // Note: functions inside this closure should use `const xxx = () => {}`
   // style in order to prevent being inlined by minifiers.
   const patch: PatchFn = (
-    n1,
-    n2,
+    n1, // 老vnode
+    n2, // 新vnode
     container,
     anchor = null,
     parentComponent = null,
@@ -465,6 +466,7 @@ function baseCreateRenderer(
       n2.dynamicChildren = null
     }
 
+    // 获取新节点的类型
     const { type, ref, shapeFlag } = n2
     switch (type) {
       case Text:
@@ -480,7 +482,7 @@ function baseCreateRenderer(
           patchStaticNode(n1, n2, container, isSVG)
         }
         break
-      case Fragment:
+      case Fragment: // 代码片段
         processFragment(
           n1,
           n2,
@@ -505,6 +507,7 @@ function baseCreateRenderer(
             optimized
           )
         } else if (shapeFlag & ShapeFlags.COMPONENT) {
+          // 初始化走组件处理流程
           processComponent(
             n1,
             n2,
@@ -1186,6 +1189,7 @@ function baseCreateRenderer(
     }
   }
 
+  // 创建或者更新一个组件
   const processComponent = (
     n1: VNode | null,
     n2: VNode,
@@ -1197,6 +1201,7 @@ function baseCreateRenderer(
     optimized: boolean
   ) => {
     if (n1 == null) {
+      // 初始化走这里
       if (n2.shapeFlag & ShapeFlags.COMPONENT_KEPT_ALIVE) {
         ;(parentComponent!.ctx as KeepAliveContext).activate(
           n2,
@@ -1206,6 +1211,7 @@ function baseCreateRenderer(
           optimized
         )
       } else {
+        // 此方法等效于vue2中mountComponent
         mountComponent(
           n2,
           container,
@@ -1221,6 +1227,7 @@ function baseCreateRenderer(
     }
   }
 
+  // 只走一次，转换initialVNode为dom
   const mountComponent: MountComponentFn = (
     initialVNode,
     container,
@@ -1230,6 +1237,7 @@ function baseCreateRenderer(
     isSVG,
     optimized
   ) => {
+    // 1.创建根组件实例
     const instance: ComponentInternalInstance = (initialVNode.component = createComponentInstance(
       initialVNode,
       parentComponent,
@@ -1254,6 +1262,7 @@ function baseCreateRenderer(
     if (__DEV__) {
       startMeasure(instance, `init`)
     }
+    // 2.组件初始化，等同于vue2中的_init()
     setupComponent(instance)
     if (__DEV__) {
       endMeasure(instance, `init`)
@@ -1273,6 +1282,8 @@ function baseCreateRenderer(
       return
     }
 
+    // 3.安装渲染函数副作用
+    // 启动首次patch以及更新函数副作用安装
     setupRenderEffect(
       instance,
       initialVNode,
@@ -1334,6 +1345,10 @@ function baseCreateRenderer(
     optimized
   ) => {
     // create reactive effect for rendering
+    // useEffect(callback, [dep1,dep2])
+    // 只要componentEffect中的响应式数据发生变化，该函数都会重新执行
+    // 依赖收集自动进行
+    // 组件更新函数
     instance.update = effect(function componentEffect() {
       if (!instance.isMounted) {
         let vnodeHook: VNodeHook | null | undefined
@@ -2199,12 +2214,15 @@ function baseCreateRenderer(
     }
   }
 
+  // 接收虚拟dom，转换为dom，追加到container
   const render: RootRenderFunction = (vnode, container) => {
     if (vnode == null) {
+      // 卸载操作
       if (container._vnode) {
         unmount(container._vnode, null, null, true)
       }
     } else {
+      // vnode=>dom
       patch(container._vnode || null, vnode, container)
     }
     flushPostFlushCbs()
@@ -2233,9 +2251,10 @@ function baseCreateRenderer(
     >)
   }
 
+  // 这里是返回的渲染器对象
   return {
-    render,
-    hydrate,
+    render, // 转换vnode =》 dom，并执行追加操作
+    hydrate, // 用于ssr，激活服务端返回html字符串
     createApp: createAppAPI(render, hydrate)
   }
 }

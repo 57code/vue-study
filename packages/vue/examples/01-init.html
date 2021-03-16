@@ -1,0 +1,32 @@
+<div id="app">
+  {{counter}}
+  <comp></comp>
+</div>
+
+<script src="../dist/vue.global.js"></script>
+<script>
+  // 创建vue实例：
+  // vue2：new Vue
+  // vue3: createApp()
+  
+  const { createApp } = Vue
+  
+  const app = createApp({
+    data() {
+      console.log(this);
+      return {
+        counter: 1
+      }
+    },
+  })
+  // 实例方法使用插件
+  // 1.多个实例之间避免污染
+  // 2.有利于treeshaking  
+  // app.use(router)
+  // app.use(store)
+  // app.use(element3)
+  app.component('comp', {
+    template: '<div>comp</div>'
+  })
+  app.mount('#app')
+</script>

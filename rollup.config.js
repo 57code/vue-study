@@ -8,7 +8,10 @@ if (!process.env.TARGET) {
 }
 
 const masterVersion = require('./package.json').version
+
+// 获取packages目录绝对地址 packages/
 const packagesDir = path.resolve(__dirname, 'packages')
+// 默认目标 packages/vue
 const packageDir = path.resolve(packagesDir, process.env.TARGET)
 const name = path.basename(packageDir)
 const resolve = p => path.resolve(packageDir, p)
@@ -18,6 +21,7 @@ const packageOptions = pkg.buildOptions || {}
 // ensure TS checks only once for each build
 let hasTSChecked = false
 
+// 输出配置
 const outputConfigs = {
   'esm-bundler': {
     file: resolve(`dist/${name}.esm-bundler.js`),
@@ -114,6 +118,7 @@ function createConfig(format, output, plugins = []) {
   // during a single build.
   hasTSChecked = true
 
+  // 入口文件
   const entryFile = /runtime$/.test(format) ? `src/runtime.ts` : `src/index.ts`
 
   const external =

@@ -111,10 +111,12 @@ export type CreateAppFunction<HostElement> = (
 
 let uid = 0
 
+// createApp方法的工厂
 export function createAppAPI<HostElement>(
   render: RootRenderFunction,
   hydrate?: RootHydrateFunction
 ): CreateAppFunction<HostElement> {
+  // 外面真正调用的实例创建方法
   return function createApp(rootComponent, rootProps = null) {
     if (rootProps != null && !isObject(rootProps)) {
       __DEV__ && warn(`root props passed to app.mount() must be an object.`)
@@ -126,6 +128,7 @@ export function createAppAPI<HostElement>(
 
     let isMounted = false
 
+    // 应用程序实例
     const app: App = (context.app = {
       _uid: uid++,
       _component: rootComponent as ConcreteComponent,
@@ -146,7 +149,7 @@ export function createAppAPI<HostElement>(
           )
         }
       },
-
+      // 等效于 Vue.use()
       use(plugin: Plugin, ...options: any[]) {
         if (installedPlugins.has(plugin)) {
           __DEV__ && warn(`Plugin has already been applied to target app.`)
@@ -210,8 +213,10 @@ export function createAppAPI<HostElement>(
         return app
       },
 
+      // 挂载
       mount(rootContainer: HostElement, isHydrate?: boolean): any {
         if (!isMounted) {
+          // 转换根组件配置为vnode
           const vnode = createVNode(
             rootComponent as ConcreteComponent,
             rootProps
@@ -227,9 +232,11 @@ export function createAppAPI<HostElement>(
             }
           }
 
+          // 执行渲染或注水
           if (isHydrate && hydrate) {
             hydrate(vnode as VNode<Node, Element>, rootContainer as any)
           } else {
+            // spa走这里
             render(vnode, rootContainer)
           }
           isMounted = true
