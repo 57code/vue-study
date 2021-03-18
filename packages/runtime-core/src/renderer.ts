@@ -1349,7 +1349,10 @@ function baseCreateRenderer(
     // 只要componentEffect中的响应式数据发生变化，该函数都会重新执行
     // 依赖收集自动进行
     // 组件更新函数
+    // 依赖收集函数effect(cb): 它会立刻调用cb，在这次调用中会触发依赖收集
+    // 结果是：响应式的数据和传入cb之间产生了关系
     instance.update = effect(function componentEffect() {
+      // 首先挂载一次
       if (!instance.isMounted) {
         let vnodeHook: VNodeHook | null | undefined
         const { el, props } = initialVNode
@@ -1368,6 +1371,7 @@ function baseCreateRenderer(
         if (__DEV__) {
           startMeasure(instance, `render`)
         }
+        // renderComponentRoot调用组件实例的render方法
         const subTree = (instance.subTree = renderComponentRoot(instance))
         if (__DEV__) {
           endMeasure(instance, `render`)
@@ -1391,6 +1395,7 @@ function baseCreateRenderer(
           if (__DEV__) {
             startMeasure(instance, `patch`)
           }
+          // 执行patch，将前面获取的subtree转换为dom
           patch(
             null,
             subTree,
@@ -1457,10 +1462,12 @@ function baseCreateRenderer(
         if (__DEV__) {
           startMeasure(instance, `render`)
         }
+        // 计算出最新vnode
         const nextTree = renderComponentRoot(instance)
         if (__DEV__) {
           endMeasure(instance, `render`)
         }
+        // 这是老的vnode
         const prevTree = instance.subTree
         instance.subTree = nextTree
 
@@ -1472,6 +1479,7 @@ function baseCreateRenderer(
         if (__DEV__) {
           startMeasure(instance, `patch`)
         }
+        // diff两者
         patch(
           prevTree,
           nextTree,

@@ -1,0 +1,77 @@
+<div id="app"></div>
+<script>
+  const createAppAPI = render => {
+    return function createApp(rootComponent) {
+      // 1.创建app
+      const app = {
+        mount(container) {
+          // 1.获取根组件vnode
+          const vnode = {
+            type: rootComponent
+          }
+
+          // 2.render之
+          render(vnode, container)
+        }
+      }
+      // 2.返回
+      return app
+    }
+  }
+
+  const createRenderer = ({createElement, querySelector, insert}) => {
+    const render = (vnode, container) => {
+      // 获得根组件subtree
+      const rootComponent = vnode.type
+      const subtree = rootComponent.render.call(rootComponent.data())
+      // 直接dom
+      // 创建dom节点
+      const child = createElement(subtree.type)
+      if (typeof subtree.children === 'string') {
+        child.textContent = subtree.children
+      } else {
+        // todo 递归创建子元素        
+      }
+      const parent = querySelector(container)
+      insert(child, parent)
+    }
+    return {
+      render,
+      createApp: createAppAPI(render)
+    }
+  }
+
+  // 获取renderer
+  // 通过传入各平台独立节点和属性操作可实现跨平台
+  const renderer = createRenderer({
+    createElement(tag) {
+      return document.createElement(tag)
+    },
+    querySelector(sel) {
+      return document.querySelector(sel)
+    },
+    insert(child, parent) {
+      parent.appendChild(child)
+    }
+  })
+
+  const Vue = {
+    createApp(rootComp) {
+      return renderer.createApp(rootComp)
+    }
+  }
+  
+  Vue.createApp({
+    data() {
+      return {
+        foo: 'hello, vue3!'
+      }
+    },
+    render() {
+      return {
+        type: 'h2',
+        children: this.foo
+      }
+    }
+  }).mount('#app')
+</script>

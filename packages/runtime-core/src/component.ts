@@ -552,11 +552,13 @@ function setupStatefulComponent(
   instance.accessCache = {}
   // 1. create public instance / render proxy
   // also mark it raw so it's never observed
+  // 此处的上下文就是vue2中的组件实例this
   instance.proxy = new Proxy(instance.ctx, PublicInstanceProxyHandlers)
   if (__DEV__) {
     exposePropsOnRenderContext(instance)
   }
   // 2. call setup()
+  // 处理setup选项
   const { setup } = Component
   if (setup) {
     const setupContext = (instance.setupContext =
@@ -564,6 +566,7 @@ function setupStatefulComponent(
 
     currentInstance = instance
     pauseTracking()
+    // 调用setup函数
     const setupResult = callWithErrorHandling(
       setup,
       instance,
@@ -573,6 +576,11 @@ function setupStatefulComponent(
     resetTracking()
     currentInstance = null
 
+    // 可能返回Promise
+    // <Suspense>
+    //   <comp></comp>
+    // </Suspense>
+    
     if (isPromise(setupResult)) {
       if (isSSR) {
         // return the promise so server-renderer can wait on it
@@ -602,6 +610,7 @@ export function handleSetupResult(
   setupResult: unknown,
   isSSR: boolean
 ) {
+  // 返回渲染函数
   if (isFunction(setupResult)) {
     // setup returned an inline render function
     instance.render = setupResult as InternalRenderFunction
@@ -617,6 +626,7 @@ export function handleSetupResult(
     if (__DEV__ || __FEATURE_PROD_DEVTOOLS__) {
       instance.devtoolsRawSetupState = setupResult
     }
+    // 作为渲染函数上下文
     instance.setupState = proxyRefs(setupResult)
     if (__DEV__) {
       exposeSetupStateOnRenderContext(instance)
@@ -628,6 +638,7 @@ export function handleSetupResult(
       }`
     )
   }
+  // 主要处理其他options选项
   finishComponentSetup(instance, isSSR)
 }
 
@@ -686,6 +697,7 @@ function finishComponentSetup(
   }
 
   // support for 2.x options
+  // 兼容2.0 options api
   if (__FEATURE_OPTIONS_API__) {
     currentInstance = instance
     applyOptions(instance, Component)

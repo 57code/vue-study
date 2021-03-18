@@ -551,6 +551,7 @@ export function applyOptions(
     }
   }
 
+  // 处理data
   if (!asMixin) {
     if (deferredData.length) {
       deferredData.forEach(dataFn => resolveData(instance, dataFn, publicThis))
@@ -779,6 +780,7 @@ function resolveData(
         `Plain object usage is no longer supported.`
     )
   }
+  // 执行data选项的函数
   const data = dataFn.call(publicThis, publicThis)
   if (__DEV__ && isPromise(data)) {
     warn(
@@ -790,6 +792,7 @@ function resolveData(
   if (!isObject(data)) {
     __DEV__ && warn(`data() should return an object.`)
   } else if (instance.data === EMPTY_OBJ) {
+    // data选项的响应式处理其实也是reactive实现的
     instance.data = reactive(data)
   } else {
     // existing data: this is a mixin or extends.

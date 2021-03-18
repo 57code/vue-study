@@ -1,0 +1,65 @@
+<div id="app">
+  <h1>响应式原理</h1>
+  <p @click="add">{{counter}}</p>
+  <p @click="add2">{{counter2}}</p>
+</div>
+<script src="../dist/vue.global.js"></script>
+
+<script>
+  const { createApp, reactive, ref, toRefs, onMounted } = Vue
+
+  function useCounter() {
+    const state = reactive({
+      counter: 2,
+    })
+    // 回调函数
+    function add() {
+      state.counter++
+    }
+    // 生命周期
+    onMounted(() => {
+      state.counter = 10
+    })
+    return { state, add }
+  }
+
+  createApp({
+    // data() {
+    //   // 必须使用函数
+    //   return {
+    //     counter: 1
+    //   }
+    // },
+    setup(props, {emit, slots, attrs}) {
+      // state是Proxy对象，因此是响应式的
+      // 优点1：维护性
+      // 优点2：复用性
+      // 消灭this
+      // ts支持更佳
+      const { state, add } = useCounter()
+
+      // 单值响应式, 返回Ref对象
+      const counter2 = ref(2)
+
+      function add2() {
+        counter2.value++
+        emit('my-add2')
+      }
+
+      onMounted(() => {
+        counter2.value = 5
+       
+      })
+
+
+      // 事件
+
+      // return () => {
+      //   // jsx
+      //   return <div></div> 
+      // }
+      return { ...toRefs(state), counter2, add, add2 }
+    }
+
+  }).mount('#app')
+</script>
