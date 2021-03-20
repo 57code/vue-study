@@ -232,6 +232,7 @@ export function trigger(
     }
   }
 
+  // 如何执行副作用函数
   const run = (effect: ReactiveEffect) => {
     if (__DEV__ && effect.options.onTrigger) {
       effect.options.onTrigger({
@@ -244,7 +245,9 @@ export function trigger(
         oldTarget
       })
     }
+    // 如果定义了任务执行器
     if (effect.options.scheduler) {
+      // 比如组件更新就会以queueJob方式执行
       effect.options.scheduler(effect)
     } else {
       effect()

@@ -259,8 +259,9 @@ export const enum MoveType {
   REORDER
 }
 
+// effect执行选项
 const prodEffectOptions = {
-  scheduler: queueJob,
+  scheduler: queueJob, // 等效于vue2中的queueWatcher
   // #1801, #2043 component render effects should allow recursive updates
   allowRecurse: true
 }

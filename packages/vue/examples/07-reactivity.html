@@ -1,0 +1,20 @@
+<div id="app"></div>
+
+<script src="./06-reactive.js"></script>
+<script>
+  const obj = reactive({
+    title: '我的vue3响应式实现'
+  })
+
+  effect(() => {
+    app.innerHTML = '<h1>' + obj.title + '</h1>'
+
+    // vue3
+    // vnode = comp.render()
+    // patch(oldvnode, vnode)
+  })
+
+  setTimeout(() => {
+    obj.title = '这是一个新的标题'
+  }, 2000)
+</script>

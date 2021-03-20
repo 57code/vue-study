@@ -6,12 +6,13 @@
 <script src="../dist/vue.global.js"></script>
 
 <script>
-  const { createApp, reactive, ref, toRefs, onMounted } = Vue
+  const { createApp, reactive, ref, toRefs, onMounted, computed } = Vue
 
   function useCounter() {
     const state = reactive({
       counter: 2,
     })
+    const doubleCounter = computed(() => state.counter * 2)
     // 回调函数
     function add() {
       state.counter++
@@ -20,7 +21,7 @@
     onMounted(() => {
       state.counter = 10
     })
-    return { state, add }
+    return { state, add, doubleCounter }
   }
 
   createApp({
