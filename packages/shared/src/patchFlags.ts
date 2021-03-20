@@ -18,7 +18,7 @@ export const enum PatchFlags {
   TEXT = 1,
 
   // Indicates an element with dynamic class binding.
-  CLASS = 1 << 1,
+  CLASS = 1 << 1,  // 10
 
   // Indicates an element with dynamic style
   // The compiler pre-compiles static string styles into static objects
@@ -45,7 +45,7 @@ export const enum PatchFlags {
   HYDRATE_EVENTS = 1 << 5,
 
   // Indicates a fragment whose children order doesn't change.
-  STABLE_FRAGMENT = 1 << 6,
+  STABLE_FRAGMENT = 1 << 6, // 64
 
   // Indicates a fragment with keyed or partially keyed children
   KEYED_FRAGMENT = 1 << 7,

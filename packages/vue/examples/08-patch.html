@@ -1,0 +1,18 @@
+<div id="app">
+  <h1>patch</h1>
+  <p>{{foo}}</p>
+</div>
+<script src="../dist/vue.global.js"></script>
+<script>
+  const { createApp } = Vue
+  const app = createApp({
+    data() {
+      return {
+        foo: 'foo'
+      }
+    }
+  }).mount('#app')
+  setTimeout(() => {
+    app.foo = 'foooooooooooo'
+  }, 1000);
+</script>
