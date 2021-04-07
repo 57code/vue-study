@@ -1,0 +1,31 @@
+<div id="app"></div>
+<script>
+  // 数据响应式
+function defineReactive(obj, key, val) {
+  Object.defineProperty(obj, key, {
+    get() {
+      console.log("get", key);
+      return val
+    },
+    set(newVal) {
+      if (newVal !== val) {
+        console.log('set', key);
+        val = newVal
+        // 视图更新函数
+        update()
+      }
+    },
+  });
+}
+const obj = {}
+
+function update() {
+  app.innerText = obj.foo
+}
+
+defineReactive(obj, 'foo', 'foo')
+setInterval(() => {
+  obj.foo = new Date().toLocaleTimeString()
+}, 1000);
+
+</script>
