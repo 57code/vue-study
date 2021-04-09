@@ -41,13 +41,17 @@ export class Observer {
 
   constructor (value: any) {
     this.value = value
+    // 此处为何创建一个Dep实例？
+    // 响应式对象动态新增或删除属性做变更通知
     this.dep = new Dep()
     this.vmCount = 0
     def(value, '__ob__', this)
+    // 根据Object或Array做不同操作
     if (Array.isArray(value)) {
       if (hasProto) {
         protoAugment(value, arrayMethods)
       } else {
+        // ie
         copyAugment(value, arrayMethods, arrayKeys)
       }
       this.observeArray(value)
@@ -86,6 +90,7 @@ export class Observer {
  */
 function protoAugment (target, src: Object) {
   /* eslint-disable no-proto */
+  // 覆盖当前数组实例的原型
   target.__proto__ = src
   /* eslint-enable no-proto */
 }
@@ -112,6 +117,8 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
     return
   }
   let ob: Observer | void
+  // 已经做过响应式处理了
+  // 防止重复工作
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
   } else if (
@@ -139,6 +146,7 @@ export function defineReactive (
   customSetter?: ?Function,
   shallow?: boolean
 ) {
+  // 和 key 一一对应
   const dep = new Dep()
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
@@ -153,6 +161,9 @@ export function defineReactive (
     val = obj[key]
   }
 
+  // dep n : n watcher
+  // this.$watch
+  // watch:{}
   let childOb = !shallow && observe(val)
   Object.defineProperty(obj, key, {
     enumerable: true,
@@ -160,8 +171,11 @@ export function defineReactive (
     get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
       if (Dep.target) {
+        // 依赖收集
         dep.depend()
+        // 如果childOb存在
         if (childOb) {
+          // 子ob内部的dep要和当前组件的watcher建立依赖关系
           childOb.dep.depend()
           if (Array.isArray(value)) {
             dependArray(value)

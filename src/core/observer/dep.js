@@ -30,6 +30,7 @@ export default class Dep {
 
   depend () {
     if (Dep.target) {
+      // watcher内部建立关系
       Dep.target.addDep(this)
     }
   }
