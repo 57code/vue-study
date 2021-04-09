@@ -14,6 +14,7 @@ const idToTemplate = cached(id => {
   return el && el.innerHTML
 })
 
+// 扩展$mount: 解析el、template选项
 const mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
@@ -29,6 +30,7 @@ Vue.prototype.$mount = function (
     return this
   }
 
+  // 根组件选项
   const options = this.$options
   // resolve template/el and convert to render function
   if (!options.render) {
@@ -54,14 +56,17 @@ Vue.prototype.$mount = function (
         return this
       }
     } else if (el) {
+      // 如果没设置template则使用el查询到元素作为模板
       template = getOuterHTML(el)
     }
+    // 最终转换template为render
     if (template) {
       /* istanbul ignore if */
       if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
         mark('compile')
       }
 
+      // 编译获得渲染函数
       const { render, staticRenderFns } = compileToFunctions(template, {
         outputSourceRange: process.env.NODE_ENV !== 'production',
         shouldDecodeNewlines,

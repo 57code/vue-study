@@ -27,6 +27,8 @@ const weexFactoryPlugin = {
 
 const aliases = require('./alias')
 const resolve = p => {
+  // 拆分/
+  // web/entry-runtime-with-compiler.js
   const base = p.split('/')[0]
   if (aliases[base]) {
     return path.resolve(aliases[base], p.slice(base.length + 1))

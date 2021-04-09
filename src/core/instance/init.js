@@ -29,6 +29,7 @@ export function initMixin (Vue: Class<Component>) {
     // a flag to avoid this being observed
     vm._isVue = true
     // merge options
+    // 合并选项
     if (options && options._isComponent) {
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
@@ -49,12 +50,14 @@ export function initMixin (Vue: Class<Component>) {
     }
     // expose real self
     vm._self = vm
-    initLifecycle(vm)
-    initEvents(vm)
-    initRender(vm)
+
+    // 核心初始化逻辑
+    initLifecycle(vm) // 实例属性初始化$parent,$root,...
+    initEvents(vm) // 处理自定义组件自定义事件
+    initRender(vm) // $slots, $scopeSlots, $_c,...
     callHook(vm, 'beforeCreate')
     initInjections(vm) // resolve injections before data/props
-    initState(vm)
+    initState(vm) // 数据响应式处理：data/props/methods/computed/watch
     initProvide(vm) // resolve provide after data/props
     callHook(vm, 'created')
 
@@ -65,6 +68,7 @@ export function initMixin (Vue: Class<Component>) {
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
 
+    // 如果设置了$el, 则自动挂载
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }

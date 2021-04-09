@@ -2,7 +2,12 @@ import Vue from './instance/index'
 import { initGlobalAPI } from './global-api/index'
 import { isServerRendering } from 'core/util/env'
 import { FunctionalRenderContext } from 'core/vdom/create-functional-component'
+import directive from '../platforms/web/runtime/directives/model'
+import components from '../platforms/web/runtime/components'
+import { mixin } from 'lodash'
 
+// 初始化全局API
+// Vue.use()/directive()/components()/mixin()/...
 initGlobalAPI(Vue)
 
 Object.defineProperty(Vue.prototype, '$isServer', {
