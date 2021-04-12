@@ -37,6 +37,7 @@ export default class Dep {
 
   notify () {
     // stabilize the subscriber list first
+    // 会通知当前key相关的所有watcher实例
     const subs = this.subs.slice()
     if (process.env.NODE_ENV !== 'production' && !config.async) {
       // subs aren't sorted in scheduler if not running async
@@ -45,6 +46,7 @@ export default class Dep {
       subs.sort((a, b) => a.id - b.id)
     }
     for (let i = 0, l = subs.length; i < l; i++) {
+      // 相当于执行watcher.update()
       subs[i].update()
     }
   }

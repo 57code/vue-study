@@ -86,12 +86,14 @@ function flushSchedulerQueue () {
   // do not cache length because more watchers might be pushed
   // as we run existing watchers
   for (index = 0; index < queue.length; index++) {
+    // 每次拿出一个watcher
     watcher = queue[index]
     if (watcher.before) {
       watcher.before()
     }
     id = watcher.id
     has[id] = null
+    // 真正执行更新操作
     watcher.run()
     // in dev build, check and stop circular updates.
     if (process.env.NODE_ENV !== 'production' && has[id] != null) {
@@ -163,9 +165,11 @@ function callActivatedHooks (queue) {
  */
 export function queueWatcher (watcher: Watcher) {
   const id = watcher.id
+  // 去重
   if (has[id] == null) {
     has[id] = true
     if (!flushing) {
+      // 入队
       queue.push(watcher)
     } else {
       // if already flushing, splice the watcher based on its id
@@ -184,6 +188,8 @@ export function queueWatcher (watcher: Watcher) {
         flushSchedulerQueue()
         return
       }
+      // nextTick：执行异步任务flushSchedulerQueue
+      // flushSchedulerQueue会被放入微任务队列
       nextTick(flushSchedulerQueue)
     }
   }

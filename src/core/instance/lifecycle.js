@@ -59,16 +59,21 @@ export function lifecycleMixin (Vue: Class<Component>) {
   Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
     const vm: Component = this
     const prevEl = vm.$el
+    // 首先获取上一次计算结果
     const prevVnode = vm._vnode
     const restoreActiveInstance = setActiveInstance(vm)
     vm._vnode = vnode
     // Vue.prototype.__patch__ is injected in entry points
     // based on the rendering backend used.
     if (!prevVnode) {
+      // 初始化时，上一次为null
+      // 会传入一个真实节点进去
+      // 创建vnode为真实dom，追加到vm.$el上
       // initial render
       vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */)
     } else {
       // updates
+      // diff
       vm.$el = vm.__patch__(prevVnode, vnode)
     }
     restoreActiveInstance()
@@ -186,7 +191,11 @@ export function mountComponent (
       measure(`vue ${name} patch`, startTag, endTag)
     }
   } else {
+    // 1.声明一个组件更新函数
     updateComponent = () => {
+      // 组件更新过程：
+      // 1.执行render获得vdom
+      // 2.vdom需要使用_update()转换为真实dom
       vm._update(vm._render(), hydrating)
     }
   }
@@ -194,6 +203,7 @@ export function mountComponent (
   // we set this to vm._watcher inside the watcher's constructor
   // since the watcher's initial patch may call $forceUpdate (e.g. inside child
   // component's mounted hook), which relies on vm._watcher being already defined
+  // 创建组件对应的Watcher实例
   new Watcher(vm, updateComponent, noop, {
     before () {
       if (vm._isMounted && !vm._isDestroyed) {

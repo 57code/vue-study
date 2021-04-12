@@ -42,6 +42,7 @@ export default class Watcher {
   getter: Function;
   value: any;
 
+  // new Watcher(this, componentUpdate)
   constructor (
     vm: Component,
     expOrFn: string | Function,
@@ -77,6 +78,7 @@ export default class Watcher {
       : ''
     // parse expression for getter
     if (typeof expOrFn === 'function') {
+      // expOrFn如果是函数，则他就是组件更新函数
       this.getter = expOrFn
     } else {
       this.getter = parsePath(expOrFn)
@@ -103,6 +105,7 @@ export default class Watcher {
     let value
     const vm = this.vm
     try {
+      // 其实执行的是getter
       value = this.getter.call(vm, vm)
     } catch (e) {
       if (this.user) {
@@ -166,10 +169,13 @@ export default class Watcher {
   update () {
     /* istanbul ignore else */
     if (this.lazy) {
+      // 计算属性
       this.dirty = true
     } else if (this.sync) {
+      // 用户设置同步，会立刻执行更新
       this.run()
     } else {
+      // watcher入队
       queueWatcher(this)
     }
   }
@@ -180,6 +186,9 @@ export default class Watcher {
    */
   run () {
     if (this.active) {
+      // watcher内部的get是谁？
+      // 如果watcher是一个render watcher，那么它是组件更新函数
+      // 如果watcher是user watcher，它应该是计算当前选项最新值的函数
       const value = this.get()
       if (
         value !== this.value ||

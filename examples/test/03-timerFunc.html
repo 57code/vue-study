@@ -17,19 +17,34 @@
             el: '#demo',
             data: { foo: 'ready~~' },
             mounted() {
+
+                // $nextTick  callbacks: [cb, flushSchedulerQueue]
+                
+
                 this.foo = Math.random()
                 console.log('1:' + this.foo);
                 this.foo = Math.random()
                 console.log('2:' + this.foo);
+
                 this.foo = Math.random()
                 console.log('3:' + this.foo);
                 // 异步行为，此时内容没变
                 console.log('p1.innerHTML:' + p1.innerHTML)
 
+                // 下面操作导致， cb1进入微任务队列
+                //     微任务队列 [flushCallbacks, cb1]
+                // nextTick，导致cb2进入callbacks
+                //     callbacks: [flushScheduleQueue, cb2]
+                Promise.resolve().then(() => {
+                    console.log('Promise p1.innerHTML:' + p1.innerHTML)
+                })
+
                 this.$nextTick(() => {
                     // 这里才是最新的值
-                    console.log('p1.innerHTML:' + p1.innerHTML)
+                    console.log('nextTick p1.innerHTML:' + p1.innerHTML)
                 })
+
+
             }
         });
     </script>
