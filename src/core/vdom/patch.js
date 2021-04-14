@@ -142,10 +142,13 @@ export function createPatchFunction (backend) {
     }
 
     vnode.isRootInsert = !nested // for transition enter check
+
+    // 首先判断vnode是不是一个自定义组件的vnode
     if (createComponent(vnode, insertedVnodeQueue, parentElm, refElm)) {
       return
     }
 
+    // 普通标签创建
     const data = vnode.data
     const children = vnode.children
     const tag = vnode.tag
@@ -189,10 +192,12 @@ export function createPatchFunction (backend) {
           insert(parentElm, vnode.elm, refElm)
         }
       } else {
+        // 有子元素则递归创建
         createChildren(vnode, children, insertedVnodeQueue)
         if (isDef(data)) {
           invokeCreateHooks(vnode, insertedVnodeQueue)
         }
+        // 插入dom树
         insert(parentElm, vnode.elm, refElm)
       }
 
@@ -212,7 +217,14 @@ export function createPatchFunction (backend) {
     let i = vnode.data
     if (isDef(i)) {
       const isReactivated = isDef(vnode.componentInstance) && i.keepAlive
+      // 如果是组件，就会有init管理钩子
       if (isDef(i = i.hook) && isDef(i = i.init)) {
+        // 执行init
+        // 创建组件实例并挂载
+        // parent created
+        //   child created
+        //   child mounted
+        // parent mounted
         i(vnode, false /* hydrating */)
       }
       // after calling the init hook, if the vnode is a child component
@@ -220,7 +232,9 @@ export function createPatchFunction (backend) {
       // component also has set the placeholder vnode's elm.
       // in that case we can just return the element and be done.
       if (isDef(vnode.componentInstance)) {
+        // 组件初始化，执行完就可以获得期dom
         initComponent(vnode, insertedVnodeQueue)
+        // 插入
         insert(parentElm, vnode.elm, refElm)
         if (isTrue(isReactivated)) {
           reactivateComponent(vnode, insertedVnodeQueue, parentElm, refElm)
@@ -779,7 +793,7 @@ export function createPatchFunction (backend) {
         // 递归创建整颗dom树
         // vnode => dom
         createElm(
-          vnode,
+          vnode, // 整颗vdom树
           insertedVnodeQueue,
           // extremely rare edge case: do not insert if old element is in a
           // leaving transition. Only happens when combining transition +
