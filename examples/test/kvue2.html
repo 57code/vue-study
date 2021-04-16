@@ -1,0 +1,29 @@
+<div id="app"></div>
+<script src="kvue2.js"></script>
+<script>
+  const app = new KVue({
+    el: '#app',
+    data: {
+      counter: 1
+    },
+    render(h) {
+      // dom
+      // const d1 = document.createElement('div')
+      // d1.id = 'app'
+      // d1.textContent = this.counter
+      // return d1
+
+      // vdom
+      return h('div', { id: 'app' }, [
+        h('p', null, this.counter + ''),
+        h('p', null, this.counter * 2 + ''),
+        h('p', null, this.counter * 3 + ''),
+      ])
+
+      // return h('div', { id: 'app' }, this.counter + '')
+    }
+  })
+  setInterval(() => {
+    app.counter++
+  }, 1000);
+</script>
