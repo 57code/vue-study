@@ -1,5 +1,3 @@
-import { defineProperty } from "core-js/core/object"
-
 // 1.实现Store类，存储响应式状态
 let Vue
 
