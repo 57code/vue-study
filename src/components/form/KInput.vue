@@ -21,6 +21,9 @@ export default {
   methods: {
     onInput(e) {
       this.$emit("input", e.target.value);
+
+      // 校验通知
+      this.$parent.$emit('validate')
     },
   },
 };
