@@ -11,6 +11,7 @@
 </template>
 
 <script>
+  import Grandson from '@/components/communication/Grandson.vue';
   export default {
     inject: ['foo'],
     methods: {

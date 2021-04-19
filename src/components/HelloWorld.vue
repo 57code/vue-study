@@ -33,11 +33,22 @@
 </template>
 
 <script>
+import Communication from '@/components/communication';
+import FormExample from 'comps/form';
+import SlotExample from '@/components/slots';
+import TreeExample from '@/components/recursion';
+
 export default {
   name: 'HelloWorld',
   props: {
     msg: String
-  }
+  },
+  components: {
+    Communication,
+    FormExample,
+    SlotExample,
+    TreeExample
+  },
 }
 </script>
 
