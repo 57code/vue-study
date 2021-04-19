@@ -11,6 +11,9 @@ import store from "./store";
 import Notice from "@/components/Notice.vue";
 import create from "@/utils/create";
 
+// icons
+import '@/icons'
+
 Vue.config.productionTip = false;
 // 事件总线
 Vue.prototype.$bus = new Vue();

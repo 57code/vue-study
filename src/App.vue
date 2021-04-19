@@ -1,8 +1,15 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/">
+        <!-- <svg>
+          <use xlink:href="#icon-ldj"></use>
+        </svg> -->
+        <svg-icon icon-class="ldj"></svg-icon>
+        Home</router-link> |
+      <router-link to="/about">
+        <svg-icon icon-class="ldj2"></svg-icon>
+        About</router-link>
     </div>
     <!-- <p @click="$store.commit('add')">commit: {{$store.state.counter}}</p>
     <p @click="$store.dispatch('add')">dispatch: {{$store.state.counter}}</p>
@@ -10,7 +17,13 @@
     <router-view/>
   </div>
 </template>
-
+<script>
+console.log(process.env.foo);
+console.log(process.env.VUE_APP_DONG);
+export default {
+  
+}
+</script>
 <style>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
