@@ -513,6 +513,7 @@ export function setupComponent(
 ) {
   isInSSRComponentSetup = isSSR
 
+  // 属性、子元素、插槽处理
   const { props, children, shapeFlag } = instance.vnode
   const isStateful = shapeFlag & ShapeFlags.STATEFUL_COMPONENT
   initProps(instance, props, isStateful, isSSR)
@@ -525,6 +526,7 @@ export function setupComponent(
   return setupResult
 }
 
+// 初始化组件状态
 function setupStatefulComponent(
   instance: ComponentInternalInstance,
   isSSR: boolean
@@ -552,13 +554,16 @@ function setupStatefulComponent(
   instance.accessCache = {}
   // 1. create public instance / render proxy
   // also mark it raw so it's never observed
+  // instance.ctx相当于我们之前熟悉的组件实例this
   instance.proxy = new Proxy(instance.ctx, PublicInstanceProxyHandlers)
   if (__DEV__) {
     exposePropsOnRenderContext(instance)
   }
   // 2. call setup()
+  // setup选项执行
   const { setup } = Component
   if (setup) {
+    // {emit, slots, attrs}
     const setupContext = (instance.setupContext =
       setup.length > 1 ? createSetupContext(instance) : null)
 
@@ -646,6 +651,7 @@ export function registerRuntimeCompiler(_compile: any) {
   compile = _compile
 }
 
+// 兼容老旧options api
 function finishComponentSetup(
   instance: ComponentInternalInstance,
   isSSR: boolean

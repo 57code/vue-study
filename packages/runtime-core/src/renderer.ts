@@ -444,8 +444,8 @@ function baseCreateRenderer(
   // Note: functions inside this closure should use `const xxx = () => {}`
   // style in order to prevent being inlined by minifiers.
   const patch: PatchFn = (
-    n1,
-    n2,
+    n1, // 老节点
+    n2, // 新节点
     container,
     anchor = null,
     parentComponent = null,
@@ -465,6 +465,7 @@ function baseCreateRenderer(
       n2.dynamicChildren = null
     }
 
+    // 1.获取节点类型
     const { type, ref, shapeFlag } = n2
     switch (type) {
       case Text:
@@ -480,7 +481,7 @@ function baseCreateRenderer(
           patchStaticNode(n1, n2, container, isSVG)
         }
         break
-      case Fragment:
+      case Fragment: // 分片
         processFragment(
           n1,
           n2,
@@ -505,6 +506,7 @@ function baseCreateRenderer(
             optimized
           )
         } else if (shapeFlag & ShapeFlags.COMPONENT) {
+          // 初始化走这里
           processComponent(
             n1,
             n2,
@@ -1206,6 +1208,7 @@ function baseCreateRenderer(
           optimized
         )
       } else {
+        // 初始化挂载
         mountComponent(
           n2,
           container,
@@ -1230,6 +1233,7 @@ function baseCreateRenderer(
     isSVG,
     optimized
   ) => {
+    // 1.创建根组件实例
     const instance: ComponentInternalInstance = (initialVNode.component = createComponentInstance(
       initialVNode,
       parentComponent,
@@ -1254,6 +1258,7 @@ function baseCreateRenderer(
     if (__DEV__) {
       startMeasure(instance, `init`)
     }
+    // 2.组件初始化，相当于_init()
     setupComponent(instance)
     if (__DEV__) {
       endMeasure(instance, `init`)
@@ -1273,6 +1278,8 @@ function baseCreateRenderer(
       return
     }
 
+    // 3.安装渲染函数副作用
+    // vue2：updateComponent
     setupRenderEffect(
       instance,
       initialVNode,
@@ -1334,6 +1341,9 @@ function baseCreateRenderer(
     optimized
   ) => {
     // create reactive effect for rendering
+    // useEffect(fn, [])
+    // 副作用函数
+    // 建立fn和响应式数据之间依赖，如果数据发生变化，则再次执行副作用
     instance.update = effect(function componentEffect() {
       if (!instance.isMounted) {
         let vnodeHook: VNodeHook | null | undefined
@@ -2201,10 +2211,12 @@ function baseCreateRenderer(
 
   const render: RootRenderFunction = (vnode, container) => {
     if (vnode == null) {
+      // 卸载
       if (container._vnode) {
         unmount(container._vnode, null, null, true)
       }
     } else {
+      // 初始化走这里
       patch(container._vnode || null, vnode, container)
     }
     flushPostFlushCbs()
@@ -2233,9 +2245,10 @@ function baseCreateRenderer(
     >)
   }
 
+  // 返回的渲染器
   return {
-    render,
-    hydrate,
+    render, // 接收一个vdom，和一个宿主元素，转换vdom为dom并追加到宿主
+    hydrate, // 注水，用于ssr
     createApp: createAppAPI(render, hydrate)
   }
 }

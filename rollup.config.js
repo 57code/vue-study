@@ -8,7 +8,9 @@ if (!process.env.TARGET) {
 }
 
 const masterVersion = require('./package.json').version
+// 大目录
 const packagesDir = path.resolve(__dirname, 'packages')
+// 模块目录 packages/vue
 const packageDir = path.resolve(packagesDir, process.env.TARGET)
 const name = path.basename(packageDir)
 const resolve = p => path.resolve(packageDir, p)

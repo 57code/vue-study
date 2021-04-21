@@ -50,7 +50,10 @@ export const hydrate = ((...args) => {
   ensureHydrationRenderer().hydrate(...args)
 }) as RootHydrateFunction
 
+// 用户调用的是这个方法
 export const createApp = ((...args) => {
+  // 获取一个渲染器renderer
+  // 我们调用的createApp实际上是renderer提供的
   const app = ensureRenderer().createApp(...args)
 
   if (__DEV__) {

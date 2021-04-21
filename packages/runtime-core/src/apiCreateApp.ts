@@ -209,9 +209,10 @@ export function createAppAPI<HostElement>(
         context.directives[name] = directive
         return app
       },
-
+      // vdom => dom
       mount(rootContainer: HostElement, isHydrate?: boolean): any {
         if (!isMounted) {
+          // 1.获取根组件对应的vdom
           const vnode = createVNode(
             rootComponent as ConcreteComponent,
             rootProps
@@ -230,6 +231,7 @@ export function createAppAPI<HostElement>(
           if (isHydrate && hydrate) {
             hydrate(vnode as VNode<Node, Element>, rootContainer as any)
           } else {
+            // 2.初始化执行渲染
             render(vnode, rootContainer)
           }
           isMounted = true
