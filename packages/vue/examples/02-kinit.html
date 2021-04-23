@@ -1,0 +1,79 @@
+<div id="app"></div>
+<script>
+  // createApp工厂
+  function createAppAPI(render) {
+    return function createApp(rootComponent) {
+      const app = {
+        mount(container) {
+          // vnode
+          const vnode = {
+            tag: rootComponent
+          }
+          // 渲染出来
+          render(vnode, container)
+        }
+      }
+      return app
+    }
+  }
+
+  // 渲染器工厂
+  function createRenderer({createElement, insert, querySelector}) {
+    const render = (vnode, container) => {
+
+      // vnode => dom
+      const {render, data} = vnode.tag
+      const subTree = render.call(data())
+      // 创建一个节点
+      const child = createElement(subTree.tag)
+      // 查找父元素
+      const parent = querySelector(container)
+      if (typeof subTree.children === 'string') {
+        // 文本赋值
+        child.textContent = subTree.children
+      } else {
+        // array
+        // todo
+      }
+      // 插入
+      insert(child, parent)
+    }
+    return {
+      render,
+      createApp: createAppAPI(render)
+    }
+  }
+
+  const renderer = createRenderer({
+    createElement(tag) {
+      return document.createElement(tag)
+    },
+    insert(child, parent) {
+      parent.appendChild(child)
+    },
+    querySelector(sel) {
+      return document.querySelector(sel)
+    }
+  })
+
+  const Vue = {
+    createApp(rootComponent) {
+      // 获取一个renderer
+      return renderer.createApp(rootComponent)
+    }
+  }
+  
+  Vue.createApp({
+    data() {
+      return {
+        foo: 'hello, vue3!'
+      }
+    },
+    render() {
+      return {
+        tag: 'h2',
+        children: this.foo
+      }
+    }
+  }).mount('#app')
+</script>

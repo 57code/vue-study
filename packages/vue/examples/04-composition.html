@@ -1,0 +1,61 @@
+<div id="app">
+  <p @click="add">{{counter}}</p>
+  <p @click="add2">{{counter2}}</p>
+  <p ref="p1">doubleCounter: {{doubleCounter}}</p>
+</div>
+<script src="../dist/vue.global.js"></script>
+<script>
+  const { createApp, reactive, ref, toRefs, onMounted, computed, watch, watchEffect } = Vue
+
+  function useCounter() {
+    const state = reactive({
+      counter: 0,
+      // Ref
+      doubleCounter: computed(() => state.counter * 2)
+    })
+
+    function add() {
+      state.counter++
+    }
+
+    // lifecycle
+    onMounted(() => {
+      console.log('mounted', state.counter);
+    })
+
+    // watch
+    watch(() => state.counter, (newVal, oldVal) => {
+      console.log(newVal);
+    })
+    watchEffect(() => {
+      console.log(state.counter);
+    })
+
+    return {...toRefs(state), add}
+  }
+
+  createApp({
+    setup(props, {slots, attrs, emit}) {
+      // vue2横跳
+      // 复用性
+      // 消灭this
+      const { counter, doubleCounter, add } = useCounter()
+
+      // Ref
+      const counter2 = ref(0)
+
+      // callback
+      function add2() {
+        // 访问Ref真实值，需要加value
+        counter2.value++
+      }
+
+      const p1 = ref(null)
+      onMounted(() => {
+        console.log(p1.value);
+       
+      })
+      return { counter, doubleCounter, counter2, add, add2, p1 }
+    }
+  }).mount('#app')
+</script>
