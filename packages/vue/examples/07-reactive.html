@@ -1,0 +1,19 @@
+<div id="app"></div>
+
+<script src="./06-reactive.js"></script>
+<script>
+
+  const obj = reactive({
+    title: 'vue3响应式',
+  })
+
+  effect(() => {
+    app.innerText = obj.title
+
+    
+  })
+  
+  setTimeout(() => {
+    obj.title = '变啦！！'
+  }, 2000)
+</script>

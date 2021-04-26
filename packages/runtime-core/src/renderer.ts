@@ -259,6 +259,7 @@ export const enum MoveType {
   REORDER
 }
 
+// 传入effect(fn, opts)参数2
 const prodEffectOptions = {
   scheduler: queueJob,
   // #1801, #2043 component render effects should allow recursive updates

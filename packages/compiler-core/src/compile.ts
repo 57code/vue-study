@@ -78,10 +78,13 @@ export function baseCompile(
     onError(createCompilerError(ErrorCodes.X_SCOPE_ID_NOT_SUPPORTED))
   }
 
+  // 1.解析：template => ast
+  // <div v-on:click="onclick($event)"></div>
   const ast = isString(template) ? baseParse(template, options) : template
   const [nodeTransforms, directiveTransforms] = getBaseTransformPreset(
     prefixIdentifiers
   )
+  // 2.转换：ast深加工
   transform(
     ast,
     extend({}, options, {
@@ -98,6 +101,9 @@ export function baseCompile(
     })
   )
 
+  // 3.代码生成
+  // ast => js function 
+  // js string => new Function(str)
   return generate(
     ast,
     extend({}, options, {

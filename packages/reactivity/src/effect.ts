@@ -232,6 +232,7 @@ export function trigger(
     }
   }
 
+  // run决定用什么方式触发副作用函数执行
   const run = (effect: ReactiveEffect) => {
     if (__DEV__ && effect.options.onTrigger) {
       effect.options.onTrigger({

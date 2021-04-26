@@ -664,11 +664,14 @@ function finishComponentSetup(
       instance.render = Component.render as InternalRenderFunction
     }
   } else if (!instance.render) {
+    // 如果当前组件实例是没有render函数
+    // 此时编译模板为render，并赋值给组件实例
     // could be set from setup()
     if (compile && Component.template && !Component.render) {
       if (__DEV__) {
         startMeasure(instance, `compile`)
       }
+      // compile: template => render
       Component.render = compile(Component.template, {
         isCustomElement: instance.appContext.config.isCustomElement,
         delimiters: Component.delimiters
@@ -692,6 +695,7 @@ function finishComponentSetup(
   }
 
   // support for 2.x options
+  // 支持vue2选项
   if (__FEATURE_OPTIONS_API__) {
     currentInstance = instance
     applyOptions(instance, Component)
