@@ -4,13 +4,16 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div>
-    <router-view/>
+    <p @click="$store.commit('add')">{{ $store.state.counter }}</p>
+    <p @click="$store.dispatch('add')">async:{{ $store.state.counter }}</p>
+    <p>{{ $store.getters.doubleCounter }}</p>
+    <router-view />
   </div>
 </template>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
