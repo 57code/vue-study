@@ -10,6 +10,8 @@ export function initUse (Vue: GlobalAPI) {
     }
 
     // additional parameters
+    // Vue.use(VueRouter, arg, ...)
+    // function install(Vue, arg1, arg2, ...)
     const args = toArray(arguments, 1)
     args.unshift(this)
     if (typeof plugin.install === 'function') {

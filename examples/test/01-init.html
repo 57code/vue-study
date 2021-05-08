@@ -3,6 +3,7 @@
 
 <head>
     <title>Vue源码剖析</title>
+    <!-- umd，带编译器 -->
     <script src="../../dist/vue.js"></script>
 </head>
 
@@ -15,6 +16,7 @@
     <script>
         // render > template > el
         // 创建实例
+        // 挂载：el => template => render => dom
         const app = new Vue({
             el: '#demo',
             // template: '<div>template</div>',
