@@ -86,6 +86,7 @@ export class Observer {
  */
 function protoAugment (target, src: Object) {
   /* eslint-disable no-proto */
+  // 替换数组实例的原型
   target.__proto__ = src
   /* eslint-enable no-proto */
 }
@@ -111,7 +112,10 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
   if (!isObject(value) || value instanceof VNode) {
     return
   }
+  // 为什么一个对象要有一个ob伴随？
+  // 除了响应式处理之外，如果有动态属性加入或删除，数组有新元素加入或删除，做变更通知
   let ob: Observer | void
+  // 已经是响应式对象，直接返回即可，不再重复做处理
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
   } else if (
@@ -139,6 +143,7 @@ export function defineReactive (
   customSetter?: ?Function,
   shallow?: boolean
 ) {
+  // dep 1:1 key
   const dep = new Dep()
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
@@ -153,14 +158,19 @@ export function defineReactive (
     val = obj[key]
   }
 
+  // 递归处理
   let childOb = !shallow && observe(val)
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
+      // 首次触发render，做依赖收集
+      // vue2一个组件一个watcher
+      // dep n : n watcher
       if (Dep.target) {
         dep.depend()
+        // 子ob也要和当前watcher建立关系
         if (childOb) {
           childOb.dep.depend()
           if (Array.isArray(value)) {

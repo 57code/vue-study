@@ -48,6 +48,9 @@ export function proxy (target: Object, sourceKey: string, key: string) {
 export function initState (vm: Component) {
   vm._watchers = []
   const opts = vm.$options
+  // props ooxx
+  // methods ooxx
+  // data ooxx
   if (opts.props) initProps(vm, opts.props)
   if (opts.methods) initMethods(vm, opts.methods)
   if (opts.data) {
@@ -148,6 +151,7 @@ function initData (vm: Component) {
     }
   }
   // observe data
+  // 对data做响应式处理
   observe(data, true /* asRootData */)
 }
 
