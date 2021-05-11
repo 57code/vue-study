@@ -34,6 +34,7 @@ export default class Dep {
     }
   }
 
+  // 遍历内部的所有依赖（watcher）
   notify () {
     // stabilize the subscriber list first
     const subs = this.subs.slice()
@@ -44,6 +45,7 @@ export default class Dep {
       subs.sort((a, b) => a.id - b.id)
     }
     for (let i = 0, l = subs.length; i < l; i++) {
+      // 执行watcher.update（）
       subs[i].update()
     }
   }

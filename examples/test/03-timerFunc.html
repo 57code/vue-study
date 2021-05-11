@@ -17,7 +17,10 @@
             el: '#demo',
             data: { foo: 'ready~~' },
             mounted() {
+                // callbacks: [cb1, flushSchedulerQueue]
+                
                 this.foo = Math.random()
+                   
                 console.log('1:' + this.foo);
                 this.foo = Math.random()
                 console.log('2:' + this.foo);
@@ -26,10 +29,17 @@
                 // 异步行为，此时内容没变
                 console.log('p1.innerHTML:' + p1.innerHTML)
 
+                // macrotasks:[flushCallbacks, cb]
+                // callbacks: [flushSchedulerQueue]
+                // Promise.resolve().then(() => {
+                //     console.log('promise innerHTML:' + p1.innerHTML)
+                // })
+                
                 this.$nextTick(() => {
                     // 这里才是最新的值
                     console.log('p1.innerHTML:' + p1.innerHTML)
-                })
+                }) 
+                
             }
         });
     </script>

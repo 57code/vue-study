@@ -64,11 +64,12 @@ export function lifecycleMixin (Vue: Class<Component>) {
     vm._vnode = vnode
     // Vue.prototype.__patch__ is injected in entry points
     // based on the rendering backend used.
+    // 如果上次没有vnode，说明是首次挂载，初始化
     if (!prevVnode) {
       // initial render
       vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */)
     } else {
-      // updates
+      // updates diff
       vm.$el = vm.__patch__(prevVnode, vnode)
     }
     restoreActiveInstance()
@@ -166,6 +167,7 @@ export function mountComponent (
   }
   callHook(vm, 'beforeMount')
 
+  // 1.声明一个组件更新函数
   let updateComponent
   /* istanbul ignore if */
   if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
@@ -186,6 +188,7 @@ export function mountComponent (
       measure(`vue ${name} patch`, startTag, endTag)
     }
   } else {
+    // render() => update(vnode) => patch() 
     updateComponent = () => {
       vm._update(vm._render(), hydrating)
     }
@@ -194,6 +197,7 @@ export function mountComponent (
   // we set this to vm._watcher inside the watcher's constructor
   // since the watcher's initial patch may call $forceUpdate (e.g. inside child
   // component's mounted hook), which relies on vm._watcher being already defined
+  // 2.创建组件相关的渲染watcher实例
   new Watcher(vm, updateComponent, noop, {
     before () {
       if (vm._isMounted && !vm._isDestroyed) {

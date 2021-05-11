@@ -84,6 +84,7 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   }
 }
 
+// 异步执行cb
 export function nextTick (cb?: Function, ctx?: Object) {
   let _resolve
   callbacks.push(() => {
@@ -99,6 +100,7 @@ export function nextTick (cb?: Function, ctx?: Object) {
   })
   if (!pending) {
     pending = true
+    // 启动异步执行
     timerFunc()
   }
   // $flow-disable-line
