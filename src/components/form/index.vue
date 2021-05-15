@@ -47,19 +47,15 @@ export default {
   methods: {
     onLogin() {
       this.$refs.loginForm.validate((isValidate) => {
-        
-
-        this.$notice({
-          title: "社会你杨哥喊你来搬砖",
-          message: isValidate ? "请求登录!" : "校验失败!",
-          duration: 2000,
-        })
-
         if (isValidate) {
           // 通过
           console.log("submit login");
         } else {
-          alert("校验失败，请重试！");
+          this.$notice({
+            title: "社会你杨哥喊你来搬砖",
+            message: "校验失败!",
+            duration: 2000,
+          })
         }
       });
     },

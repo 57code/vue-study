@@ -37,13 +37,16 @@ export default {
       const rules = this.form.rules[this.prop];
 
       const validator = new Validator({ [this.prop]: rules });
-      return validator.validate({ [this.prop]: value }, (errors) => {
-        console.log(errors);
-        if (errors) {
-          this.error = errors[0].message;
-        } else {
-          this.error = "";
-        }
+      return new Promise((resolve, reject) => {
+        validator.validate({ [this.prop]: value }, (errors) => {
+          if (errors) {
+            this.error = errors[0].message;
+            reject()
+          } else {
+            this.error = "";
+            resolve()
+          }
+        });
       });
     },
   },
