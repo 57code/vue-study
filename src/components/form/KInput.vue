@@ -26,6 +26,7 @@ export default {
 
       // 通知校验
       this.$parent.$emit('validate')
+      // this.dispatch('kformitem', 'validate')
     },
   },
 };
