@@ -1,0 +1,39 @@
+<div id="app">
+  <h3>{{title}}</h3>
+  <h3>{{state.title}}</h3>
+  <comp></comp>
+</div>
+
+<script src="http://unpkg.com/vue@next"></script>
+<script>
+
+  const { createApp, reactive } = Vue
+  // new Vue
+  // Vue.component
+  // 函数式: 类型支持ts，摇树优化，打包体积减小
+  // 消灭静态方法，编程实例方法
+  // 避免全局污染，实例之间相互独立
+  // const app2 = createApp({})
+  // app.config.globalProperties.xxx
+  const app = createApp({
+    // 统一api，一致性
+    data() {
+      return {
+        title: 'hello,vue3!'
+      }
+    },
+    setup() {
+      const state = reactive({
+        title: 'vue3, hello!'
+      })
+      return { state }
+    }
+  })
+  // 全局组件
+  app.component('comp', {
+    template: '<div>comp</div>'
+  })
+  // api简化、一致性
+  app.mount('#app')
+
+</script>
