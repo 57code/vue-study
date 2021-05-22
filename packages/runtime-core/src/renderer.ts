@@ -70,6 +70,7 @@ import { startMeasure, endMeasure } from './profiling'
 import { ComponentPublicInstance } from './componentPublicInstance'
 import { devtoolsComponentRemoved, devtoolsComponentUpdated } from './devtools'
 import { initFeatureFlags } from './featureFlags'
+import { watchEffect } from 'test-dts'
 
 export interface Renderer<HostElement = RendererElement> {
   render: RootRenderFunction<HostElement>
@@ -443,6 +444,7 @@ function baseCreateRenderer(
 
   // Note: functions inside this closure should use `const xxx = () => {}`
   // style in order to prevent being inlined by minifiers.
+  // 补丁算法：init,update
   const patch: PatchFn = (
     n1,
     n2,
@@ -1221,6 +1223,10 @@ function baseCreateRenderer(
     }
   }
 
+  // 首次挂载做3件事：
+  // 1.根组件实例化
+  // 2.初始化根组件
+  // 3.安装render函数副作用
   const mountComponent: MountComponentFn = (
     initialVNode,
     container,
@@ -1230,6 +1236,7 @@ function baseCreateRenderer(
     isSVG,
     optimized
   ) => {
+    // 1.根组件实例化
     const instance: ComponentInternalInstance = (initialVNode.component = createComponentInstance(
       initialVNode,
       parentComponent,
@@ -1254,6 +1261,8 @@ function baseCreateRenderer(
     if (__DEV__) {
       startMeasure(instance, `init`)
     }
+    // 根实例初始化，类似于vue2中this._init()
+    // 组件实例属性，选项处理合并和处理
     setupComponent(instance)
     if (__DEV__) {
       endMeasure(instance, `init`)
@@ -1273,6 +1282,8 @@ function baseCreateRenderer(
       return
     }
 
+    // 3.初始化渲染函数副作用
+    // useEffect(fn, deps)
     setupRenderEffect(
       instance,
       initialVNode,
@@ -1334,6 +1345,15 @@ function baseCreateRenderer(
     optimized
   ) => {
     // create reactive effect for rendering
+    // componentEffect === vue2 componentUpdate
+    // effect(fn):添加副作用函数，这样里面的相关的响应式数据如果发生变化
+    // 那么fn会再次执行
+    // 内部render函数的执行会触发依赖收集
+    // 所以这个机制消除了watcher
+    // 和useEffect有啥区别？ useEffect(fn, [this.title])
+    // 依赖时自动收集的
+    // watch() === useEffect()
+    // watchEffect()
     instance.update = effect(function componentEffect() {
       if (!instance.isMounted) {
         let vnodeHook: VNodeHook | null | undefined
@@ -1353,6 +1373,7 @@ function baseCreateRenderer(
         if (__DEV__) {
           startMeasure(instance, `render`)
         }
+        // 执行render获取vnode
         const subTree = (instance.subTree = renderComponentRoot(instance))
         if (__DEV__) {
           endMeasure(instance, `render`)
@@ -1376,6 +1397,7 @@ function baseCreateRenderer(
           if (__DEV__) {
             startMeasure(instance, `patch`)
           }
+          // 转换vnode为dom
           patch(
             null,
             subTree,
@@ -2205,6 +2227,7 @@ function baseCreateRenderer(
         unmount(container._vnode, null, null, true)
       }
     } else {
+      // init走这里
       patch(container._vnode || null, vnode, container)
     }
     flushPostFlushCbs()
@@ -2233,9 +2256,10 @@ function baseCreateRenderer(
     >)
   }
 
+  // 渲染器
   return {
-    render,
-    hydrate,
+    render, // spa
+    hydrate, // ssr
     createApp: createAppAPI(render, hydrate)
   }
 }

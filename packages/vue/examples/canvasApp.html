@@ -1,0 +1,87 @@
+<div id="demo"></div>
+
+<script src="../dist/vue.global.js"></script>
+<script>
+  const { createRenderer } = Vue
+  // 创建⼀个渲染器，给它提供节点和属性操作
+  const nodeOps = {
+    // querySelector(){},
+    createElement(tag) {
+      // 由于是在canvas中绘图，所以不需要创建dom，仅仅保存数据即可
+      return { tag }
+    },
+    patchProp(el, key, prev, next) {
+      // el 前面返回的对象
+      // 只需要保存数据即可
+      el[key] = next
+    },
+    insert(child, parent, anchor) {
+      // 由于是在canvas中绘图，所以不需要插入dom
+      // 绘制即可
+      if (parent.nodeType === 1) {
+        // parent是canvas
+        draw(child)
+      }
+    },
+  }
+
+  const draw = (el, noClear) => {
+    if (!noClear) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+    }
+    if (el.tag == 'bar-chart') {
+      const { data } = el;
+      const barWidth = canvas.width / 10,
+        gap = 20,
+        paddingLeft = (data.length * barWidth + (data.length - 1) * gap) / 2,
+        paddingBottom = 10;
+      // x轴
+      // 柱状图
+      data.forEach(({ title, count, color }, index) => {
+        const x = paddingLeft + index * (barWidth + gap)
+        const y = canvas.height - paddingBottom - count
+        ctx.fillStyle = color
+        ctx.fillRect(x, y, barWidth, count)
+        // text
+      });
+    }
+    // 递归绘制⼦节点
+    el.childs && el.childs.forEach(child => draw(child, true));
+  }
+
+  const renderer = createRenderer(nodeOps);
+
+  let canvas, ctx;
+
+  function createCanvasApp(options) {
+    const app = renderer.createApp(options)
+
+    const mount = app.mount
+
+    app.mount = function (sel) {
+      // 额外创建一个宿主canvas
+      canvas = document.createElement('canvas')
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+      document.querySelector(sel).appendChild(canvas)
+      ctx = canvas.getContext('2d')
+      mount(canvas)
+    }
+
+    return app
+  }
+
+  createCanvasApp({
+    template: '<bar-chart :data="chartData"></bar-chart>',
+    data() {
+      return {
+        chartData: [
+          { title: "⻘铜", count: 200, color: "brown" },
+          { title: "砖⽯", count: 300, color: "skyblue" },
+          { title: "星耀", count: 100, color: "purple" },
+          { title: "王者", count: 50, color: "gold" }
+        ]
+      }
+    },
+  }).mount('#demo')
+</script>
