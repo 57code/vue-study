@@ -686,6 +686,8 @@ function finishComponentSetup(
   }
 
   // support for 2.x options
+  // 最后依然会处理组件options
+  // 兼容options api
   if (__FEATURE_OPTIONS_API__) {
     currentInstance = instance
     applyOptions(instance, Component)

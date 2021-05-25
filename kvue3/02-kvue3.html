@@ -2,6 +2,7 @@
   <h3>{{title}}</h3>
 </div>
 
+<script src="./reactive.js"></script>
 <script>
   // 基本结构
   const Vue = {
@@ -9,18 +10,18 @@
       const renderer = Vue.createRenderer({
         querySelector(selector) {
           return document.querySelector(selector)
-        }, 
+        },
         insert(child, parent, anchor) {
           parent.insertBefore(child, anchor || null)
         }
       })
       return renderer.createApp(options)
     },
-    createRenderer({querySelector, insert}) { // 平台特有操作
+    createRenderer({ querySelector, insert }) { // 平台特有操作
       // 获得渲染器
       return {
-        render(){},
-        hydrate(){},
+        render() { },
+        hydrate() { },
         createApp(options) {
           // 返回App实例
           return {
@@ -59,9 +60,12 @@
               })
 
               // 渲染dom，追加到宿主元素
-              const el = options.render.call(this.proxy)
-              parent.innerHTML = ''
-              insert(el, parent)
+              this.update = effect(() => {
+                const el = options.render.call(this.proxy)
+                parent.innerHTML = ''
+                insert(el, parent)
+              })
+              // this.update()// init
             },
             compile(template) {
               // 返回render
@@ -95,9 +99,13 @@
       }
     },
     setup() {
-      return {
+      const state = reactive({
         title: 'vue3, hello!'
-      }
+      })
+      setTimeout(() => {
+        state.title = 'hello, vue3!'
+      }, 2000);
+      return state
     }
   })
   // api简化、一致性

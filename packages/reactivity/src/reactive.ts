@@ -68,8 +68,8 @@ export function reactive(target: object) {
   return createReactiveObject(
     target,
     false,
-    mutableHandlers,
-    mutableCollectionHandlers
+    mutableHandlers, // 普通对象用这个
+    mutableCollectionHandlers // 集合对象用这个
   )
 }
 
@@ -164,6 +164,7 @@ function createReactiveObject(
   if (targetType === TargetType.INVALID) {
     return target
   }
+  // 核心代码：创建target代理
   const proxy = new Proxy(
     target,
     targetType === TargetType.COLLECTION ? collectionHandlers : baseHandlers

@@ -60,6 +60,7 @@ export function effect<T = any>(
   }
   const effect = createReactiveEffect(fn, options)
   if (!options.lazy) {
+    // 立刻执行，触发依赖收集
     effect()
   }
   return effect
