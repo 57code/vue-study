@@ -1,0 +1,62 @@
+<div id="app">
+  <h3>{{title}}</h3>
+  <p>{{foo}}</p>
+  <p @click="add">{{count}}</p>
+  <p>{{double}}</p>
+  <!-- 模板中自动解包 -->
+  <h3>{{title2}}</h3>
+</div>
+
+<script src="http://unpkg.com/vue@next"></script>
+<script>
+  const { createApp, reactive, ref, toRefs, computed, onMounted } = Vue
+
+  function useState() {
+    const state = reactive({
+      title: 'vue3, hello!',
+      // props
+      foo: 'foooooo',
+      count: 1
+    })
+    setTimeout(() => {
+      state.title = 'vue3,hello!'
+    }, 1000)
+
+    onMounted(() => {
+      state.foo = 'foo'
+    })
+    // 计算属性
+    const double = computed(() => {
+      return state.count * 2
+    })
+
+    function add() {
+      state.count++
+    }
+
+    return { state, double, add }
+  }
+
+  const app = createApp({
+    setup() {
+      // 对象响应式
+      const { state, double, add } = useState()
+      
+      // 单值响应式
+      // ref => Ref，包装类型
+      const title2 = ref('hello, vue3!')
+      setTimeout(() => {
+        title2.value = 'vue3, hello!'
+      }, 3000)
+      // title2.value
+      onMounted(() => {
+        title2.value = 'lalalalalala'
+      })
+
+      return { ...toRefs(state), title2, double, add }
+    }
+  })
+  // api简化、一致性
+  app.mount('#app')
+
+</script>
