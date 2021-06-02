@@ -12,6 +12,7 @@ function defineReactive(obj, key, val) {
     set(newVal) {
       if (newVal !== val) {
         console.log('set', key);
+        observe(newVal)
         val = newVal
         // update()
       }
@@ -54,6 +55,10 @@ observe(obj)
 // obj.dong = 'dong'
 set(obj, 'dong', 'dong')
 obj.dong
+
+obj.baz = {
+  a: 10
+}
 
 // 2.数组：支持不了
 // 解决方案是：要拦截数组的7个变更方法，覆盖他们，让他们做数组操作的同时，进行变更通知
