@@ -1,0 +1,17 @@
+<div id="app">
+  <p>{{counter}}</p>
+</div>
+<script src="node_modules/vue/dist/vue.js"></script>
+<script>
+  // 1.数据驱动：数据响应式
+  // 2.编译：得到渲染函数
+  const app = new Vue({
+    el: '#app',
+    data: {
+      counter: 1
+    },
+  })
+  setInterval(() => {
+    app.counter++
+  }, 1000);
+</script>

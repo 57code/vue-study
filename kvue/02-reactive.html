@@ -1,0 +1,34 @@
+<div id="app"></div>
+<script>
+  const obj = {}
+  function defineReactive(obj, key, val) {
+    Object.defineProperty(obj, key, {
+      get() {
+        console.log(`get ${key}:${val}`);
+        return val
+      },
+      set(newVal) {
+        if (newVal !== val) {
+          val = newVal
+          // 通知视图更新
+          update()
+        }
+      }
+    })
+  }
+
+  // 响应式处理
+  defineReactive(obj, 'foo', '')
+  obj.foo = new Date().toLocaleTimeString()
+
+  // 更新函数：描述了视图内容
+  // 1.更新函数不应该自己写的：编译器将模板转换出来的
+  // 2.全量更新：更新函数能够精确定位具体dom元素；或者利用vdom，比对得到dom操作
+  function update() {
+    app.innerText = obj.foo
+    // todo。。。。
+  }
+  setInterval(() => {
+    obj.foo = new Date().toLocaleTimeString()
+  }, 1000);
+</script>
