@@ -40,11 +40,16 @@ export class Observer {
   vmCount: number; // number of vms that have this object as root $data
 
   constructor (value: any) {
+    // 2.此处dep目的？
+    // 如果使用Vue.set/delete添加或删除属性，负责通知更新
     this.value = value
     this.dep = new Dep()
     this.vmCount = 0
     def(value, '__ob__', this)
+
+    // 1.分辨传入对象类型
     if (Array.isArray(value)) {
+      // 现代浏览器，覆盖原型
       if (hasProto) {
         protoAugment(value, arrayMethods)
       } else {
@@ -86,6 +91,8 @@ export class Observer {
  */
 function protoAugment (target, src: Object) {
   /* eslint-disable no-proto */
+  // 覆盖当前数组实例的原型
+  // 他只会影响当前数组实例本身
   target.__proto__ = src
   /* eslint-enable no-proto */
 }
@@ -111,7 +118,10 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
   if (!isObject(value) || value instanceof VNode) {
     return
   }
+  // Observer作用？
+  // 1.将传入value做响应式处理
   let ob: Observer | void
+  // 如果已经做过响应式处理，则直接返回ob
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
   } else if (
@@ -121,6 +131,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
     Object.isExtensible(value) &&
     !value._isVue
   ) {
+    // 初始化传入需要响应式的对象
     ob = new Observer(value)
   }
   if (asRootData && ob) {
@@ -139,6 +150,7 @@ export function defineReactive (
   customSetter?: ?Function,
   shallow?: boolean
 ) {
+  // 创建key一一对应的dep
   const dep = new Dep()
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
@@ -153,16 +165,23 @@ export function defineReactive (
     val = obj[key]
   }
 
+  // 递归遍历
   let childOb = !shallow && observe(val)
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
+      // 如果存在，说明此次调用触发者是一个Watcher实例
+      // dep n：n watcher
       if (Dep.target) {
+        // 建立dep和Dep.target之间依赖关系
         dep.depend()
+
         if (childOb) {
+          // 建立ob内部dep和Dep.target之间依赖关系
           childOb.dep.depend()
+          // 如果是数组，数组内部所有项都要做相同处理
           if (Array.isArray(value)) {
             dependArray(value)
           }

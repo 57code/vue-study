@@ -14,13 +14,27 @@
     <script>
         // 创建实例
         // 会有几个Observer？Dep？Watcher？
-        //            2      2    1
+        //            2      4    1
         const app = new Vue({
             el: '#demo',
-            data: { obj: { foo: 'foo' } },
+            data: { // ob + dep
+                obj: { // ob + dep
+                    foo: 'foo' 
+                } 
+            },
+            // watch: { // user watcher
+            //     foo(newValue, oldValue) {
+            //         console.log();
+            //     }
+            // },
             mounted() {
                 setTimeout(() => {
+                    this.obj = {
+                        bar: 'bar'
+                    }
                     this.obj.foo = 'fooooo'
+
+                    this.$set(this.obj, 'bar', 'bar')
                 }, 1000);
             }
         });
