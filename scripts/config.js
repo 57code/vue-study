@@ -27,6 +27,8 @@ const weexFactoryPlugin = {
 
 const aliases = require('./alias')
 const resolve = p => {
+  // web/xxx.js
+  // base = web
   const base = p.split('/')[0]
   if (aliases[base]) {
     return path.resolve(aliases[base], p.slice(base.length + 1))
@@ -121,6 +123,7 @@ const builds = {
   },
   // Runtime+compiler development build (Browser)
   'web-full-dev': {
+    // 入口
     entry: resolve('web/entry-runtime-with-compiler.js'),
     dest: resolve('dist/vue.js'),
     format: 'umd',

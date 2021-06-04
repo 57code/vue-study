@@ -29,6 +29,7 @@ export function initMixin (Vue: Class<Component>) {
     // a flag to avoid this being observed
     vm._isVue = true
     // merge options
+    // 1.选项合并：用户选项和系统默认选项需要合并
     if (options && options._isComponent) {
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
@@ -48,13 +49,18 @@ export function initMixin (Vue: Class<Component>) {
       vm._renderProxy = vm
     }
     // expose real self
+    // 2.初始化
     vm._self = vm
-    initLifecycle(vm)
-    initEvents(vm)
-    initRender(vm)
+    initLifecycle(vm) // 生命周期相关的属性初始化$parent等
+    // <comp @my-click="onclick"></comp>
+    initEvents(vm) // 自定义组件事件监听
+    initRender(vm) // 插槽处理，$createElm === render(h)
+    // 调用生命周期的钩子函数
     callHook(vm, 'beforeCreate')
+    // provide/inject
+    // 组件数据和状态初始化
     initInjections(vm) // resolve injections before data/props
-    initState(vm)
+    initState(vm) // data/props/methods/computed/watch
     initProvide(vm) // resolve provide after data/props
     callHook(vm, 'created')
 
@@ -65,6 +71,7 @@ export function initMixin (Vue: Class<Component>) {
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
 
+    // 设置了el选项组件，会自动挂载
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }

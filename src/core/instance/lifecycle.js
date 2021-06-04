@@ -59,16 +59,19 @@ export function lifecycleMixin (Vue: Class<Component>) {
   Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
     const vm: Component = this
     const prevEl = vm.$el
+    // 上次计算的虚拟dom
     const prevVnode = vm._vnode
     const restoreActiveInstance = setActiveInstance(vm)
     vm._vnode = vnode
     // Vue.prototype.__patch__ is injected in entry points
     // based on the rendering backend used.
+    // 初始化时没有prevVnode
     if (!prevVnode) {
       // initial render
       vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */)
     } else {
       // updates
+      // diff
       vm.$el = vm.__patch__(prevVnode, vnode)
     }
     restoreActiveInstance()
@@ -138,6 +141,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
   }
 }
 
+// 真正的挂载
 export function mountComponent (
   vm: Component,
   el: ?Element,
@@ -166,6 +170,7 @@ export function mountComponent (
   }
   callHook(vm, 'beforeMount')
 
+  // 组件更新函数声明
   let updateComponent
   /* istanbul ignore if */
   if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
@@ -187,6 +192,7 @@ export function mountComponent (
     }
   } else {
     updateComponent = () => {
+      // 首先执行render =》 vdom
       vm._update(vm._render(), hydrating)
     }
   }
