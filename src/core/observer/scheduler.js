@@ -85,6 +85,7 @@ function flushSchedulerQueue () {
 
   // do not cache length because more watchers might be pushed
   // as we run existing watchers
+  // 遍历所有watchers，执行它们的run函数
   for (index = 0; index < queue.length; index++) {
     watcher = queue[index]
     if (watcher.before) {
@@ -92,6 +93,7 @@ function flushSchedulerQueue () {
     }
     id = watcher.id
     has[id] = null
+    // 真正更新函数是run
     watcher.run()
     // in dev build, check and stop circular updates.
     if (process.env.NODE_ENV !== 'production' && has[id] != null) {
@@ -161,11 +163,14 @@ function callActivatedHooks (queue) {
  * Jobs with duplicate IDs will be skipped unless it's
  * pushed when the queue is being flushed.
  */
+// 尝试将传入watcher实例入队
 export function queueWatcher (watcher: Watcher) {
   const id = watcher.id
+  // 去重
   if (has[id] == null) {
     has[id] = true
     if (!flushing) {
+      // 入队
       queue.push(watcher)
     } else {
       // if already flushing, splice the watcher based on its id
@@ -184,6 +189,9 @@ export function queueWatcher (watcher: Watcher) {
         flushSchedulerQueue()
         return
       }
+      // 异步启动队列冲刷任务
+      // 此处的nextTick就是我们平时使用的那个
+      // 启动一个异步任务，在未来的某个时刻执行flushSchedulerQueue
       nextTick(flushSchedulerQueue)
     }
   }

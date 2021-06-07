@@ -16,7 +16,8 @@
         const app = new Vue({
             el: '#demo',
             data: { foo: 'ready~~' },
-            mounted() {
+            mounted() {            
+
                 this.foo = Math.random()
                 console.log('1:' + this.foo);
                 this.foo = Math.random()
@@ -25,6 +26,17 @@
                 console.log('3:' + this.foo);
                 // 异步行为，此时内容没变
                 console.log('p1.innerHTML:' + p1.innerHTML)
+
+                // nextTick的理解？
+                // nextTick：
+                // 概念：vue批量异步更新策略策略，组件更新的时候，不会立刻执行，而是通过nextTick异步启动
+                // 作用：nextTick(cb),应用：数据变化，需要访问dom最新的值的时候
+                // 如何工作：源码描述，数据变化，watcher入队，异步冲刷队列，最后真正watcher.run
+                // 结合实践：
+                Promise.resolve().then(() => {
+                    // 这里才是最新的值
+                    console.log('promise:' + p1.innerHTML)
+                })
 
                 this.$nextTick(() => {
                     // 这里才是最新的值

@@ -86,6 +86,8 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
 
 export function nextTick (cb?: Function, ctx?: Object) {
   let _resolve
+  // 封装一个能够处理错误高阶函数，
+  // 并将它存入callbacks的数组之中
   callbacks.push(() => {
     if (cb) {
       try {
@@ -98,6 +100,7 @@ export function nextTick (cb?: Function, ctx?: Object) {
     }
   })
   if (!pending) {
+    // 异步启动执行
     pending = true
     timerFunc()
   }
