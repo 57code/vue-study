@@ -68,10 +68,12 @@ export function lifecycleMixin (Vue: Class<Component>) {
     // 初始化时没有prevVnode
     if (!prevVnode) {
       // initial render
+      // 初始化只走一次
       vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */)
     } else {
       // updates
-      // diff
+      // diff：因为组件只有一个watcher，内部发生变化的可能有多个值，为了知道具体变化点
+      // 需要做两次vnode之间比对，从而得到不同点，再把这些不同点转换为dom操作，从而做到精准更新
       vm.$el = vm.__patch__(prevVnode, vnode)
     }
     restoreActiveInstance()
