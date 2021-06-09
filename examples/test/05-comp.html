@@ -12,6 +12,7 @@
         <comp></comp>
     </div>
     <script>
+        
         Vue.component('comp', {
             template: '<div>I am comp</div>'
         })
@@ -19,6 +20,7 @@
         const app = new Vue({
             el: '#demo'
         });
+        console.log(app.$options.render);
     </script>
 </body>
 

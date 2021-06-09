@@ -149,10 +149,13 @@ export function createPatchFunction (backend) {
     }
 
     vnode.isRootInsert = !nested // for transition enter check
+    
+    // 自定义组件vnode
     if (createComponent(vnode, insertedVnodeQueue, parentElm, refElm)) {
       return
     }
 
+    // 后续是保留标签
     const data = vnode.data
     const children = vnode.children
     const tag = vnode.tag
@@ -215,10 +218,12 @@ export function createPatchFunction (backend) {
     }
   }
 
+  // 如果是自定义组件，执行它的组件vnode钩子
   function createComponent (vnode, insertedVnodeQueue, parentElm, refElm) {
     let i = vnode.data
     if (isDef(i)) {
       const isReactivated = isDef(vnode.componentInstance) && i.keepAlive
+      // 执行init钩子
       if (isDef(i = i.hook) && isDef(i = i.init)) {
         i(vnode, false /* hydrating */)
       }
@@ -226,8 +231,11 @@ export function createPatchFunction (backend) {
       // it should've created a child instance and mounted it. the child
       // component also has set the placeholder vnode's elm.
       // in that case we can just return the element and be done.
+      // 已经得到了组件实例并执行了它的挂载
       if (isDef(vnode.componentInstance)) {
+        // 属性处理
         initComponent(vnode, insertedVnodeQueue)
+        // 插入dom
         insert(parentElm, vnode.elm, refElm)
         if (isTrue(isReactivated)) {
           reactivateComponent(vnode, insertedVnodeQueue, parentElm, refElm)
@@ -243,6 +251,7 @@ export function createPatchFunction (backend) {
       vnode.data.pendingInsert = null
     }
     vnode.elm = vnode.componentInstance.$el
+    // 组件标签上的属性执行
     if (isPatchable(vnode)) {
       invokeCreateHooks(vnode, insertedVnodeQueue)
       setScope(vnode)
