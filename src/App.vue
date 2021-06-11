@@ -6,7 +6,7 @@
     </div>
     <p @click="$store.commit('add')">{{$store.state.counter}}</p>
     <p @click="$store.dispatch('add')">async: {{$store.state.counter}}</p>
-    <p>{{$store.getters.doubleCounter}}</p>
+    <!-- <p>{{$store.getters.doubleCounter}}</p> -->
     <!-- 路由出口 -->
     <router-view/>
   </div>
