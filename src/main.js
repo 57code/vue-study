@@ -10,6 +10,8 @@ import router from "./krouter";
 import store from "./kstore";
 import create from "./utils/create";
 
+import '@/icon'
+
 Vue.config.productionTip = false;
 
 Vue.prototype.$notice = function(opts) {
