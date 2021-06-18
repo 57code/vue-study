@@ -50,18 +50,22 @@ export const hydrate = ((...args) => {
   ensureHydrationRenderer().hydrate(...args)
 }) as RootHydrateFunction
 
+// 用户实际调用的
 export const createApp = ((...args) => {
+  // 先获取渲染器
   const app = ensureRenderer().createApp(...args)
 
   if (__DEV__) {
     injectNativeTagCheck(app)
   }
 
+  // 扩展mount方法
   const { mount } = app
   app.mount = (containerOrSelector: Element | string): any => {
     const container = normalizeContainer(containerOrSelector)
     if (!container) return
     const component = app._component
+    // 模板获取
     if (!isFunction(component) && !component.render && !component.template) {
       component.template = container.innerHTML
     }
