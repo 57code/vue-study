@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">
+    {{title}}
+  </div>
+
+  <script src="http://unpkg.com/vue@next"></script>
+  <script>
+    // 1.创建实例
+    // vue2: new Vue()
+    // vue3: createApp()
+    const { createApp } = Vue
+    // 传入根组件配置
+    const app = createApp({
+      data() {
+        return {
+          title: 'hello,vue3!'
+        }
+      },
+    })
+    // 更简洁
+    app.mount('#app')
+  </script>
+</body>
+
+</html>

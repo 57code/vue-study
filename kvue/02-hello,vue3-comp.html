@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">
+    {{state.title}}
+    <comp></comp>
+  </div>
+
+  <script src="http://unpkg.com/vue@next"></script>
+  <script>
+    // 1.创建实例
+    // vue2: new Vue()
+    // vue3: createApp()
+    const { createApp, reactive } = Vue
+    // 传入根组件配置
+    // 2.静态方法移除
+    const app = createApp({
+      data() {
+        return {
+          title: 'vue3,hello!',
+        }
+      },
+      // composition api
+      setup() {
+        const state = reactive({
+          title: 'hello,vue3!'
+        })
+        return {
+          state
+        }
+      },
+    })
+
+    app.component('comp', {
+      template: '<div>comp</div>'
+    })
+
+    // app.use(router)
+    // app.use(store)
+
+    // 更简洁
+    app.mount('#app')
+  </script>
+</body>
+
+</html>

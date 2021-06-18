@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">
+    {{title}}
+  </div>
+
+  <script>
+    const Vue = {
+      // 创建渲染器
+      // opts中传入节点相关操作
+      createRenderer({querySelector, insert}) {
+        // createApp实际上由渲染器实现
+        return {
+          createApp(options) {
+            // 返回应用程序实例app
+            return {
+              // 传入宿主
+              mount(selector) {
+                // 传入的宿主获取
+                const parent = querySelector(selector)
+
+                // 处理vue2 options选项
+                if (options.setup) {
+                  // 存入app实例上
+                  this.setupState = options.setup()
+                }
+                if (options.data) {
+                  this.data = options.data()
+                }
+
+                // 设置render上下文
+                this.proxy = new Proxy(this, {
+                  get(target, key) {
+                    // 优先从setupState上获取，其次是data
+                    if (key in target.setupState) {
+                      return target.setupState[key]
+                    } else {
+                      return target.data[key]
+                    }
+                  },
+                  set(target, key, val) {
+                    if (key in target.setupState) {
+                      target.setupState[key] = val
+                    } else {
+                      target.data[key] = val
+                    }
+                  }
+                })
+
+                // 将options转换为dom并追加到宿主
+                // 获取模板，将数据绑上去
+                // 模板是有编译函数编译而来
+                if (!options.render) {
+                  options.render = this.compile(parent.innerHTML)
+                }
+                const el = options.render.call(this.proxy)
+                parent.innerHTML = ''
+                // parent.appendChild(el)
+                insert(el, parent)
+              },
+              compile(template) {
+                // template => ast => generate
+                return function render() {
+                  const h3 = document.createElement('h3')
+                  // 注意上下文
+                  h3.textContent = this.title
+                  return h3
+                }
+              }
+            }
+          }
+        }
+      },
+      // 传入根组件配置
+      createApp(options) {
+        // 1.根据当前web平台创建一个renderer
+        const renderer = Vue.createRenderer({
+          querySelector(sel) {
+            return document.querySelector(sel)
+          },
+          insert(child, parent, anchor) {
+            parent.insertBefore(child, anchor || null)
+          }
+        })
+        return renderer.createApp(options)
+      }
+    }
+  </script>
+  <script>
+    // 1.创建实例
+    // vue2: new Vue()
+    // vue3: createApp()
+    const { createApp } = Vue
+    // 传入根组件配置
+    const app = createApp({
+      data() {
+        return {
+          title: 'hello,vue3!'
+        }
+      },
+      setup() {
+        return {
+          title: 'vue3,hello!'
+        }
+      }
+    })
+    // 更简洁
+    app.mount('#app')
+  </script>
+</body>
+
+</html>
