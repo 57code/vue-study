@@ -1369,6 +1369,7 @@ function baseCreateRenderer(
           startMeasure(instance, `render`)
         }
         // 首先获取组件vnode，其实就是调用组件render
+        // 这次调用触发了依赖收集
         const subTree = (instance.subTree = renderComponentRoot(instance))
         if (__DEV__) {
           endMeasure(instance, `render`)
@@ -1460,6 +1461,7 @@ function baseCreateRenderer(
         if (__DEV__) {
           startMeasure(instance, `render`)
         }
+        // 重新获得最新渲染结果
         const nextTree = renderComponentRoot(instance)
         if (__DEV__) {
           endMeasure(instance, `render`)
@@ -2217,6 +2219,7 @@ function baseCreateRenderer(
     }
   }
 
+  // mount => render
   const render: RootRenderFunction = (vnode, container) => {
     if (vnode == null) {
       if (container._vnode) {

@@ -11,14 +11,14 @@ function reactive(obj) {
     set(target, key, val) {
       // notify
       console.log('set', key)
-      trigger(target, key)
       target[key] = val
+      trigger(target, key)
     },
     deleteProperty(target, key) {
       // notify
       console.log('deleteProperty', key)
-      trigger(target, key)
       delete target[key]
+      trigger(target, key)
     }
   })
 }
@@ -84,22 +84,22 @@ function trigger(target, key) {
   }
 }
 
-const state = reactive({
-  foo: 'foo',
-  bar: {
-    baz: 1
-  }
-})
+// const state = reactive({
+//   foo: 'foo',
+//   bar: {
+//     baz: 1
+//   }
+// })
 
-effect(() => {
-  console.log('effect1', state.foo);
-})
-effect(() => {
-  console.log('effect2', state.foo, state.bar.baz);
-})
+// effect(() => {
+//   console.log('effect1', state.foo);
+// })
+// effect(() => {
+//   console.log('effect2', state.foo, state.bar.baz);
+// })
 
-state.foo = 'foooo'
-state.bar.baz = 10
+// state.foo = 'foooo'
+// state.bar.baz = 10
 // state.foo
 // state.foo = 'foooooo'
 // delete state.foo
@@ -107,7 +107,7 @@ state.bar.baz = 10
 // state.bar
 // state.bar
 // state.bar.baz
-state.bar = {
-  baz: 10
-}
-state.bar.baz
+// state.bar = {
+//   baz: 10
+// }
+// state.bar.baz

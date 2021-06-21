@@ -12,12 +12,12 @@
   <div id="app">
     {{title}}
   </div>
-
+  <script src="./reactive.js"></script>
   <script>
     const Vue = {
       // 创建渲染器
       // opts中传入节点相关操作
-      createRenderer({querySelector, insert}) {
+      createRenderer({ querySelector, insert }) {
         // createApp实际上由渲染器实现
         return {
           createApp(options) {
@@ -62,10 +62,15 @@
                 if (!options.render) {
                   options.render = this.compile(parent.innerHTML)
                 }
-                const el = options.render.call(this.proxy)
-                parent.innerHTML = ''
-                // parent.appendChild(el)
-                insert(el, parent)
+
+                this.update = effect(() => {
+                  const el = options.render.call(this.proxy)
+                  parent.innerHTML = ''
+                  // parent.appendChild(el)
+                  insert(el, parent)
+                })
+
+
               },
               compile(template) {
                 // template => ast => generate
@@ -108,9 +113,15 @@
         }
       },
       setup() {
-        return {
+        const state = reactive({
           title: 'vue3,hello!'
-        }
+        })
+
+        setTimeout(() => {
+          state.title = 'hello,vue3!!!!'
+        }, 2000)
+
+        return state
       }
     })
     // 更简洁
