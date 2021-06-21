@@ -10,31 +10,59 @@
 
 <body>
   <div id="app">
-    {{state.title}}
+    {{title}}
+    <p @click="add">{{counter}}</p>
+    <p>{{doubleCounter}}</p>
+    <p>{{anotherCounter}}</p>
     <comp></comp>
   </div>
 
   <script src="http://unpkg.com/vue@next"></script>
   <script>
+
+    function useCounter() {
+      const data = reactive({
+        title: 'hello,vue3!',
+        counter: 1,
+      })
+
+      const add = () => {
+        data.counter++
+      }
+
+      // 计算属性
+      const doubleCounter = computed(() => data.counter * 2)
+
+      return { data, add, doubleCounter }
+    }
+
     // 1.创建实例
     // vue2: new Vue()
     // vue3: createApp()
-    const { createApp, reactive } = Vue
+    const { createApp, reactive, computed, ref, toRefs, onMounted } = Vue
     // 传入根组件配置
     // 2.静态方法移除
     const app = createApp({
-      data() {
-        return {
-          title: 'vue3,hello!',
-        }
-      },
       // composition api
       setup() {
-        const state = reactive({
-          title: 'hello,vue3!'
+        // 对象响应式
+        // Proxy
+        // VueUse
+        const {data, add, doubleCounter} = useCounter()
+
+        // 单值响应式, Ref
+        const anotherCounter = ref(1)
+        onMounted(() => {
+          anotherCounter.value = 10
         })
+
+
+
         return {
-          state
+          ...toRefs(data),
+          doubleCounter,
+          anotherCounter,
+          add
         }
       },
     })
