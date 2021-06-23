@@ -10,14 +10,21 @@
 
 <body>
   <div id="app">
-    {{title}}
+    <h1>{{title}}</h1>
   </div>
   <script src="./reactive.js"></script>
+  <script src="./compiler.js"></script>
   <script>
+    // 1.返回vnode函数
+    function h(tag, props, children) {
+      return { tag, props, children }
+    }
+
+
     const Vue = {
       // 创建渲染器
       // opts中传入节点相关操作
-      createRenderer({ querySelector, insert }) {
+      createRenderer({ querySelector, insert, createElement }) {
         // createApp实际上由渲染器实现
         return {
           createApp(options) {
@@ -60,27 +67,48 @@
                 // 获取模板，将数据绑上去
                 // 模板是有编译函数编译而来
                 if (!options.render) {
-                  options.render = this.compile(parent.innerHTML)
+                  options.render = compile(parent.innerHTML)
                 }
 
                 this.update = effect(() => {
-                  const el = options.render.call(this.proxy)
-                  parent.innerHTML = ''
-                  // parent.appendChild(el)
-                  insert(el, parent)
+                  // const el = options.render.call(this.proxy)
+                  // parent.innerHTML = ''
+                  // // parent.appendChild(el)
+                  // insert(el, parent)
+
+                  // vnode
+                  // 渲染vdom
+                  const vnode = options.render(this.proxy)
+                  if (!this.isMounted) {
+                    const el = this.createElm(vnode)
+                    parent.innerHTML = ''
+                    insert(el, parent)
+                    this.isMounted = true
+                  } else {
+                    this.patch(this._vnode, vnode)
+                  }
                 })
-
-
               },
-              compile(template) {
-                // template => ast => generate
-                return function render() {
-                  const h3 = document.createElement('h3')
-                  // 注意上下文
-                  h3.textContent = this.title
-                  return h3
+              // ⾸次创建
+              createElm(vnode) {
+                const el = createElement(vnode.tag)
+                if (typeof vnode.children === 'string') {
+                  el.textContent = vnode.children
+                } else {
+                  vnode.children.forEach(child => insert(this.createElm(child), el))
                 }
-              }
+                vnode.el = el
+                return el
+              },
+              // compile(template) {
+              //   // template => ast => generate
+              //   return function render() {
+              //     const h3 = document.createElement('h3')
+              //     // 注意上下文
+              //     h3.textContent = this.title
+              //     return h3
+              //   }
+              // }
             }
           }
         }
@@ -94,6 +122,10 @@
           },
           insert(child, parent, anchor) {
             parent.insertBefore(child, anchor || null)
+          },
+          // 添加⼀个创建元素
+          createElement(tag) {
+            return document.createElement(tag)
           }
         })
         return renderer.createApp(options)

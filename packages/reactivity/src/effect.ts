@@ -245,6 +245,7 @@ export function trigger(
         oldTarget
       })
     }
+    // 判断effect选项中是否设置scheduler
     if (effect.options.scheduler) {
       effect.options.scheduler(effect)
     } else {
