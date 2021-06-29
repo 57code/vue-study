@@ -730,6 +730,7 @@ function baseCreateRenderer(
       if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
         hostSetElementText(el, vnode.children as string)
       } else if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
+        // 如果children不是文本元素，说明当前节点是拥有很多子元素的元素
         mountChildren(
           vnode.children as VNodeArrayChildren,
           el,
@@ -846,6 +847,7 @@ function baseCreateRenderer(
     optimized,
     start = 0
   ) => {
+    // 循环fragment内部所有节点
     for (let i = start; i < children.length; i++) {
       const child = (children[i] = optimized
         ? cloneIfMounted(children[i] as VNode)
@@ -1116,6 +1118,7 @@ function baseCreateRenderer(
     const fragmentStartAnchor = (n2.el = n1 ? n1.el : hostCreateText(''))!
     const fragmentEndAnchor = (n2.anchor = n1 ? n1.anchor : hostCreateText(''))!
 
+    // 补丁标记，如果大于0，就是编译器优化，
     let { patchFlag, dynamicChildren } = n2
     if (patchFlag > 0) {
       optimized = true
@@ -1537,6 +1540,7 @@ function baseCreateRenderer(
     flushPreFlushCbs(undefined, instance.update)
   }
 
+  // 类似于updateChildren
   const patchChildren: PatchChildrenFn = (
     n1,
     n2,
@@ -1702,6 +1706,7 @@ function baseCreateRenderer(
     // 1. sync from start
     // (a b) c
     // (a b) d e
+    // 掐头
     while (i <= e1 && i <= e2) {
       const n1 = c1[i]
       const n2 = (c2[i] = optimized
@@ -1727,6 +1732,7 @@ function baseCreateRenderer(
     // 2. sync from end
     // a (b c)
     // d e (b c)
+    // 去尾
     while (i <= e1 && i <= e2) {
       const n1 = c1[e1]
       const n2 = (c2[e2] = optimized
@@ -1757,6 +1763,7 @@ function baseCreateRenderer(
     // (a b)
     // c (a b)
     // i = 0, e1 = -1, e2 = 0
+    // 扫尾工作
     if (i > e1) {
       if (i <= e2) {
         const nextPos = e2 + 1
@@ -1785,6 +1792,7 @@ function baseCreateRenderer(
     // a (b c)
     // (b c)
     // i = 0, e1 = 0, e2 = -1
+    // 老的中有多余，批量创建
     else if (i > e2) {
       while (i <= e1) {
         unmount(c1[i], parentComponent, parentSuspense, true)

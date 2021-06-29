@@ -215,6 +215,7 @@ export function createAppAPI<HostElement>(
       // vnode => dom
       mount(rootContainer: HostElement, isHydrate?: boolean): any {
         if (!isMounted) {
+          // 首次挂载，创建根组件对应vnode
           const vnode = createVNode(
             rootComponent as ConcreteComponent,
             rootProps
