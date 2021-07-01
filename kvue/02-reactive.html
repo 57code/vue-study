@@ -1,0 +1,41 @@
+<div id="app">
+  
+</div>
+
+<script>
+  function defineReactive(obj, key, val) {
+    Object.defineProperty(obj, key, {
+      get() {
+        console.log('get', key);
+        return val
+      },
+      set(v) {
+        if (v !== val) {
+          val = v
+          console.log('set', key);
+          update()
+        }
+      }
+    })
+  }
+
+  const obj = {}
+  // 对obj做响应式处理
+  defineReactive(obj, 'foo', 'foooo')
+
+  // 全量更新
+  function update() {
+    app.innerHTML = obj.foo
+    // dom...
+    // const vdom = render()
+    // patch(oldVdom, vdom)
+  }
+
+  
+  // 数据驱动
+  setInterval(() => {
+    obj.foo = new Date().toLocaleTimeString()
+  }, 1000);
+
+
+</script>
