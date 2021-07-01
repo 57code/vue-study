@@ -1,13 +1,21 @@
 <div id="app">
-  <p>{{counter}}</p>
+  <p @click="add">{{counter}}</p>
   <p k-text="counter"></p>
+  <p k-html="desc"></p>
+  <input type="text" k-model="counter">
 </div>
 <script src="./kvue.js"></script>
 <script>
   const app = new KVue({
     el: '#app',
     data: {
-      counter: 1
+      counter: 1,
+      desc: '<p>村长<span style="color:red">真棒</span></p>'
+    },
+    methods: {
+      add() {
+        this.counter++
+      }
     },
   })
   setInterval(() => {
