@@ -21,6 +21,7 @@ export default class Dep {
   }
 
   addSub (sub: Watcher) {
+    // dep知道所有管理watcher
     this.subs.push(sub)
   }
 

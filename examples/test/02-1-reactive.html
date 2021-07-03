@@ -17,8 +17,16 @@
         //            2      2    1
         const app = new Vue({
             el: '#demo',
-            data: { obj: { foo: 'foo' } },
+            // Observer: 2
+            // Dep:?
+            data: { // ob + dep
+                obj: { // ob + dep
+                    foo: 'foo'
+                }
+            },
             mounted() {
+                // this.obj.foo = 'fooooooooo'
+                // this.$set(this.obj, 'bar', 'bar')
                 setTimeout(() => {
                     this.obj.foo = 'fooooo'
                 }, 1000);
