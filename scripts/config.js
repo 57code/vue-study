@@ -27,6 +27,7 @@ const weexFactoryPlugin = {
 
 const aliases = require('./alias')
 const resolve = p => {
+  // web/entry-runtime-with-compiler.js
   const base = p.split('/')[0]
   if (aliases[base]) {
     return path.resolve(aliases[base], p.slice(base.length + 1))
@@ -35,6 +36,7 @@ const resolve = p => {
   }
 }
 
+// 各种不同输出格式配置项
 const builds = {
   // Runtime only (CommonJS). Used by bundlers e.g. Webpack & Browserify
   'web-runtime-cjs-dev': {

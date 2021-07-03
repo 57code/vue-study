@@ -29,6 +29,7 @@ export function initMixin (Vue: Class<Component>) {
     // a flag to avoid this being observed
     vm._isVue = true
     // merge options
+    // 1.选项合并：和系统选项和用户选项
     if (options && options._isComponent) {
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
@@ -48,14 +49,20 @@ export function initMixin (Vue: Class<Component>) {
       vm._renderProxy = vm
     }
     // expose real self
+    // 初始化过程
+    // new Vue()都发生了什么？
     vm._self = vm
-    initLifecycle(vm)
-    initEvents(vm)
-    initRender(vm)
+    initLifecycle(vm) // 例如$parent/$children实例属性
+    // <comp @my-click="onclick"></comp>
+    initEvents(vm) // 自定义事件
+    initRender(vm) // 插槽$slots、$scopedSlots/_c()/$createElement
     callHook(vm, 'beforeCreate')
-    initInjections(vm) // resolve injections before data/props
-    initState(vm)
-    initProvide(vm) // resolve provide after data/props
+    // 接下来都是组件状态处理
+    // provide/inject,
+    // react context
+    initInjections(vm) // 首先注入祖辈传递下来的数据
+    initState(vm) // props/data/computed/watch/methods
+    initProvide(vm) // 传递给后代
     callHook(vm, 'created')
 
     /* istanbul ignore if */
@@ -65,6 +72,7 @@ export function initMixin (Vue: Class<Component>) {
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
 
+    // 如果用户设置el选项，则自动挂载
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }

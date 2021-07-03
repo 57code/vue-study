@@ -13,14 +13,13 @@
         
     </div>
     <script>
-        // render > template > el
         // 创建实例
         const app = new Vue({
             el: '#demo',
             // template: '<div>template</div>',
             // template: '#app',
             // render(h){return h('div','render')},
-            data:{foo:'foo'}
+            data:{foo:'foo'},
         })
         console.log(app.$options.render);
         

@@ -1,5 +1,5 @@
 /* @flow */
-
+// src/core/index
 import Vue from 'core/index'
 import config from 'core/config'
 import { extend, noop } from 'shared/util'
@@ -31,9 +31,11 @@ extend(Vue.options.directives, platformDirectives)
 extend(Vue.options.components, platformComponents)
 
 // install platform patch function
+// 1.安装一个平台特有patch函数
 Vue.prototype.__patch__ = inBrowser ? patch : noop
 
 // public mount method
+// 2.实现挂载方法
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
