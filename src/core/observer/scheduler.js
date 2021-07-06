@@ -85,6 +85,7 @@ function flushSchedulerQueue () {
 
   // do not cache length because more watchers might be pushed
   // as we run existing watchers
+  // 遍历所有watcher，执行他们的run方法
   for (index = 0; index < queue.length; index++) {
     watcher = queue[index]
     if (watcher.before) {
@@ -163,9 +164,11 @@ function callActivatedHooks (queue) {
  */
 export function queueWatcher (watcher: Watcher) {
   const id = watcher.id
+  // 去重：watcher实例只能进入queue一次
   if (has[id] == null) {
     has[id] = true
     if (!flushing) {
+      // 入队
       queue.push(watcher)
     } else {
       // if already flushing, splice the watcher based on its id
@@ -177,6 +180,7 @@ export function queueWatcher (watcher: Watcher) {
       queue.splice(i + 1, 0, watcher)
     }
     // queue the flush
+    // 首次进来时候异步启动刷新队列任务
     if (!waiting) {
       waiting = true
 
@@ -184,6 +188,7 @@ export function queueWatcher (watcher: Watcher) {
         flushSchedulerQueue()
         return
       }
+      // 异步方式执行传入函数
       nextTick(flushSchedulerQueue)
     }
   }

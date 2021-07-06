@@ -39,6 +39,8 @@ let timerFunc
 // completely stops working after triggering a few times... so, if native
 // Promise is available, we will use it:
 /* istanbul ignore next, $flow-disable-line */
+// 根据当前执行平台支持性，选择某种异步方案
+// 首选Promise
 if (typeof Promise !== 'undefined' && isNative(Promise)) {
   const p = Promise.resolve()
   timerFunc = () => {
@@ -54,6 +56,7 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
 } else if (!isIE && typeof MutationObserver !== 'undefined' && (
   isNative(MutationObserver) ||
   // PhantomJS and iOS 7.x
+  // 次选MutationObserver
   MutationObserver.toString() === '[object MutationObserverConstructor]'
 )) {
   // Use MutationObserver where native Promise is not available,
@@ -84,8 +87,11 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   }
 }
 
+// 平时开发中使用的nextTick
 export function nextTick (cb?: Function, ctx?: Object) {
   let _resolve
+  // 传入的cb被封装为一个高阶函数，目的是处理错误
+  // 传入的cb会不放入callbacks数组中
   callbacks.push(() => {
     if (cb) {
       try {
@@ -98,6 +104,7 @@ export function nextTick (cb?: Function, ctx?: Object) {
     }
   })
   if (!pending) {
+    // 第一次进来的时候启动异步任务
     pending = true
     timerFunc()
   }

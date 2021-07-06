@@ -15,17 +15,31 @@
         // 创建实例
         const app = new Vue({
             el: '#demo',
-            data: { foo: 'ready~~' },
+            data: { 
+                foo: 'ready~~',
+                bar: 'lalala'
+            },
             mounted() {
+                // callbacks: [cb1, flushSchedulerQueue]
+                
+                
                 this.foo = Math.random()
                 console.log('1:' + this.foo);
                 this.foo = Math.random()
                 console.log('2:' + this.foo);
+
                 this.foo = Math.random()
                 console.log('3:' + this.foo);
                 // 异步行为，此时内容没变
                 console.log('p1.innerHTML:' + p1.innerHTML)
 
+
+                // callback: [flushSchedulerQueue]
+                // microTasksQueue: [flushCallbacks, cb]
+                Promise.resolve().then(() => {
+                    console.log('promise:' + p1.innerHTML)
+                })
+               
                 this.$nextTick(() => {
                     // 这里才是最新的值
                     console.log('p1.innerHTML:' + p1.innerHTML)

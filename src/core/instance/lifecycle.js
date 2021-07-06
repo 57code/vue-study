@@ -138,6 +138,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
   }
 }
 
+// 此方法是$mount调用
 export function mountComponent (
   vm: Component,
   el: ?Element,
@@ -166,6 +167,7 @@ export function mountComponent (
   }
   callHook(vm, 'beforeMount')
 
+  // 1.声明组件更新函数
   let updateComponent
   /* istanbul ignore if */
   if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
@@ -194,6 +196,7 @@ export function mountComponent (
   // we set this to vm._watcher inside the watcher's constructor
   // since the watcher's initial patch may call $forceUpdate (e.g. inside child
   // component's mounted hook), which relies on vm._watcher being already defined
+  // 2.选件组件渲染watcher
   new Watcher(vm, updateComponent, noop, {
     before () {
       if (vm._isMounted && !vm._isDestroyed) {
