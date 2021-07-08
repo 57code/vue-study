@@ -141,10 +141,12 @@ export function createPatchFunction (backend) {
     }
 
     vnode.isRootInsert = !nested // for transition enter check
+    // 首先判断传入vnode是不是一个自定义组件的VNode
     if (createComponent(vnode, insertedVnodeQueue, parentElm, refElm)) {
       return
     }
 
+    // 保留标签
     const data = vnode.data
     const children = vnode.children
     const tag = vnode.tag
@@ -163,6 +165,9 @@ export function createPatchFunction (backend) {
         }
       }
 
+      // 真实dom存入虚拟dom中：
+      // update =》 patchVnode(old, newVnode)
+      // diff: old.elm.xxx()
       vnode.elm = vnode.ns
         ? nodeOps.createElementNS(vnode.ns, tag)
         : nodeOps.createElement(tag, vnode)
@@ -188,10 +193,12 @@ export function createPatchFunction (backend) {
           insert(parentElm, vnode.elm, refElm)
         }
       } else {
+        // 向下递归创建
         createChildren(vnode, children, insertedVnodeQueue)
         if (isDef(data)) {
           invokeCreateHooks(vnode, insertedVnodeQueue)
         }
+        // 追加到父节点
         insert(parentElm, vnode.elm, refElm)
       }
 
@@ -208,10 +215,15 @@ export function createPatchFunction (backend) {
   }
 
   function createComponent (vnode, insertedVnodeQueue, parentElm, refElm) {
+    // 获取组件数据
     let i = vnode.data
     if (isDef(i)) {
+      // 判断缓存情况
       const isReactivated = isDef(vnode.componentInstance) && i.keepAlive
+      // 获取组件init管理钩子
       if (isDef(i = i.hook) && isDef(i = i.init)) {
+        // 执行它：创建组件实例并执行挂载：
+        // 组件挂载之后，得到了dom
         i(vnode, false /* hydrating */)
       }
       // after calling the init hook, if the vnode is a child component
@@ -219,7 +231,9 @@ export function createPatchFunction (backend) {
       // component also has set the placeholder vnode's elm.
       // in that case we can just return the element and be done.
       if (isDef(vnode.componentInstance)) {
+        // 属性、事件、样式等初始化
         initComponent(vnode, insertedVnodeQueue)
+        // 追加dom
         insert(parentElm, vnode.elm, refElm)
         if (isTrue(isReactivated)) {
           reactivateComponent(vnode, insertedVnodeQueue, parentElm, refElm)
@@ -787,7 +801,7 @@ export function createPatchFunction (backend) {
         const parentElm = nodeOps.parentNode(oldElm) // body
 
         // create new node
-        // vnode=》dom =》 appendChild
+        // vnode =》dom =》 appendChild
         createElm(
           vnode,
           insertedVnodeQueue,
