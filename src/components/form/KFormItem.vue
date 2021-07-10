@@ -10,12 +10,16 @@
 </template>
 
 <script>
+  import Validator from 'async-validator'
+
   export default {
+    inject: ['form'],
     props: {
       label: {
         type: String,
         default: ''
       },
+      prop: String
     },
     data() {
       return {
@@ -29,7 +33,18 @@
     },
     methods: {
       validate() {
-        console.log('validate!');
+        const rules = this.form.rules[this.prop]
+        const value = this.form.model[this.prop]
+        const validator = new Validator({[this.prop]: rules})
+        return validator.validate({[this.prop]: value}, errors => {
+          // 处理校验结果
+          if (errors) {
+            this.error = errors[0].message
+          } else {
+            // 校验通过
+            this.error = ''
+          }
+        })
       }
     },
   }
