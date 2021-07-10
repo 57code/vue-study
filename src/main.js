@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import App from './App.vue'
 import './plugins/element.js'
-// import router from './router'
-import router from './kvue-router'
-// import store from './store'
-import store from './kstore'
+import router from './router'
+// import router from './kvue-router'
+import store from './store'
+// import store from './kstore'
 
 Vue.config.productionTip = false
 // 事件总线
