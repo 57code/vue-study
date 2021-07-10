@@ -1,0 +1,31 @@
+<div id="app">
+  <h1>{{counter}}</h1>
+</div>
+
+
+
+<script src="kvue.js"></script>
+<script>
+  const app = new KVue({
+    el: '#app',
+    data: {
+      counter: 1
+    },
+    render(h) {
+      // const h1 = document.createElement('h1')
+      // h1.innerText = this.counter + ''
+      // return h1
+
+      // vnode方案
+      // return h('h1', {}, this.counter + '')
+      return h('h1', {}, [
+        h('p', {}, this.counter + ''),
+        h('p', {}, this.counter * 2 + ''),
+        h('p', {}, this.counter * 3 + ''),
+      ])
+    }
+  })
+  setInterval(() => {
+    app.counter++
+  }, 1000);
+</script>
