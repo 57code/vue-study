@@ -111,6 +111,7 @@ export type CreateAppFunction<HostElement> = (
 
 let uid = 0
 
+// 可以返回用户调用的那个createApp函数
 export function createAppAPI<HostElement>(
   render: RootRenderFunction,
   hydrate?: RootHydrateFunction
@@ -126,6 +127,7 @@ export function createAppAPI<HostElement>(
 
     let isMounted = false
 
+    // 这是app实例
     const app: App = (context.app = {
       _uid: uid++,
       _component: rootComponent as ConcreteComponent,
@@ -210,8 +212,11 @@ export function createAppAPI<HostElement>(
         return app
       },
 
+      // 挂载：vdom =》 dom =》 append
       mount(rootContainer: HostElement, isHydrate?: boolean): any {
         if (!isMounted) {
+          // init
+          // 创建根组件的vnode
           const vnode = createVNode(
             rootComponent as ConcreteComponent,
             rootProps
@@ -230,6 +235,10 @@ export function createAppAPI<HostElement>(
           if (isHydrate && hydrate) {
             hydrate(vnode as VNode<Node, Element>, rootContainer as any)
           } else {
+            // 初始化走这里
+            // ReactDOM.render(<App></App>)
+            // 此处render不同于组件的render函数
+            // 作用是将传入vnode转换dom并追加到rootContainer
             render(vnode, rootContainer)
           }
           isMounted = true

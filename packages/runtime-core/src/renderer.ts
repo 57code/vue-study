@@ -444,8 +444,8 @@ function baseCreateRenderer(
   // Note: functions inside this closure should use `const xxx = () => {}`
   // style in order to prevent being inlined by minifiers.
   const patch: PatchFn = (
-    n1,
-    n2,
+    n1, // prevVnode
+    n2, // newVnode
     container,
     anchor = null,
     parentComponent = null,
@@ -465,6 +465,7 @@ function baseCreateRenderer(
       n2.dynamicChildren = null
     }
 
+    // 根据虚拟dom类型走不同分支
     const { type, ref, shapeFlag } = n2
     switch (type) {
       case Text:
@@ -1206,6 +1207,7 @@ function baseCreateRenderer(
           optimized
         )
       } else {
+        // vue2中的mountComponent来了，等效
         mountComponent(
           n2,
           container,
@@ -1221,6 +1223,9 @@ function baseCreateRenderer(
     }
   }
 
+  // vue2：
+  // 1.updateComponent
+  // 2.new Watcher
   const mountComponent: MountComponentFn = (
     initialVNode,
     container,
@@ -1230,6 +1235,7 @@ function baseCreateRenderer(
     isSVG,
     optimized
   ) => {
+    // 1.创建组件实例
     const instance: ComponentInternalInstance = (initialVNode.component = createComponentInstance(
       initialVNode,
       parentComponent,
@@ -1254,6 +1260,8 @@ function baseCreateRenderer(
     if (__DEV__) {
       startMeasure(instance, `init`)
     }
+    // 组件初始化，等效于vue2中_init()
+    // 组件属性，响应式，插槽等等初始化
     setupComponent(instance)
     if (__DEV__) {
       endMeasure(instance, `init`)
@@ -1273,6 +1281,9 @@ function baseCreateRenderer(
       return
     }
 
+    // 3.安装组件副作用
+    // 类似于useEffect(callback, [dep])
+    // 内部自动建立依赖关系，如果这些数据变化，组件更新函数需要重新执行
     setupRenderEffect(
       instance,
       initialVNode,
@@ -1334,6 +1345,7 @@ function baseCreateRenderer(
     optimized
   ) => {
     // create reactive effect for rendering
+
     instance.update = effect(function componentEffect() {
       if (!instance.isMounted) {
         let vnodeHook: VNodeHook | null | undefined
@@ -1353,6 +1365,7 @@ function baseCreateRenderer(
         if (__DEV__) {
           startMeasure(instance, `render`)
         }
+        // 调用render获取子树
         const subTree = (instance.subTree = renderComponentRoot(instance))
         if (__DEV__) {
           endMeasure(instance, `render`)
@@ -1376,6 +1389,7 @@ function baseCreateRenderer(
           if (__DEV__) {
             startMeasure(instance, `patch`)
           }
+          // 递归
           patch(
             null,
             subTree,
@@ -2199,6 +2213,7 @@ function baseCreateRenderer(
     }
   }
 
+  // vdom =》 dom
   const render: RootRenderFunction = (vnode, container) => {
     if (vnode == null) {
       if (container._vnode) {
@@ -2232,10 +2247,10 @@ function baseCreateRenderer(
       Element
     >)
   }
-
+  // 返回的就是自定义渲染器
   return {
-    render,
-    hydrate,
+    render, // 返回vdom
+    hydrate, // 注水，用于SSR
     createApp: createAppAPI(render, hydrate)
   }
 }
