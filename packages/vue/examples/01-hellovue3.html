@@ -1,0 +1,30 @@
+<div id="app">
+  <h3>{{title}}</h3>
+  <comp></comp>
+</div>
+
+<script src="http://unpkg.com/vue@next"></script>
+<script>
+  // vue2: new Vue
+  // vue3: createApp()
+  const { createApp } = Vue
+  // vue3中移除静态方法，取而代之全是app实例方法
+  // Vue.component('comp', {})
+  // 函数式写法
+  const app = createApp({
+    data() {
+      return {
+        title: 'hello,vue3!'
+      }
+    },
+  })
+  app.component('comp', {
+    template: '<div>comp</div>',
+    // render(){
+    //   return h('div', {title:'xxx', onXXX(){}})
+    // }
+  })
+  // app.use(store)
+  // app.directive()
+  app.mount('#app')
+</script>

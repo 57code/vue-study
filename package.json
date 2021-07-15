@@ -5,7 +5,7 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "node scripts/dev.js",
+    "dev": "node scripts/dev.js --sourcemap",
     "build": "node scripts/build.js",
     "size": "node scripts/build.js vue runtime-dom size-check -p -f global",
     "lint": "eslint --ext .ts packages/*/src/**",
@@ -24,19 +24,6 @@
   "types": "test-dts/index.d.ts",
   "tsd": {
     "directory": "test-dts"
-  },
-  "gitHooks": {
-    "pre-commit": "ls-lint && lint-staged",
-    "commit-msg": "node scripts/verifyCommit.js"
-  },
-  "lint-staged": {
-    "*.js": [
-      "prettier --write"
-    ],
-    "*.ts?(x)": [
-      "eslint",
-      "prettier --parser=typescript --write"
-    ]
   },
   "engines": {
     "node": ">=10.0.0"

@@ -1,0 +1,107 @@
+<div id="app">
+  <h3>{{title}}</h3>
+</div>
+
+<script>
+  // 1.基本结构
+  const Vue = {
+    createApp(options) {
+      // web dom平台
+      const renderer = Vue.createRenderer({
+        querySelector(sel) {
+          return document.querySelector(sel)
+        },
+        insert(child, parent, anchor) {
+          // 不传递anchor，等效于appendChild
+          parent.insertBefore(child, anchor || null)
+        }
+      })
+      return renderer.createApp(options)
+    },
+    createRenderer({querySelector, insert}) {
+      // 返回渲染器
+      return {
+        createApp(options) {
+          // 返回的对象就是app实例
+          return {
+            mount(selector) {
+              const parent = querySelector(selector)
+
+              // dosomthing
+              // 根组件配置转换为dom
+              // template =》 render =》 vdom =》 dom
+              if (!options.render) {
+                options.render = this.compile(parent.innerHTML)
+              }
+
+              // 处理setup
+              if (options.setup) {
+                this.setupState = options.setup()
+              }
+              if (options.data) {
+                this.data = options.data()
+              }
+
+              this.proxy = new Proxy(this, {
+                get(target, key) {
+                  // 如果setupState中存在key，则用它，否则才使用data中的key
+                  if (key in target.setupState) {
+                    return target.setupState[key]
+                  } else {
+                    return target.data[key]
+                  }
+                },
+                set(target, key, val) {
+                  if (key in target.setupState) {
+                    target.setupState[key] = val
+                  } else {
+                    target.data[key] = val
+                  }
+                },
+              })
+
+              // 执行render，获取视图结构
+              const el = options.render.call(this.proxy)
+              parent.innerHTML = ''
+              // parent.appendChild(el)
+              insert(el, parent)
+            },
+            compile(template) {
+              // 编译：
+              // template =》 ast =》 ast => generate render()
+              // 传入template，返回render
+              return function render() {
+                const h3 = document.createElement('h3')
+                h3.textContent = this.title
+                return h3
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+</script>
+<script>
+  // vue2: new Vue
+  // vue3: createApp()
+  const { createApp } = Vue
+  // vue3中移除静态方法，取而代之全是app实例方法
+  // Vue.component('comp', {})
+  // 函数式写法
+  const app = createApp({
+    data() {
+      return {
+        title2: 'hello,vue3!'
+      }
+    },
+    setup() {
+      return {
+        title: 'vue3,hello!'
+      }
+    }
+  })
+  // app.use(store)
+  // app.directive()
+  app.mount('#app')
+</script>

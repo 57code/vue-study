@@ -1,0 +1,26 @@
+<div id="app">
+  <h3>{{state.title}}</h3>
+</div>
+
+<script src="http://unpkg.com/vue@next"></script>
+<script>
+  // vue2: new Vue
+  // vue3: createApp()
+  const { createApp, reactive } = Vue
+  // 函数式写法
+  const app = createApp({
+    setup() {
+      // 逻辑复用性
+      const state = reactive({
+        title: 'hello,vue3!'
+      })
+      // 。。。
+
+      
+      return {
+        state
+      }
+    }
+  })
+  app.mount('#app')
+</script>
