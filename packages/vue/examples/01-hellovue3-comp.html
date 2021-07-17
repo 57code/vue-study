@@ -1,24 +1,54 @@
 <div id="app">
-  <h3>{{state.title}}</h3>
+  <h3>{{title}}</h3>
+  <p @click="add">{{state.counter}}</p>
+  <p>{{doubleCounter}}</p>
 </div>
 
 <script src="http://unpkg.com/vue@next"></script>
 <script>
   // vue2: new Vue
   // vue3: createApp()
-  const { createApp, reactive } = Vue
+  const { createApp, reactive, computed, ref, onMounted } = Vue
+
+  function useCounter() {
+    const state = reactive({
+
+      counter: 0
+    })
+    // metheds
+    function add() {
+      state.counter++
+    }
+
+    // computed
+    const doubleCounter = computed(() => state.counter * 2)
+
+    return { state, add, doubleCounter }
+  }
+
+  function useTitle() {
+    const title = ref('hello,vue3!')
+    onMounted(() => {
+      setTimeout(() => {
+        // 修改值，需要访问value
+        title.value = 'vue3,hello!'
+      }, 1000)
+    })
+    return title
+  }
+
   // 函数式写法
   const app = createApp({
     setup() {
       // 逻辑复用性
-      const state = reactive({
-        title: 'hello,vue3!'
-      })
-      // 。。。
+      // 避免横跳
+      const { state, add, doubleCounter } = useCounter()
 
-      
+      // title 相关逻辑, ref返回Ref包装类型
+      const title = useTitle()
+
       return {
-        state
+        state, add, doubleCounter, title
       }
     }
   })

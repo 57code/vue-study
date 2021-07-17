@@ -1345,7 +1345,8 @@ function baseCreateRenderer(
     optimized
   ) => {
     // create reactive effect for rendering
-
+    // effect：组件的更新函数作为副作用传入effect中，会建立起内部的
+    // 响应式数据和它之间的依赖关系
     instance.update = effect(function componentEffect() {
       if (!instance.isMounted) {
         let vnodeHook: VNodeHook | null | undefined
@@ -1471,6 +1472,7 @@ function baseCreateRenderer(
         if (__DEV__) {
           startMeasure(instance, `patch`)
         }
+        // diff
         patch(
           prevTree,
           nextTree,

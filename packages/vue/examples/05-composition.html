@@ -1,0 +1,53 @@
+<meta charset="UTF-8">
+<script src="../dist/vue.global.js"></script>
+<div id="app">
+  <h1>logic reuse</h1>
+</div>
+<script>
+  const { createApp, reactive, onMounted, onUnmounted, toRefs } = Vue;
+  // ⿏标位置侦听
+  function useMouse() {
+    // 数据响应化
+    const state = reactive({ x: 0, y: 0 })
+    const update = e => {
+      state.x = e.pageX
+      state.y = e.pageY
+    }
+    onMounted(() => {
+      window.addEventListener('mousemove', update)
+    })
+    onUnmounted(() => {
+      window.removeEventListener('mousemove', update)
+    })
+    // 转换所有key为响应式数据
+    // 返回每个key对应的值，包装成Ref
+    return toRefs(state)
+  }
+  // 事件监测
+  function useTime() {
+    const state = reactive({ time: new Date() })
+    onMounted(() => {
+      setInterval(() => {
+        state.time = new Date()
+      }, 1000)
+    })
+    return toRefs(state)
+  }
+  // 逻辑组合
+  const MyComp = {
+    template: `
+      <div>x: {{ x }} y: {{ y }}</div>
+      <p>time: {{time}}</p>
+    `,
+    setup() {
+      // 使⽤⿏标逻辑
+      // 导出x,y  是两个Ref对象
+      const { x, y } = useMouse()
+      // 使⽤时间逻辑
+      const { time } = useTime()
+      // 返回使⽤
+      return { x, y, time }
+    }
+  }
+  createApp(MyComp).mount('#app')
+</script>
