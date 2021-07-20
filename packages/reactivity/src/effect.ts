@@ -233,6 +233,7 @@ export function trigger(
     }
   }
 
+  // 副作用函数的调用函数
   const run = (effect: ReactiveEffect) => {
     if (__DEV__ && effect.options.onTrigger) {
       effect.options.onTrigger({
@@ -245,7 +246,9 @@ export function trigger(
         oldTarget
       })
     }
+    // 如果effect设置了options.scheduler则用它执行effectFunction
     if (effect.options.scheduler) {
+      // 组件更新相当于调用queueJob(effect)
       effect.options.scheduler(effect)
     } else {
       effect()

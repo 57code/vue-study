@@ -11,10 +11,13 @@ __DEV__ && initDev()
 
 const compileCache: Record<string, RenderFunction> = Object.create(null)
 
+// 1.编译template为render函数
 function compileToFunction(
   template: string | HTMLElement,
   options?: CompilerOptions
 ): RenderFunction {
+  // compile('#app')
+  // template: '<div>xxx</div>'
   if (!isString(template)) {
     if (template.nodeType) {
       template = template.innerHTML
@@ -24,6 +27,7 @@ function compileToFunction(
     }
   }
 
+  // 获取上次编译缓存结果
   const key = template
   const cached = compileCache[key]
   if (cached) {
@@ -42,6 +46,7 @@ function compileToFunction(
     template = el ? el.innerHTML : ``
   }
 
+  // 真正编译函数
   const { code } = compile(
     template,
     extend(

@@ -1,0 +1,35 @@
+<div id="app">
+  <h3 :title="foo+'string'">{{title}}</h3>
+  <comp></comp>
+</div>
+
+<script src="../dist/vue.global.js"></script>
+<script>
+  // vue2: new Vue
+  // vue3: createApp()
+  const { createApp } = Vue
+  // vue3中移除静态方法，取而代之全是app实例方法
+  // Vue.component('comp', {})
+  // 函数式写法
+  const app = createApp({
+    data() {
+      return {
+        title: 'hello,vue3!'
+      }
+    },
+    mounted () {
+      setTimeout(() => {
+        this.title = 'vue3, hello!'
+      }, 1000)
+    },
+  })
+  app.component('comp', {
+    template: '<div>comp</div>',
+    // render(){
+    //   return h('div', {title:'xxx', onXXX(){}})
+    // }
+  })
+  // app.use(store)
+  // app.directive()
+  app.mount('#app')
+</script>

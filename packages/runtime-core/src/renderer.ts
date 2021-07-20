@@ -260,7 +260,7 @@ export const enum MoveType {
 }
 
 const prodEffectOptions = {
-  scheduler: queueJob,
+  scheduler: queueJob, // 此处设置该项，未来effect用它去调用
   // #1801, #2043 component render effects should allow recursive updates
   allowRecurse: true
 }
@@ -1347,6 +1347,7 @@ function baseCreateRenderer(
     // create reactive effect for rendering
     // effect：组件的更新函数作为副作用传入effect中，会建立起内部的
     // 响应式数据和它之间的依赖关系
+    // 参数2约束了componentEffect函数将来被调用的方式
     instance.update = effect(function componentEffect() {
       if (!instance.isMounted) {
         let vnodeHook: VNodeHook | null | undefined
@@ -1695,9 +1696,10 @@ function baseCreateRenderer(
     let e1 = c1.length - 1 // prev ending index
     let e2 = l2 - 1 // next ending index
 
-    // 1. sync from start
+    // 1. sync from start:同步开头
     // (a b) c
     // (a b) d e
+    // 掐头
     while (i <= e1 && i <= e2) {
       const n1 = c1[i]
       const n2 = (c2[i] = optimized
@@ -1747,6 +1749,7 @@ function baseCreateRenderer(
     }
 
     // 3. common sequence + mount
+    // 创建
     // (a b)
     // (a b) c
     // i = 2, e1 = 1, e2 = 2

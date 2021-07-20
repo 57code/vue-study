@@ -53,6 +53,7 @@ export function nextTick(fn?: () => void): Promise<void> {
   return fn ? p.then(fn) : p
 }
 
+// 传入副作用，排队
 export function queueJob(job: SchedulerJob) {
   // the dedupe search uses the startIndex argument of Array.includes()
   // by default the search index includes the current job that is being run
@@ -69,6 +70,7 @@ export function queueJob(job: SchedulerJob) {
     job !== currentPreFlushParentJob
   ) {
     queue.push(job)
+    // 启动异步任务
     queueFlush()
   }
 }
@@ -76,6 +78,7 @@ export function queueJob(job: SchedulerJob) {
 function queueFlush() {
   if (!isFlushing && !isFlushPending) {
     isFlushPending = true
+    // 直接将flushJobs做为微任务入队
     currentFlushPromise = resolvedPromise.then(flushJobs)
   }
 }
