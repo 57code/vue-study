@@ -2,6 +2,7 @@
   <h3>{{title}}</h3>
 </div>
 
+<script src="./06-reactive.js"></script>
 <script>
   // 1.基本结构
   const Vue = {
@@ -18,7 +19,7 @@
       })
       return renderer.createApp(options)
     },
-    createRenderer({querySelector, insert}) {
+    createRenderer({ querySelector, insert }) {
       // 返回渲染器
       return {
         createApp(options) {
@@ -60,11 +61,14 @@
                 },
               })
 
-              // 执行render，获取视图结构
-              const el = options.render.call(this.proxy)
-              parent.innerHTML = ''
-              // parent.appendChild(el)
-              insert(el, parent)
+              this.update = effect(() => {
+                // 执行render，获取视图结构
+                const el = options.render.call(this.proxy)
+                parent.innerHTML = ''
+                // parent.appendChild(el)
+                insert(el, parent)
+              })
+
             },
             compile(template) {
               // 编译：
@@ -96,9 +100,13 @@
       }
     },
     setup() {
-      return {
+      const state = reactive({
         title: 'vue3,hello!'
-      }
+      })
+      setTimeout(() => {
+        state.title = 'hello,vue3!!!!!!'
+      }, 2000);
+      return state
     }
   })
   // app.use(store)

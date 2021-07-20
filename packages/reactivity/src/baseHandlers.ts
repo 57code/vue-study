@@ -87,6 +87,7 @@ function createGetter(isReadonly = false, shallow = false) {
       return Reflect.get(arrayInstrumentations, key, receiver)
     }
 
+    // 获取值
     const res = Reflect.get(target, key, receiver)
 
     const keyIsSymbol = isSymbol(key)
@@ -99,6 +100,7 @@ function createGetter(isReadonly = false, shallow = false) {
     }
 
     if (!isReadonly) {
+      // 依赖收集
       track(target, TrackOpTypes.GET, key)
     }
 

@@ -65,6 +65,7 @@ export function reactive(target: object) {
   if (target && (target as Target)[ReactiveFlags.IS_READONLY]) {
     return target
   }
+  // 创建响应式对象
   return createReactiveObject(
     target,
     false,

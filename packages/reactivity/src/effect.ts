@@ -59,6 +59,7 @@ export function effect<T = any>(
     fn = fn.raw
   }
   const effect = createReactiveEffect(fn, options)
+  // lazy是computed默认设置
   if (!options.lazy) {
     effect()
   }

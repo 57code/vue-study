@@ -518,6 +518,7 @@ export function setupComponent(
   initProps(instance, props, isStateful, isSSR)
   initSlots(instance, children)
 
+  // 状态组件执行setupStatefulComponent
   const setupResult = isStateful
     ? setupStatefulComponent(instance, isSSR)
     : undefined
@@ -552,6 +553,7 @@ function setupStatefulComponent(
   instance.accessCache = {}
   // 1. create public instance / render proxy
   // also mark it raw so it's never observed
+  // options.data, setup
   instance.proxy = new Proxy(instance.ctx, PublicInstanceProxyHandlers)
   if (__DEV__) {
     exposePropsOnRenderContext(instance)
@@ -564,6 +566,7 @@ function setupStatefulComponent(
 
     currentInstance = instance
     pauseTracking()
+    // 执行setup函数
     const setupResult = callWithErrorHandling(
       setup,
       instance,
@@ -628,6 +631,7 @@ export function handleSetupResult(
       }`
     )
   }
+  // 处理options
   finishComponentSetup(instance, isSSR)
 }
 
