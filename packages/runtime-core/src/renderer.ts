@@ -1721,7 +1721,7 @@ function baseCreateRenderer(
       }
       i++
     }
-
+    
     // 2. sync from end
     // a (b c)
     // d e (b c)
