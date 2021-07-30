@@ -29,6 +29,9 @@ export default {
     SlotExample,
     TreeExample
   },
+  mounted () {
+    this.$router
+  },
 }
 </script>
 
