@@ -5,10 +5,9 @@
     <p @click="$store.dispatch('add')">async:{{ $store.state.counter }}</p>
     <p>doubleCounter: {{$store.getters.doubleCounter}}</p>
     <!-- 组件通信 -->
-    <Communication></Communication>
+    <!-- <Communication></Communication> -->
     <!-- 表单 -->
-    <!-- <FormExample></FormExample> -->
-
+    <FormExample></FormExample>
     <!-- 插槽 -->
     <!-- <SlotExample></SlotExample> -->
     <!-- 递归 -->

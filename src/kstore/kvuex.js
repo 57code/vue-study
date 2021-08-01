@@ -1,68 +1,78 @@
-let Vue
-
 // 实现一个插件
+// 实现Store
+let Vue;
+
 class Store {
   constructor(options) {
-    console.log(Vue, options);
-    // 1.Vue.util.defineReactive(this, 'state', options.state)
-    // 2.new Vue()
     this._mutations = options.mutations
     this._actions = options.actions
-    
+    // 响应式处理的数据
+    // this.state = new Vue({
+    //   data: options.state
+    // })
+    // setInterval(() => {
+    //   this.state.counter++
+    // }, 1000);
     this._vm = new Vue({
-      data() {
-        return {
-          // 加上两个$, 不让Vue做代理
-          $$state: options.state
-        }
-      },
+      data: {
+        // 添加$$, Vue就不会代理
+        $$state: options.state
+      }
     })
 
     this.commit = this.commit.bind(this)
     this.dispatch = this.dispatch.bind(this)
+
+    // getters
+    
   }
 
   get state() {
-    console.log(this._vm);
     return this._vm._data.$$state
   }
+
   set state(v) {
-    console.error('不能直接覆盖state，你可以使用replaceState');
+    console.error('请使用replaceState重置状态');
   }
 
-  // commit('add', 10)
+  // 修改状态，commit('add', payload)
   commit(type, payload) {
+    // 1.根据type获取mutation
     const mutation = this._mutations[type]
-    if (!mutation) {
-      console.error('错误mutation名称');
-      return
+
+    if(!mutation) {
+      console.error('mutation不存在');
+      return 
     }
+
     mutation(this.state, payload)
   }
 
+  // dispatch('add', payload)
   dispatch(type, payload) {
     const action = this._actions[type]
-    if (!action) {
-      console.error('错误action名称');
-      return
+
+    if(!action) {
+      console.error('action不存在');
+      return 
     }
+
     action(this, payload)
   }
-}
 
+}
 function install(_Vue) {
-  Vue = _Vue
+  Vue = _Vue;
 
   // 注册$store
   Vue.mixin({
     beforeCreate() {
       if (this.$options.store) {
-        // console.log('我是根实例', this);
         Vue.prototype.$store = this.$options.store
       }
     }
   })
 }
 
-// { Store }代表Vuex
+// 现在导出的就是Vuex
 export default { Store, install };

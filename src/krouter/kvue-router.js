@@ -1,60 +1,69 @@
-// 我们的自己的插件
-// 实现⼀个插件
-// 实现VueRouter类
-// 处理路由选项
-// 监控url变化，hashchange
-// 响应这个变化
-// 实现install⽅法
+// spa页面不能刷新：
+// 1.hash
+// 2.history api
+
+// url变化显示对应内容：
+// 1.router-view：占位容器
+// 2.数据响应式
 
 let Vue;
 
-// new VueRouter({routes})
-class KVueRouter {
+// 1.实现插件
+class VueRouter {
   constructor(options) {
-    this.$options = options;
+    this.options = options;
 
-    // current必须是响应式的
-    // 如何做到？
-    // set只能在响应式对象上动态添加新属性
-    // new Vue({data() {
-    //   return {
-    //     key: value
-    //   }
-    // },})
+    // 数据响应式，current必须是响应式的，这样他变化，使用它的组件就会重新render
+    // 如何造一个响应式数据
+    // 方式1：借鸡生蛋 - new Vue({data: {current: '/'}})
+    // 方式2：Vue.util.defineReactive(obj, 'current', '/')
+    // Vue.set(this)
+    // Vue.set(obj, 'key', 'val')
     Vue.util.defineReactive(
       this,
       "current",
       window.location.hash.slice(1) || "/"
     );
-    // this.current = window.location.hash.slice(1) || '/'
-    // 监控hashchange
+
+    // 监控url变化
     window.addEventListener("hashchange", () => {
-      console.log(this.current);
       this.current = window.location.hash.slice(1);
     });
   }
 }
 
-// vue插件：需要实现一个静态方法install
-// install(Vue, ...)
-KVueRouter.install = function(_Vue) {
+// 插件要实现一个install方法
+VueRouter.install = function(_Vue) {
   Vue = _Vue;
 
-  // console.log(this);
-  // $router注册
-  // 延迟执行注册代码
-  // 混入：Vue.mixin({beforeCreate(){}})
+  // 注册router实例
+  // 通过全局混入：Vue.mixin({beforeCreate})
   Vue.mixin({
     beforeCreate() {
-      // console.log(this); // this是组件实例
-      // 如果当前this是根组件，它选项中必有一个router
+      // 仅在根组件创建时执行一次
       if (this.$options.router) {
         Vue.prototype.$router = this.$options.router;
       }
     },
   });
 
-  // 两个全局组件: router-link、router-view
+  // 注册router-view和router-link
+  Vue.component("router-view", {
+    render(h) {
+      // url => component
+      // url
+      // window.location.hash
+      // router: this.$router
+      let component = null;
+      const { current, options } = this.$router;
+      const route = options.routes.find((route) => route.path === current);
+      if (route) {
+        component = route.component;
+      }
+      console.log(current, options);
+      return h(component);
+    },
+  });
   Vue.component("router-link", {
     props: {
       to: {
@@ -65,31 +74,10 @@ KVueRouter.install = function(_Vue) {
     render(h) {
       // <router-link to="/about">xxx</router-link>
       // <a href="#/about">xxx</a>
-      // return <a href={"#" + this.to}>{this.$slots.default}</a>
+      // return <a href={"#" + this.to}>{this.$slots.default}</a>;
       return h("a", { attrs: { href: "#" + this.to } }, this.$slots.default);
-    },
-  });
-  Vue.component("router-view", {
-    // render什么时候会执行？
-    // init执行一次
-    // 未来响应式数据变化会再次执行
-    render(h) {
-      // 1.获取hash部分#/about
-      // this.$router.$options.routes
-      // 2.根据上面地址获取对应组件配置About
-      // 3.h(About)
-      console.log(this.$router.$options);
-      console.log(this.$router.current);
-      let component = null;
-      const route = this.$router.$options.routes.find(
-        (route) => route.path === this.$router.current
-      );
-      if (route) {
-        component = route.component;
-      }
-      return h(component);
     },
   });
 };
 
-export default KVueRouter;
+export default VueRouter;

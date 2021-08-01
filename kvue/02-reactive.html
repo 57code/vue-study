@@ -1,0 +1,32 @@
+<div id="app"></div>
+
+<script>
+  // 给一个obj定义一个响应式的属性
+  function defineReactive(obj, key, val) {
+    Object.defineProperty(obj, key, {
+      get() {
+        console.log('get', key);
+        return val
+      },
+      set(newVal) {
+        if (newVal !== val) {
+          console.log('set', key);
+          val = newVal
+          // 视图更新
+          update()
+        }
+      },
+    })
+  }
+  
+  const obj = {}
+  defineReactive(obj, 'foo', 'foo')
+
+  function update() {
+    app.innerText = obj.foo
+  }
+
+  setInterval(() => {
+    obj.foo = new Date().toLocaleTimeString()
+  }, 1000);
+</script>

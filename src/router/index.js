@@ -2,8 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 
-// 1.VueRouter是一个vue插件
-// use调用的时候回执行内部install方法
 Vue.use(VueRouter)
 
 const routes = [
