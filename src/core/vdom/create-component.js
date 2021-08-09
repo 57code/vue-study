@@ -33,7 +33,6 @@ import {
 } from 'weex/runtime/recycle-list/render-component-template'
 
 // inline hooks to be invoked on component VNodes during patch
-// 组件虚拟dom钩子
 const componentVNodeHooks = {
   init (vnode: VNodeWithData, hydrating: boolean): ?boolean {
     // 如果当前组件是缓存的，keep-alive中的组件
@@ -47,13 +46,10 @@ const componentVNodeHooks = {
       const mountedNode: any = vnode // work around flow
       componentVNodeHooks.prepatch(mountedNode, mountedNode)
     } else {
-      // 通常走这里，初始化
-      // 获取组件实例并执行挂载
       const child = vnode.componentInstance = createComponentInstanceForVnode(
         vnode,
         activeInstance
       )
-      // 如果存在父组件和子组件嵌套，两者生命周期顺序是怎样的？
       // parent created
       // child created
       // child mounted

@@ -46,7 +46,6 @@ export function createElement (
   return _createElement(context, tag, data, children, normalizationType)
 }
 
-// 此方法就是用户实际调用h，最终返回vnode
 export function _createElement (
   context: Component,
   tag?: string | Class<Component> | Function | Object,
@@ -96,13 +95,10 @@ export function _createElement (
     children = simpleNormalizeChildren(children)
   }
 
-  // vnode就是最终返回虚拟dom
   let vnode, ns
-  // 根据传入标签类型和名称，做对应处理
   if (typeof tag === 'string') {
     let Ctor
     ns = (context.$vnode && context.$vnode.ns) || config.getTagNamespace(tag)
-    // 保留标签，例如div
     if (config.isReservedTag(tag)) {
       // platform built-in elements
       if (process.env.NODE_ENV !== 'production' && isDef(data) && isDef(data.nativeOn)) {
@@ -111,14 +107,12 @@ export function _createElement (
           context
         )
       }
-      // 直接创建虚拟dom
       vnode = new VNode(
         config.parsePlatformTagName(tag), data, children,
         undefined, undefined, context
       )
     } else if ((!data || !data.pre) && isDef(Ctor = resolveAsset(context.$options, 'components', tag))) {
       // component
-      // 自定义组件：获取构造函数，之前注册名称就派上用场了，从components选项中获取即可
       vnode = createComponent(Ctor, data, context, children, tag)
     } else {
       // unknown or unlisted namespaced elements
