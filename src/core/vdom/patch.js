@@ -130,6 +130,7 @@ export function createPatchFunction (backend) {
 
   let creatingElmInVPre = 0
 
+  // 递归遍历传入虚拟dom，将它创建为一颗dom树🌲
   function createElm (
     vnode,
     insertedVnodeQueue,
@@ -150,10 +151,12 @@ export function createPatchFunction (backend) {
 
     vnode.isRootInsert = !nested // for transition enter check
     
+    // 如果传入vnode是一个自定义组件的，走if逻辑
     if (createComponent(vnode, insertedVnodeQueue, parentElm, refElm)) {
       return
     }
 
+    // 原生标签走这里
     const data = vnode.data
     const children = vnode.children
     const tag = vnode.tag
@@ -197,6 +200,7 @@ export function createPatchFunction (backend) {
           insert(parentElm, vnode.elm, refElm)
         }
       } else {
+        // 向下递归
         createChildren(vnode, children, insertedVnodeQueue)
         if (isDef(data)) {
           invokeCreateHooks(vnode, insertedVnodeQueue)
@@ -217,17 +221,21 @@ export function createPatchFunction (backend) {
   }
 
   // 如果是自定义组件，执行它的组件vnode钩子
+  // 从vnode中获取组件初始化钩子
   function createComponent (vnode, insertedVnodeQueue, parentElm, refElm) {
     let i = vnode.data
     if (isDef(i)) {
       const isReactivated = isDef(vnode.componentInstance) && i.keepAlive
       if (isDef(i = i.hook) && isDef(i = i.init)) {
+        // 执行自定义组件初始化钩子init
+        // 创建自定义组件实例并挂载之
         i(vnode, false /* hydrating */)
       }
       // after calling the init hook, if the vnode is a child component
       // it should've created a child instance and mounted it. the child
       // component also has set the placeholder vnode's elm.
       // in that case we can just return the element and be done.
+      // 如果前面执行成功，那么将获得组件实例
       if (isDef(vnode.componentInstance)) {
         initComponent(vnode, insertedVnodeQueue)
         insert(parentElm, vnode.elm, refElm)
@@ -246,6 +254,7 @@ export function createPatchFunction (backend) {
     }
     vnode.elm = vnode.componentInstance.$el
     if (isPatchable(vnode)) {
+      // 创建钩子负责处理组件的属性、事件等等
       invokeCreateHooks(vnode, insertedVnodeQueue)
       setScope(vnode)
     } else {

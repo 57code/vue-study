@@ -65,5 +65,6 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   initUse(Vue)
   initMixin(Vue)
   initExtend(Vue)
+
   initAssetRegisters(Vue)
 }

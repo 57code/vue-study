@@ -1,4 +1,5 @@
-<div id="app"></div>
+<div id="app">{{counter}}</div>
+
 <script src="kvue.js"></script>
 <script>
   const app = new KVue({
@@ -7,17 +8,15 @@
       counter: 1
     },
     render(h) {
-      // 描述视图
-      // const h1 = document.createElement('h1')
-      // h1.textContent = this.counter 
-      // return h1
+      // const div = document.createElement('div')
+      // div.textContent = this.counter
+      // return div
 
-      // vnode
-      // return h('h1', null, this.counter + '')
-      return h('h1', {id:'xxx'}, [
+      // return h('div', null, this.counter + '')
+      return h('div', null, [
         h('p', null, this.counter + ''),
-        h('p', null, this.counter + ''),
-        h('p', null, this.counter + ''),
+        h('p', null, this.counter * 2 + ''),
+        h('p', null, this.counter * 3 + ''),
       ])
     }
   })

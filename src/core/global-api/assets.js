@@ -26,8 +26,12 @@ export function initAssetRegisters (Vue: GlobalAPI) {
         // 如果是对象，说明传入是组件配置，此时需要做转换：对象 =》组件构造函数
         // 这是为后续组件实例化做准备：new Ctor()
         if (type === 'component' && isPlainObject(definition)) {
+          // Vue.component('comp', {})
           definition.name = definition.name || id
           // 构造函数获取：Vue.extend(obj) => VueComponent
+          // const Ctor = Vue.extend({})
+          // const comp = new Ctor()
+          // comp.$mount()
           definition = this.options._base.extend(definition)
         }
         if (type === 'directive' && typeof definition === 'function') {
