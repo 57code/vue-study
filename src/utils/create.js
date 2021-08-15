@@ -1,4 +1,5 @@
 import Vue from 'vue'
+<<<<<<< HEAD
 import Notice from '@/components/Notice.vue'
 
 function create(Component, props) {
@@ -35,4 +36,27 @@ export default {
 
     //$alert
   }
+=======
+
+export default function create(Component, props) {
+  // 1.创建Component组件的实例
+  const Ctor = Vue.extend(Component)
+  const comp = new Ctor({
+    propsData: props
+  })
+  // 2.挂载：将其实例挂载到body
+  comp.$mount() // vnode => dom
+
+  // 3.手动追加
+  document.body.appendChild(comp.$el)
+
+  // 4.淘汰方法
+  comp.remove = function() {
+    document.body.removeChild(comp.$el)
+    comp.$destroy()
+  }
+  
+  return comp
+
+>>>>>>> 2c65389d71cbe23b8c86eeb55380a66a3bc0c45f
 }
