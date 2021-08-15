@@ -8,17 +8,12 @@
 export default {
   provide() {
     return {
-<<<<<<< HEAD
       form: this
-=======
-      form: this,
->>>>>>> 2c65389d71cbe23b8c86eeb55380a66a3bc0c45f
     };
   },
   props: {
     model: {
       type: Object,
-<<<<<<< HEAD
       required: true
     },
     rules: {
@@ -44,25 +39,3 @@ export default {
 
 <style scoped>
 </style>
-=======
-      required: true,
-    },
-    rules: Object,
-  },
-  methods: {
-    validate(cb) {
-      // 1.获取所有items，执行他们的validate，统一处理返回Promise
-      const results = this.$children
-        .filter((item) => item.prop)
-        .map((item) => item.validate());
-        console.log(results);
-      Promise.all(results)
-        .then(() => cb(true))
-        .catch(() => cb(false));
-    },
-  },
-};
-</script>
-
-<style lang="scss" scoped></style>
->>>>>>> 2c65389d71cbe23b8c86eeb55380a66a3bc0c45f
