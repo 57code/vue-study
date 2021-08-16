@@ -1,0 +1,135 @@
+<div id="app">
+  <h3>{{title1}}</h3>
+</div>
+
+<script>
+  
+  const Vue = {
+    // 提供新的自定义渲染器API
+    createRenderer({querySelector, insert}) {
+      // 给用户返回一个渲染器对象renderer
+      // 用户可以传入平台特性操作
+      return {
+        createApp(options) {
+          // 返回一个App实例
+          return {
+            mount(selector) {
+              // ...
+              // 将传入选项中的数据解析
+              // 执行渲染函数获得视图信息（vdom）
+              // 转换为dom并追加
+              // render  update
+              // vue2:
+              // mountComponent()
+              // updateComponent
+              //   render
+              //   _update()
+              //   patch()
+              // new Watcher
+
+              // 0.获取parent
+              const parent = querySelector(selector)
+
+              // 1.渲染
+              // 看看有没有render函数
+              // 如果没有如何获取：编译 template => render
+              // parse => transform => codegen
+              if (!options.render) {
+                options.render = this.compile(parent.innerHTML)
+              }
+
+              // 如果用户设置setup，它的优先级较高
+              if (options.setup) {
+                // 保存setup结果在app实例上面
+                this.setupState = options.setup()
+              }
+              // 如果还有vue2中选项依然要处理
+              if (options.data) {
+                this.data = options.data()
+              }
+              // other options
+
+              // 构造一个新的render函数上下文
+              this.proxy = new Proxy(this, {
+                get(target, key) {
+                  // 如果key在setupState中就用这个，否则从data获取
+                  if (key in target.setupState) {
+                    return target.setupState[key]
+                  } else {
+                    return target.data[key]
+                  }
+                },
+                // set() {}
+              })
+
+              // 2.执行render获取视图并追加
+              const el = options.render.call(this.proxy)
+              parent.innerHTML = ''
+              parent.appendChild(el)
+              insert(el, parent)
+
+            },
+            compile(template) {
+              // 解析template  。。。 转换render
+              // 获得render
+              return function render() {
+                const h3 = document.createElement('h3')
+                h3.textContent = this.title2
+                return h3
+              }
+            }
+          }
+        }
+      }
+    },
+
+    // 给web平台提供一个createApp
+    createApp(options) {
+      // 返回一个App实例
+      const renderer = this.createRenderer({
+        querySelector(sel) {
+          return document.querySelector(sel)
+        },
+        insert(child, parent, anchor) {
+          // 不传递anchor，则是appendChild行为
+          parent.insertBefore(child, anchor || null)
+        },
+      })
+      return renderer.createApp(options)
+    }
+  }
+</script>
+<script>
+  // 1.初始化
+  // new Vue
+  // vue3: createApp()
+  // 工厂函数方式
+  // 2.composition-api
+  // const { createApp } = Vue
+  // 静态方法
+  // Vue.component('comp', {})
+  const app1 = Vue.createApp({
+    data() {
+      return {
+        title1: 'hello,vue3!'
+      }
+    },
+    setup() {
+      // 显示声明响应式数据
+      // const state = reactive({
+      //   title: 'vue3,hello!'
+      // })
+      return {
+        title2: 'vue3,hello!'
+      }
+    },
+
+  })
+  // 实例方法
+  // .component('comp', {
+  //   template: '<div>comp</div>'
+  // })
+  // .use(store)
+  // .use(router)
+  app1.mount('#app')
+</script>

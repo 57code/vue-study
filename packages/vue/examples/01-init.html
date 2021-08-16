@@ -1,0 +1,47 @@
+<div id="app">
+  <h3>{{title}}</h3>
+  <comp></comp>
+</div>
+
+<script src="http://unpkg.com/vue@next"></script>
+<script>
+  // 动机：
+  // 1.类型友好 ts
+  // 2.利于摇树优化tree-shaking
+  // 3.API简化、一致性：render函数、sync修饰符、自定义指令
+  // v-model .sync
+  // 4.复用性： composition api
+  // 5.性能优化：响应式、编译器
+  // 6.扩展性：自定义渲染器 customRenderer
+
+  // 1.初始化
+  // new Vue
+  // vue3: createApp()
+  // 工厂函数方式
+  // 2.composition-api
+  const {createApp, reactive} = Vue
+  // 静态方法
+  // Vue.component('comp', {})
+  const app1 = createApp({
+    data() {
+      return {
+        title: 'hello,vue3!'
+      }
+    },
+    setup() {
+      // 显示声明响应式数据
+      const state = reactive({
+        title: 'vue3,hello!'
+      })
+      return state
+    },
+
+  })
+  // 实例方法
+  .component('comp', {
+    template: '<div>comp</div>'
+  })
+  // .use(store)
+  // .use(router)
+  .mount('#app')
+</script>
