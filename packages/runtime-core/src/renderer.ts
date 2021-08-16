@@ -1186,6 +1186,7 @@ function baseCreateRenderer(
     }
   }
 
+  // 组件处理
   const processComponent = (
     n1: VNode | null,
     n2: VNode,
@@ -1230,6 +1231,7 @@ function baseCreateRenderer(
     isSVG,
     optimized
   ) => {
+    // 1.创建组件实例
     const instance: ComponentInternalInstance = (initialVNode.component = createComponentInstance(
       initialVNode,
       parentComponent,
@@ -1254,6 +1256,8 @@ function baseCreateRenderer(
     if (__DEV__) {
       startMeasure(instance, `init`)
     }
+    // 安装组件：组件初始化
+    // new Vue  _init() 实例属性、方法初始化、数据响应式、两个生命周期钩子
     setupComponent(instance)
     if (__DEV__) {
       endMeasure(instance, `init`)
@@ -1273,6 +1277,7 @@ function baseCreateRenderer(
       return
     }
 
+    // 更新机制
     setupRenderEffect(
       instance,
       initialVNode,
@@ -2199,12 +2204,15 @@ function baseCreateRenderer(
     }
   }
 
+  // 接收vnode，转为dom，并追加
   const render: RootRenderFunction = (vnode, container) => {
     if (vnode == null) {
       if (container._vnode) {
         unmount(container._vnode, null, null, true)
       }
     } else {
+      // 只要vnode =》 dom
+      // 初始化时参数1 是null，则走初始化逻辑，不会走diff
       patch(container._vnode || null, vnode, container)
     }
     flushPostFlushCbs()
@@ -2233,9 +2241,11 @@ function baseCreateRenderer(
     >)
   }
 
+  // 返回的就是渲染器renderer
+  // ReactDOM.render(<App></App>, '#demo')
   return {
-    render,
-    hydrate,
+    render, // 传入vdom，转换dom，追加到宿主
+    hydrate, // 用于SSR
     createApp: createAppAPI(render, hydrate)
   }
 }

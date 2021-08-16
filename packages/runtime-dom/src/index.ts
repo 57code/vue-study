@@ -29,7 +29,9 @@ let renderer: Renderer<Element> | HydrationRenderer
 
 let enabledHydration = false
 
+// 返回单例的渲染器实例
 function ensureRenderer() {
+  // 如何获取一个渲染器
   return renderer || (renderer = createRenderer<Node, Element>(rendererOptions))
 }
 
@@ -50,7 +52,9 @@ export const hydrate = ((...args) => {
   ensureHydrationRenderer().hydrate(...args)
 }) as RootHydrateFunction
 
+// 外面用户调用的createApp
 export const createApp = ((...args) => {
+  // createApp如何返回一个App实例
   const app = ensureRenderer().createApp(...args)
 
   if (__DEV__) {
