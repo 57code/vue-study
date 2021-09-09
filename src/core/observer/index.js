@@ -34,6 +34,8 @@ export function toggleObserving (value: boolean) {
  * object's property keys into getter/setters that
  * collect dependencies and dispatch updates.
  */
+
+// __ob__
 export class Observer {
   value: any;
   dep: Dep;

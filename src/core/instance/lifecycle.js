@@ -143,6 +143,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
   }
 }
 
+// $mount -> mountComponent
 // 真正的挂载
 export function mountComponent (
   vm: Component,
