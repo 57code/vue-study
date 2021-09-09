@@ -130,6 +130,7 @@ export function createPatchFunction (backend) {
 
   let creatingElmInVPre = 0
 
+  // 传入一个虚拟dom，创建对应真实dom
   function createElm (
     vnode,
     insertedVnodeQueue,
@@ -150,10 +151,12 @@ export function createPatchFunction (backend) {
 
     vnode.isRootInsert = !nested // for transition enter check
     
+    // 判断传入vnode是否是自定义组件
     if (createComponent(vnode, insertedVnodeQueue, parentElm, refElm)) {
       return
     }
 
+    // 保留标签创建
     const data = vnode.data
     const children = vnode.children
     const tag = vnode.tag
@@ -197,6 +200,7 @@ export function createPatchFunction (backend) {
           insert(parentElm, vnode.elm, refElm)
         }
       } else {
+        // 向下递归
         createChildren(vnode, children, insertedVnodeQueue)
         if (isDef(data)) {
           invokeCreateHooks(vnode, insertedVnodeQueue)
