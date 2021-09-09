@@ -33,8 +33,9 @@ import {
 } from 'weex/runtime/recycle-list/render-component-template'
 
 // inline hooks to be invoked on component VNodes during patch
-
+// 组件虚拟dom钩子，patch()的时候会调用它们
 const componentVNodeHooks = {
+  // 表示组件初始化
   init (vnode: VNodeWithData, hydrating: boolean): ?boolean {
     // 如果当前组件是缓存的，keep-alive中的组件
     // 直接从缓存获取，不需要在创建
@@ -47,15 +48,16 @@ const componentVNodeHooks = {
       const mountedNode: any = vnode // work around flow
       componentVNodeHooks.prepatch(mountedNode, mountedNode)
     } else {
-      // 全新创建过程
+      // 创建组件实例，首先获取构造函数
       const child = vnode.componentInstance = createComponentInstanceForVnode(
         vnode,
         activeInstance
       )
-      // parent created
-      //   child created
-      //   child mounted
-      // parent mounted
+
+      // Parent created
+      //   Child created
+      //   Child mounted
+      // Parent mounted
       child.$mount(hydrating ? vnode.elm : undefined, hydrating)
     }
   },
@@ -118,6 +120,7 @@ export function createComponent (
     return
   }
 
+  // 选项处理
   const baseCtor = context.$options._base
 
   // plain options object: turn it into a constructor
@@ -135,6 +138,7 @@ export function createComponent (
   }
 
   // async component
+  // 异步组件
   let asyncFactory
   if (isUndef(Ctor.cid)) {
     asyncFactory = Ctor
@@ -153,6 +157,7 @@ export function createComponent (
     }
   }
 
+  // 处理属性
   data = data || {}
 
   // resolve constructor options in case global mixins are applied after

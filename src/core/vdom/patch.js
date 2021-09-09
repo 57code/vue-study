@@ -130,7 +130,7 @@ export function createPatchFunction (backend) {
 
   let creatingElmInVPre = 0
 
-  // 递归遍历传入虚拟dom，将它创建为一颗dom树🌲
+  // 传入一个虚拟dom，创建对应真实dom
   function createElm (
     vnode,
     insertedVnodeQueue,
@@ -151,12 +151,12 @@ export function createPatchFunction (backend) {
 
     vnode.isRootInsert = !nested // for transition enter check
     
-    // 如果传入vnode是一个自定义组件的，走if逻辑
+    // 判断传入vnode是否是自定义组件
     if (createComponent(vnode, insertedVnodeQueue, parentElm, refElm)) {
       return
     }
 
-    // 原生标签走这里
+    // 保留标签创建
     const data = vnode.data
     const children = vnode.children
     const tag = vnode.tag

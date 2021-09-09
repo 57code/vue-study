@@ -29,9 +29,8 @@ export function initAssetRegisters (Vue: GlobalAPI) {
           // Vue.component('comp', {})
           definition.name = definition.name || id
           // 构造函数获取：Vue.extend(obj) => VueComponent
-          // const Ctor = Vue.extend({})
-          // const comp = new Ctor()
-          // comp.$mount()
+          // const Ctor = Vue.extend()
+          // new Ctor()
           definition = this.options._base.extend(definition)
         }
         if (type === 'directive' && typeof definition === 'function') {

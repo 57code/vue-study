@@ -70,141 +70,147 @@ class KVue {
     proxy(this, "$data");
     // 3.编译模板
     // new Compile('#app', this)
-    // 3.挂载$mount
+
+    // 如果设置el，则挂载
     if (options.el) {
-      this.$mount(options.el);
+      this.$mount(options.el)
     }
   }
 
   $mount(el) {
-    // 1.获取宿主
-    this.$el = document.querySelector(el);
-    // 2.执行render
+    // 0.获取宿主
+    this.$el = document.querySelector(el)
+    
+    // 1.声明一个updateComponent
     const updateComponent = () => {
-      // const el = this.$options.render.call(this);
-      // 3.转换结果并追加
-      // const parent = this.$el.parentElement;
-      // parent.insertBefore(el, this.$el.nextSibling);
-      // parent.removeChild(this.$el);
-      // this.$el = el;
-      const vnode = this.$options.render.call(this, this.$createElement);
-      // patch
-      this._update(vnode);
-    };
-    new Watcher(this, updateComponent);
-  }
+      // const el = this.$options.render.call(this)
+      // const parent = this.$el.parentElement
+      // parent.insertBefore(el, this.$el.nextSibling)
+      // parent.removeChild(this.$el)
+      // this.$el = el
 
-  // 返回虚拟dom
-  $createElement(tag, props, children) {
-    return { tag, props, children };
-  }
-  // 转换vnode=》dom
-  _update(vnode) {
-    // 判断是初始化还是patch
-    // 是否存在上次计算结果
-    const prevVnode = this._vnode;
-    if (!prevVnode) {
-      // init
-      this.__patch__(this.$el, vnode);
-    } else {
-      // update
-      this.__patch__(prevVnode, vnode);
+      // vnode
+      const vnode = this.$options.render.call(this, this.$createElement)
+      this._update(vnode)
     }
 
-    // 保存vnode，更新使用
-    this._vnode = vnode;
+    // 2.new Watcher
+    new Watcher(this, updateComponent)
+
+  }
+
+  // 创建返回虚拟dom
+  $createElement(tag, props, children) {
+    return {tag, props, children}
+  }
+
+  // 将传入的vnode转换，如果初始化则创建，如果是更新则patch
+  _update(vnode) {
+    // 上次vnode
+    const prevVnode = this._vnode
+
+    if (!prevVnode) {
+      // init
+      this.__patch__(this.$el, vnode)
+    } else {
+      // patch
+      this.__patch__(prevVnode, vnode)
+    }
+
+    this._vnode = vnode
   }
 
   __patch__(oldVnode, vnode) {
-    // 是否走初始化看oldVnode是否是一个dom
+    // 判断oldVnode是否是真实dom
     if (oldVnode.nodeType) {
-      // init create
-      const parent = oldVnode.parentElement;
-      const ref = oldVnode.nextSibling;
-      const el = this.createElm(vnode);
-      parent.insertBefore(el, ref);
-      parent.removeChild(oldVnode);
+      const parent = oldVnode.parentElement
+      const refElm = oldVnode.nextSibling
+      const el = this.createElm(vnode)
+      parent.insertBefore(el, refElm)
+      parent.removeChild(oldVnode)
+      // 保存vnode
+      this._vnode = vnode
     } else {
-      // update
-      // 1.获取要更新元素
-      const el = (vnode.el = oldVnode.el);
-      // 判断是否是相同节点
+      // 获取要更新的元素
+      const el = vnode.el = oldVnode.el
+
+      // 同层比较相同节点
       if (oldVnode.tag === vnode.tag) {
         // diff
-        // props ...
+        // props
         // children
-        // 获取两个子节点数组
-        const oldCh = oldVnode.children;
-        const newCh = vnode.children;
-        if (typeof newCh === "string") {
-          if (typeof oldCh === "string") {
+        // 获取双方孩子
+        const oldCh = oldVnode.children
+        const newCh = vnode.children
+
+        if (typeof newCh === 'string') {
+          if (typeof oldCh === 'string') {
             // 文本更新
             if (newCh !== oldCh) {
-              el.textContent = newCh;
+              el.textContent = newCh
             }
           } else {
-            // 将之前的子元素替换为文本
-            el.textContent = newCh;
+            // replace elements with text
+            el.textContent = newCh
           }
         } else {
-          if (typeof oldCh === "string") {
-            // 将之前的文本替换为数组
-            el.innerHTML = "";
-            newCh.forEach(child => el.appendChild(this.createElm(child)));
+          if (typeof oldCh === 'string') {
+            // replace text with elements
+            // clear
+            // 循环创建并追加
           } else {
-            // updateChildren
-            this.updateChildren(el, oldCh, newCh);
+            this.updateChildren(el, oldCh, newCh)
           }
         }
       } else {
         // replace
-        // ...
       }
     }
   }
 
-  // 更新两组孩子
   updateChildren(parentElm, oldCh, newCh) {
     // 这⾥暂且直接patch对应索引的两个节点
-    const len = Math.min(oldCh.length, newCh.length);
+    const len = Math.min(oldCh.length, newCh.length)
     for (let i = 0; i < len; i++) {
-      this.__patch__(oldCh[i], newCh[i]);
-    }
+    this.__patch__(oldCh[i], newCh[i])
+     }
     // newCh若是更⻓的那个，说明有新增
     if (newCh.length > oldCh.length) {
-      newCh.slice(len).forEach(child => {
-        const el = this.createElm(child);
-        parentElm.appendChild(el);
-      });
-    } else if (newCh.length < oldCh.length) {
-      // oldCh若是更⻓的那个，说明有删减
-      oldCh.slice(len).forEach(child => {
-        parentElm.removeChild(child.el);
-      });
+    newCh.slice(len).forEach(child => {
+    const el = this.createElm(child)
+    parentElm.appendChild(el)
+     })
+     } else if (newCh.length < oldCh.length) {
+    // oldCh若是更⻓的那个，说明有删减
+    oldCh.slice(len).forEach(child => {
+    parentElm.removeChild(child.el)
+     })
+     }
     }
-  }
 
-  // 递归遍历vnode，创建dom树
   createElm(vnode) {
-    const el = document.createElement(vnode.tag);
+    const el = document.createElement(vnode.tag)
 
     // props
-    // ...
 
     // children
     if (vnode.children) {
-      if (typeof vnode.children === "string") {
-        el.textContent = vnode.children;
+      if (typeof vnode.children === 'string') {
+        // 文本内容
+        el.textContent = vnode.children
       } else {
-        // 递归
-        vnode.children.forEach(child => el.appendChild(this.createElm(child)));
+        // 子节点递归
+        vnode.children.forEach(vnode => {
+          el.appendChild(this.createElm(vnode))
+        })
       }
     }
 
-    // vnode中需要保存el,用于未来更新
-    vnode.el = el;
-
-    return el;
+    // 保存真实元素，更新时要用
+    vnode.el = el
+    
+    // 返回创建的dom
+    return el
   }
 }
 // 移除
@@ -212,22 +218,20 @@ class KVue {
 class Watcher {
   constructor(vm, fn) {
     this.vm = vm;
-
+    // this.key = key;
     this.getter = fn;
-
-    // 立即执行getter
-    this.get();
+   
+    this.get()
   }
-
-  get() {
-    // 依赖收集触发
-    Dep.target = this;
-    this.getter.call(this.vm);
-    Dep.target = null;
+  get(){
+     // 依赖收集触发
+     Dep.target = this;
+     this.getter.call(this.vm)
+     Dep.target = null;
   }
 
   update() {
-    this.get();
+    this.get()
   }
 }
 // 管家：和某个key，⼀⼀对应，管理多个秘书，数据更新时通知他们做更新⼯作
