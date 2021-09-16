@@ -1,0 +1,53 @@
+<div id="app">
+  <h3>{{title}}</h3>
+  <!-- emit('update:value') -->
+  <!-- <comp v-model:val1="" v-model:val2=""></comp> -->
+</div>
+<script src="http://unpkg.com/vue@next"></script>
+<script>
+  // 实例创建：
+  // v2  new Vue()
+  // v3 函数式
+
+  // v2中的静态接口（全局接口）
+  // Vue.component()
+  // v3中全是实例方法
+  const { createApp, reactive } = Vue
+
+  // vue-use
+  function useState() {
+    const state = reactive({
+      title: 'vue3, hello!'
+    })
+
+    setTimeout(() => {
+      state.title = 'new title'
+    }, 1000)
+    return state
+  }
+
+  const app = createApp({
+    // data() {
+    //   return {
+    //     title: 'hello, vue3!'
+    //   }
+    // },
+    // mixin: [clickOutside, mouse, mouse2],
+    setup(props,{emit,slots,attrs}) {
+      // 冲突、来源不明
+      const state = useState()
+
+      // 消除this
+      const state2 = useState2()
+
+      // 3.2 setup script
+      return {state,state2}
+    }
+  }).component('comp', {
+    template: '<div>comp</div>'
+  })
+  // app.use(store)
+  // app.use(router)
+  // app.use(antdv)
+  app.mount('#app')
+</script>

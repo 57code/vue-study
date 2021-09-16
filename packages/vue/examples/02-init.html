@@ -1,0 +1,81 @@
+<div id="app">
+</div>
+<script>
+  const Vue = {
+    createRenderer({ querySelector }) {
+      // 返回渲染器 renderer
+      return {
+        createApp(options) {
+          // 返回应用程序实例
+          return {
+            mount(selector) {
+              // const updateComponent = () => {
+              //   this._update(this.render())
+              // }
+              // new Watcher(this, updateComponent)
+
+              // 处理选项
+              if (options.setup) {
+                this.setupState = options.setup()
+              }
+              if (options.data) {
+                this.data = options.data()
+              }
+              // app.xxx
+              this.proxy = new Proxy(this, {
+                get(target, key) {
+                  if (target.setupState && key in target.setupState) {
+                    return target.setupState[key]
+                  } else if (target.data && key in target.data) {
+                    return target.data[key]
+                  }
+                }
+              })
+
+              // 1.获取宿主元素
+              const parent = querySelector(selector)
+              // 2.把options中的数据渲染到视图中
+              // 2.5如果用户未提供render，自动编译一个
+              const el = options.render.call(this.proxy)
+              // 3.将渲染得到的结果追加到宿主元素
+              parent.innerHTML = ''
+              parent.appendChild(el)
+              // 4.建立更新机制
+            }
+          }
+        }
+      }
+    },
+    createApp(options, rootProps) {
+      const renderer = Vue.createRenderer({
+        querySelector(sel) {
+          return document.querySelector(sel)
+        }
+      })
+      return renderer.createApp(options)
+    },
+  }
+</script>
+<script>
+  // 实例创建：
+  const { createApp } = Vue
+
+  const app = createApp({
+    data() {
+      return {
+        title: 'hello, vue3!'
+      }
+    },
+    setup(props, ctx) {
+      return {
+        title: 'vue3, hello!'
+      }
+    },
+    render() {
+      const h3 = document.createElement('h3')
+      h3.textContent = this.title
+      return h3
+    }
+  }, { foo: 'foo' })
+  app.mount('#app')
+</script>
