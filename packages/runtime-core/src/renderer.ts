@@ -2233,9 +2233,11 @@ function baseCreateRenderer(
     >)
   }
 
+  // 返回的就是渲染器
+  // ReactDOM.render(jsx, '#app')
   return {
-    render,
-    hydrate,
+    render, // render(vnode, '#app')
+    hydrate, // 注水，ssr
     createApp: createAppAPI(render, hydrate)
   }
 }
