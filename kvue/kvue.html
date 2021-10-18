@@ -7,17 +7,15 @@
       counter: 1
     },
     render(h) {
-      // 描述视图
       // const h1 = document.createElement('h1')
       // h1.textContent = this.counter 
       // return h1
 
-      // vnode
-      // return h('h1', null, this.counter + '')
-      return h('h1', {id:'xxx'}, [
-        h('p', null, this.counter + ''),
-        h('p', null, this.counter + ''),
-        h('p', null, this.counter + ''),
+      // return h('h1', {attrs: {id: 'title'}}, this.counter + '')
+      return h('h1', {attrs: {id: 'title'}}, [
+        h('p', {}, this.counter + ''),
+        h('p', {}, this.counter * 2 + ''),
+        h('p', {}, this.counter * 3 + ''),
       ])
     }
   })

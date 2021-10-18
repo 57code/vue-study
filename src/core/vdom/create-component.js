@@ -46,6 +46,10 @@ const componentVNodeHooks = {
       const mountedNode: any = vnode // work around flow
       componentVNodeHooks.prepatch(mountedNode, mountedNode)
     } else {
+      // parent created
+      //   child created
+      //   child mounted
+      // parent mounted
       const child = vnode.componentInstance = createComponentInstanceForVnode(
         vnode,
         activeInstance
@@ -150,6 +154,7 @@ export function createComponent (
     }
   }
 
+  // 开始处理组件各种信息
   data = data || {}
 
   // resolve constructor options in case global mixins are applied after

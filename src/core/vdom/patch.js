@@ -150,6 +150,7 @@ export function createPatchFunction (backend) {
 
     vnode.isRootInsert = !nested // for transition enter check
     
+    // 自定义组件走这里
     if (createComponent(vnode, insertedVnodeQueue, parentElm, refElm)) {
       return
     }
@@ -218,10 +219,12 @@ export function createPatchFunction (backend) {
 
   // 如果是自定义组件，执行它的组件vnode钩子
   function createComponent (vnode, insertedVnodeQueue, parentElm, refElm) {
+    // hook.init
     let i = vnode.data
     if (isDef(i)) {
       const isReactivated = isDef(vnode.componentInstance) && i.keepAlive
       if (isDef(i = i.hook) && isDef(i = i.init)) {
+        // 自定义组件初始化启动
         i(vnode, false /* hydrating */)
       }
       // after calling the init hook, if the vnode is a child component
