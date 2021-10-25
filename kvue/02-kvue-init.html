@@ -1,0 +1,105 @@
+<div id="app">
+  <h1>{{title}}</h1>
+</div>
+
+<!-- <script src="http://unpkg.com/vue@next"></script> -->
+<script>
+  // 基本结构
+  const Vue = {
+    // runtime-core
+    createRenderer({querySelector, insert}) {
+      // 返回renderer
+      return {
+        createApp(options) {
+          return {
+            mount(selector) {
+              // 挂载做了什么？
+              // 1. 把组件配置中状态转换为dom，并追加
+              // 2. new Watcher(this, updateComponent)
+
+              // 1. 初始化视图
+              // 2. 建立更新机制
+
+              // 获取dom，追加的宿主元素
+              // v2：
+              // 1. vm.render() -> vnode
+              // 2. vm._update() -> patch() -> dom
+
+              // 获取父元素
+              const parent = querySelector(selector)
+
+              // render函数如何产生？
+              // 编译器编译产生render
+              if (!options.render) {
+                options.render = this.compile(parent.innerHTML)
+              }
+
+              // 兼容options：确定一个优先级，从优先级高的地方先找
+              if (options.setup) {
+                this.setupState = options.setup()
+              }
+              if (options.data) {
+                this.data = options.data()
+              }
+              const ctx = new Proxy(this, {
+                get(target, key) {
+                  if (key in target.setupState) {
+                    return target.setupState[key]
+                  } else {
+                    return target.data[key]
+                  }
+                }
+              })
+              const el = options.render.call(ctx)
+              parent.innerHTML = ''
+              // parent.appendChild(el)
+              insert(el, parent)
+            },
+            compile(template) {
+              // 将传入的template编译为render函数
+              return function render() {
+                const h1 = document.createElement('h1')
+                h1.innerText = this.title + this.title2
+                return h1
+              }
+            }
+          }
+        }
+      }
+    },
+    // canvas
+    // app
+    // mini-app
+    // web plateform
+    createApp(options) {
+      // 返回app实例
+      // 实现web平台createApp
+      const renderer = this.createRenderer({
+        querySelector(sel) {
+          return document.querySelector(sel)
+        }, 
+        insert(el, parent) {
+          parent.appendChild(el)
+        }
+      })
+      return renderer.createApp(options)
+    }
+  }
+</script>
+<script>
+  const app = Vue.createApp({
+    // options api
+    data() {
+      return {
+        title2: 'hello,vue3!'
+      }
+    },
+
+    // composition api
+    setup() {
+      return {
+        title: 'vue3,hello!'
+      }
+    }
+  }).mount('#app')
+</script>

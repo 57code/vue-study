@@ -1,0 +1,54 @@
+<div id="app">
+  <h1>{{title}}</h1>
+  <comp></comp>
+</div>
+
+<script src="http://unpkg.com/vue@next"></script>
+<script>
+
+  function useState() {
+    const state = Vue.reactive({
+      title: 'vue3,hello!',
+      count: 1
+    })
+    const doubleCount = Vue.computed(() => state.count * 2)
+
+    return {state, doubleCount}
+  }
+
+
+  // 初始化方式变了
+  // 函数式
+  // v2: new Vue
+  // v3: createApp
+  // 函数对于类型支持更好
+
+  // 利于摇树优化
+  // vue3中消除了全局静态方法
+  // vue2中哪些全局方法都被移至app实例上，变成实例方法
+  const app = Vue.createApp({
+    // options api
+    data() {
+      return {
+        title: 'hello,vue3!'
+      }
+    },
+    // composition api
+    setup() {
+      // 消除this
+      // 复用性
+      const {state, doubleCount} = useState()
+
+      // logic 2
+
+      return state
+    }
+  })
+  app.component('comp', {
+    template: '<div id="myid">comp</div>',
+  })
+  // app.use(router)
+  // app.use(store)
+  // app.use(antdv)
+  app.mount('#app')
+</script>
