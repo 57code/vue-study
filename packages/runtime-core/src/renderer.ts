@@ -505,6 +505,7 @@ function baseCreateRenderer(
             optimized
           )
         } else if (shapeFlag & ShapeFlags.COMPONENT) {
+          // 初始化走这里
           processComponent(
             n1,
             n2,
@@ -1206,6 +1207,7 @@ function baseCreateRenderer(
           optimized
         )
       } else {
+        // 等效于v2 mountComponent
         mountComponent(
           n2,
           container,
@@ -1230,6 +1232,7 @@ function baseCreateRenderer(
     isSVG,
     optimized
   ) => {
+    // 创建组件实例
     const instance: ComponentInternalInstance = (initialVNode.component = createComponentInstance(
       initialVNode,
       parentComponent,
@@ -1254,6 +1257,8 @@ function baseCreateRenderer(
     if (__DEV__) {
       startMeasure(instance, `init`)
     }
+    // 初始化组件
+    // 等同于_init()
     setupComponent(instance)
     if (__DEV__) {
       endMeasure(instance, `init`)
@@ -1273,6 +1278,7 @@ function baseCreateRenderer(
       return
     }
 
+    // 渲染副作用安装
     setupRenderEffect(
       instance,
       initialVNode,
@@ -2233,8 +2239,9 @@ function baseCreateRenderer(
     >)
   }
 
+  // 这就是渲染器
   return {
-    render,
+    render, // 接收一个vnode，转换为dom，追加到宿主
     hydrate,
     createApp: createAppAPI(render, hydrate)
   }

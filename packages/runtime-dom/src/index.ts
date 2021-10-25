@@ -50,6 +50,7 @@ export const hydrate = ((...args) => {
   ensureHydrationRenderer().hydrate(...args)
 }) as RootHydrateFunction
 
+// 用户使用的就是这个
 export const createApp = ((...args) => {
   const app = ensureRenderer().createApp(...args)
 
